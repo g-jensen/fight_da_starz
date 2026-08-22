@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdlib.h>
+
 struct abuf {
   char *b;
   int len;

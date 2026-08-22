@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+
 #include "core.h"
 #include "abuf.h"
 #include "raw_mode.h"
