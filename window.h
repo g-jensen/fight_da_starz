@@ -23,8 +23,8 @@ struct windowConfig {
 };
 
 void window_init_config(struct windowConfig *cfg);
-void window_draw_screen(struct abuf *ab, struct windowConfig *cfg);
-void window_clear_line(struct abuf *ab);
+void window_draw_screen(struct abuf *abuf, struct windowConfig *cfg);
+void window_clear_line(struct abuf *abuf);
 void window_clear_screen();
 char window_read_key();
 void window_hide_cursor();

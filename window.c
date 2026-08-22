@@ -6,8 +6,8 @@
 #include "window.h"
 #include "core.h"
 
-void window_buf_reset_cursor(struct abuf *ab) {
-    abuf_append(ab, RESET_CURSOR, 3);
+void window_buf_reset_cursor(struct abuf *abuf) {
+    abuf_append(abuf, RESET_CURSOR, 3);
 }
 
 void window_reset_cursor() {
@@ -61,8 +61,8 @@ int window_get_size(int *rows, int *cols) {
     }
 }
 
-void window_clear_line(struct abuf *ab) {
-    abuf_append(ab, CLEAR_LINE, 3);
+void window_clear_line(struct abuf *abuf) {
+    abuf_append(abuf, CLEAR_LINE, 3);
 }
 
 void window_hide_cursor() {
@@ -73,9 +73,9 @@ void window_show_cursor() {
     write(STDOUT_FILENO, SHOW_CURSOR, 6);
 }
 
-void window_draw_screen(struct abuf *ab, struct windowConfig *cfg) {
-    window_buf_reset_cursor(ab);    
-    write(STDOUT_FILENO, ab->b, ab->len);
+void window_draw_screen(struct abuf *abuf, struct windowConfig *cfg) {
+    window_buf_reset_cursor(abuf);    
+    write(STDOUT_FILENO, abuf->b, abuf->len);
 }
 
 void window_init_config(struct windowConfig *cfg) {
