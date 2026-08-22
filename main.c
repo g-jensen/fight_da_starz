@@ -7,6 +7,7 @@
 #include "window.h"
 
 struct gameState {
+    int stop;
     int counter;
 };
 
@@ -31,9 +32,7 @@ void process_key(struct gameState *state, struct abuf *abuf) {
             state->counter++;
             break;
         case CTRL_KEY('c'):
-            abuf_free(abuf);
-            window_clear_screen();
-            exit(0);
+            state->stop = 1;
             break;
     }
 }
@@ -46,13 +45,18 @@ int main() {
 
     struct abuf abuf = ABUF_INIT;
 
-    struct gameState state = {.counter = 1};
+    struct gameState state = {.counter = 1, .stop = 0};
 
-    while (1) {
+    window_hide_cursor();
+    while (!state.stop) {
         set_window_buffer(&state,&abuf,&cfg);
         window_draw_screen(&abuf, &cfg);
         process_key(&state, &abuf);
     }
+    window_show_cursor();
+
+    abuf_free(&abuf);
+    window_clear_screen();
 
     return 0;
 }

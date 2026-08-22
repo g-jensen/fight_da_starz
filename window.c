@@ -65,18 +65,16 @@ void window_clear_line(struct abuf *ab) {
     abuf_append(ab, CLEAR_LINE, 3);
 }
 
-void window_hide_cursor(struct abuf *ab) {
-    abuf_append(ab, HIDE_CURSOR, 6);
+void window_hide_cursor() {
+    write(STDOUT_FILENO, HIDE_CURSOR, 6);
 }
 
-void window_show_cursor(struct abuf *ab) {
-    abuf_append(ab, SHOW_CURSOR, 6);
+void window_show_cursor() {
+    write(STDOUT_FILENO, SHOW_CURSOR, 6);
 }
 
 void window_draw_screen(struct abuf *ab, struct windowConfig *cfg) {
-    window_hide_cursor(ab);
     window_buf_reset_cursor(ab);    
-    window_show_cursor(ab);
     write(STDOUT_FILENO, ab->b, ab->len);
 }
 

@@ -27,3 +27,5 @@ void window_draw_screen(struct abuf *ab, struct windowConfig *cfg);
 void window_clear_line(struct abuf *ab);
 void window_clear_screen();
 char window_read_key();
+void window_hide_cursor();
+void window_show_cursor();
