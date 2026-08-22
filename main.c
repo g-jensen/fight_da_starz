@@ -7,7 +7,7 @@ struct gameState {
     int counter;
 };
 
-void set_buffer(struct gameState *state, struct abuf *ab, struct windowConfig *cfg) {
+void set_window_buffer(struct gameState *state, struct abuf *ab, struct windowConfig *cfg) {
     int y;
     char str[100];
     snprintf(str,100,"I LOVE YOU x%d",state->counter);
@@ -21,7 +21,7 @@ void set_buffer(struct gameState *state, struct abuf *ab, struct windowConfig *c
     }
 }
 
-void window_process_key(struct gameState *state, struct abuf *ab) {
+void process_key(struct gameState *state, struct abuf *ab) {
     char c = window_read_key();
     switch (c) {
         case 'g':
@@ -46,9 +46,9 @@ int main() {
     struct gameState state = {.counter = 1};
 
     while (1) {
-        set_buffer(&state,&ab,&cfg);
+        set_window_buffer(&state,&ab,&cfg);
         window_draw_screen(&ab, &cfg);
-        window_process_key(&state, &ab);
+        process_key(&state, &ab);
     }
 
     return 0;
