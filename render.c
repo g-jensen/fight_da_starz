@@ -10,7 +10,7 @@ struct point render_position(struct point p, struct point rendered_player_positi
     return point_sub(point_add(p, rendered_player_position), real_player_position);
 }
 
-void state_to_grid(struct gameState *state, struct grid grid) {
+void render_state_into_grid(struct gameState *state, struct grid grid) {
     grid_fill(grid, DEFAULT_CHAR);
     
     struct point player_rendered_position = {.x = grid.cols/2, .y = grid.rows/2};
