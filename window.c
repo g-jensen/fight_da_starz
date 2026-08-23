@@ -5,7 +5,18 @@
 #include <string.h>
 
 #include "window.h"
+#include "raw_mode.h"
 #include "core.h"
+
+void window_init() {
+    enable_raw_mode();
+    window_hide_cursor();
+}
+
+void window_cleanup() {
+    window_show_cursor();
+    window_clear_screen();
+}
 
 int window_buf_reset_cursor(char* buf) {
     return insert_string(buf,RESET_CURSOR);
@@ -82,10 +93,12 @@ void window_buf_draw(struct drawBuf *drawBuf) {
     write(STDOUT_FILENO, drawBuf->b, drawBuf->len);
 }
 
-void window_init_config(struct windowConfig *cfg) {
-    if (window_get_size(&cfg->screenrows, &cfg->screencols) == -1) {
+struct windowConfig window_init_config() {
+    struct windowConfig cfg;
+    if (window_get_size(&cfg.screenrows, &cfg.screencols) == -1) {
         clear_and_die("window_get_size");
     }
+    return cfg;
 }
 
 void grid_into_drawbuf(struct grid grid, struct drawBuf drawBuf) {

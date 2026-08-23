@@ -24,7 +24,9 @@ struct windowConfig {
     int screencols;
 };
 
-void window_init_config(struct windowConfig *cfg);
+void window_init();
+void window_cleanup();
+struct windowConfig window_init_config();
 void window_buf_draw(struct drawBuf *drawBuf);
 void window_grid_draw(struct grid grid, struct drawBuf drawBuf);
 void window_clear_screen();

@@ -1,5 +1,4 @@
 #include "drawbuf.h"
-#include "raw_mode.h"
 #include "window.h"
 #include "grid.h"
 #include "core.h"
@@ -7,28 +6,27 @@
 #include "game.h"
 #include "render.h"
 
-int main() {
-    enable_raw_mode();
-    
-    struct windowConfig cfg;
-    window_init_config(&cfg);
+int main() {    
+    struct windowConfig cfg = window_init_config(); // should return a windowConfig to align with the styles below
     
     struct grid grid = grid_create(cfg.screenrows,cfg.screencols, DEFAULT_CHAR);
-    
     struct drawBuf drawBuf = drawbuf_create_from_grid(grid);
+    // Abstract grid + drawBuf logic into "renderState", which is all that this user sees.
+    // Importantly, this decouples the render state from the window: "what to render" vs "how to render".
+    // Window shouldn't know that grid exists: only that renderState exists.
+    // This user also shouldn't know that a grid exists.
 
     struct gameState state = game_init();
     
-    window_hide_cursor();
+    window_init();
     while (!state.stop) {
         render_state_into_grid(&state,grid);
-        window_grid_draw(grid,drawBuf);
+        window_grid_draw(grid,drawBuf); // window_draw(render_state)
         process_key(&state, window_read_key());
     }
-    window_show_cursor();
-    drawbuf_free(&drawBuf);
-    grid_free(grid);
-    window_clear_screen();
+    window_cleanup();
+    drawbuf_free(&drawBuf); // render_state_cleanup()
+    grid_free(grid); // render_state_cleanup()
 
     return 0;
 }
