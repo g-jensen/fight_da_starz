@@ -15,12 +15,7 @@ int main() {
     struct grid grid = grid_create(cfg.screenrows,cfg.screencols, DEFAULT_CHAR);
     struct drawBuf drawBuf = drawbuf_create_from_grid(grid);
     
-    struct gameState state = {
-        .counter = 1, 
-        .stop = 0, 
-        .player_position = {.x = 0, .y = 0},
-        .box_position = {.x = 0, .y = 5} 
-    };
+    struct gameState state = game_init();
     
     window_hide_cursor();
     while (!state.stop) {

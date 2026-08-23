@@ -10,3 +10,4 @@ struct gameState {
 };
 
 void process_key(struct gameState *state);
+struct gameState game_init();

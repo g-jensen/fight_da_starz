@@ -22,3 +22,14 @@ void process_key(struct gameState *state) {
             break;
     }
 }
+
+struct gameState game_init() {
+    struct gameState state = {
+        .counter = 1, 
+        .stop = 0, 
+        .player_position = {.x = 0, .y = 0},
+        .box_position = {.x = 0, .y = 5} 
+    };
+    
+    return state;
+}
