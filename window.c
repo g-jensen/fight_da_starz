@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "window.h"
 #include "core.h"
@@ -77,7 +78,7 @@ void window_show_cursor() {
     write(STDOUT_FILENO, SHOW_CURSOR, 6);
 }
 
-void window_draw_screen(struct drawBuf *drawBuf) {
+void window_buf_draw(struct drawBuf *drawBuf) {
     write(STDOUT_FILENO, drawBuf->b, drawBuf->len);
 }
 
@@ -85,4 +86,29 @@ void window_init_config(struct windowConfig *cfg) {
     if (window_get_size(&cfg->screenrows, &cfg->screencols) == -1) {
         clear_and_die("window_get_size");
     }
+}
+
+void grid_into_drawbuf(struct grid grid, struct drawBuf drawBuf) {
+    int i = 0;
+    i += window_buf_reset_cursor(drawBuf.b+i);
+    for (int y = 0; y < grid.rows; y++) {
+        i += window_buf_clear_line(drawBuf.b+i);
+        for (int x = 0; x < grid.cols; x++) {
+            drawBuf.b[i++] = grid_get(grid,y,x);
+        }
+        if (y < grid.rows - 1) {
+            i += window_buf_new_line(drawBuf.b+i);
+        }
+    }
+}
+
+struct drawBuf drawbuf_create_from_grid(struct grid grid) {
+    int len = grid.rows*grid.cols + grid.rows*(strlen(CLEAR_LINE) + strlen(NEW_LINE)) + strlen(RESET_CURSOR);
+    struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .len = len};
+    return drawBuf;
+}
+
+void window_grid_draw(struct grid grid, struct drawBuf drawBuf) {
+    grid_into_drawbuf(grid,drawBuf);
+    window_buf_draw(&drawBuf);
 }
