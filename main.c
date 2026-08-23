@@ -41,9 +41,9 @@ int main() {
     
     window_hide_cursor();
     while (!state.stop) {
+        state_to_grid(&state,grid);
         window_grid_draw(grid,drawBuf);
         process_key(&state);
-        state_to_grid(&state,grid);
     }
     window_show_cursor();
     drawbuf_free(&drawBuf);
