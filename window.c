@@ -35,6 +35,11 @@ void window_shutdown() {
     window_clear_screen();
 }
 
+void clear_and_die(const char *s) {
+    window_clear_screen();
+    die(s);
+}
+
 struct optional_char window_read_key() {
     int nread;
     char c;
@@ -80,11 +85,6 @@ struct drawBuf drawbuf_create(int rows, int cols) {
     int len = rows*cols + rows*(strlen(CLEAR_LINE) + strlen(NEW_LINE)) + strlen(RESET_CURSOR);
     struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .len = len};
     return drawBuf;
-}
-
-void clear_and_die(const char *s) {
-    window_clear_screen();
-    die(s);
 }
 
 struct window window_create() {
