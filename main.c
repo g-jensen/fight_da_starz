@@ -3,13 +3,9 @@
 #include "window.h"
 #include "grid.h"
 #include "core.h"
+#include "point.h"
 
 #define DEFAULT_CHAR ' '
-
-struct point {
-    int x;
-    int y;
-};
 
 struct gameState {
     int stop;
@@ -46,11 +42,17 @@ void place_char(struct point p, struct grid grid, char c) {
     }
 }
 
+struct point render_position(struct point p, struct point rendered_player_position, struct point real_player_position) {
+    return point_sub(point_add(p, rendered_player_position), real_player_position);
+}
+
 void state_to_grid(struct gameState *state, struct grid grid) {
     grid_fill(grid, DEFAULT_CHAR);
     
-    place_char(state->box_position, grid, '9');
-    place_char(state->player_position, grid, 'o');
+    struct point player_rendered_position = {.x = grid.cols/2, .y = grid.rows/2};
+    struct point box_rendered_position = render_position(state->box_position, player_rendered_position, state->player_position);
+    place_char(box_rendered_position, grid, '9');
+    place_char(player_rendered_position, grid, 'o');
 }
 
 int main() {
@@ -64,8 +66,8 @@ int main() {
     struct gameState state = {
         .counter = 1, 
         .stop = 0, 
-        .player_position = {.x = grid.cols/2, .y = grid.rows/2},
-        .box_position = {.x = 0, .y = grid.rows/2} 
+        .player_position = {.x = 0, .y = 0},
+        .box_position = {.x = 0, .y = 5} 
     };
     
     window_hide_cursor();
