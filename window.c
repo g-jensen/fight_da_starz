@@ -33,13 +33,13 @@ void clear_and_die(const char *s) {
     die(s);
 }
 
-char window_read_key() {
+struct optional_char window_read_key() {
     int nread;
     char c;
-    while ((nread = read(STDIN_FILENO, &c, 1)) != 1) {
-        if (nread == -1 && errno != EAGAIN) clear_and_die("read");
-    }
-    return c;
+    nread = read(STDIN_FILENO, &c, 1);
+    if (nread == 0) return (struct optional_char){.some = 0};
+    if (nread == -1 && errno != EAGAIN) clear_and_die("read");
+    return (struct optional_char){.some = 1, .value = c};
 }
 
 int window_get_cursor_pos(int *rows, int *cols) {

@@ -25,16 +25,21 @@ struct windowConfig {
     int screencols;
 };
 
+struct optional_char {
+    int some;
+    char value;
+};
+
 void window_init_config(struct windowConfig *cfg);
 void window_buf_draw(struct drawBuf *drawBuf);
 void window_grid_draw(struct grid grid, struct drawBuf drawBuf);
 void window_clear_screen();
 void window_hide_cursor();
 void window_show_cursor();
-char window_read_key();
 int window_buf_reset_cursor(char* buf);
 int window_buf_clear_line(char* buf);
 int window_buf_new_line(char* buf);
+struct optional_char window_read_key();
 
 void grid_into_drawbuf(struct grid grid, struct drawBuf drawBuf);
 struct drawBuf drawbuf_create_from_grid(struct grid grid);
