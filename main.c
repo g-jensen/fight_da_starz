@@ -16,7 +16,7 @@ int main() {
     window_init();
     while (!state.stop) {
         render_state_to_window(&state,window,render_grid);
-        process_key(&state, window_read_key());
+        process_key(&state, window_read_key()); // replace terminal character reading with full-scale key reading? https://github.com/kwhat/libuiohook
     }
     window_shutdown();
 
