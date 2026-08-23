@@ -1,5 +1,9 @@
 #include "render.h"
 
+struct grid render_grid_create(int rows, int cols) {
+    return grid_create(rows,cols, DEFAULT_CHAR);
+}
+
 void place_char(struct point p, struct grid grid, char c) {
     if(!(p.x >= grid.cols || p.y >= grid.rows || p.x < 0 || p.y < 0)){
         grid_set(grid, p.y, p.x, c);

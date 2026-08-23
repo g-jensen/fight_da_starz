@@ -19,23 +19,15 @@
 #define HIDE_CURSOR "\x1b[?25l"
 #define SHOW_CURSOR "\x1b[?25h"
 
-struct windowConfig {
-    int screenrows;
-    int screencols;
+struct window {
+    int rows;
+    int cols;
+    struct drawBuf drawBuf;
 };
 
 void window_init();
-void window_cleanup();
-struct windowConfig window_init_config();
-void window_buf_draw(struct drawBuf *drawBuf);
-void window_grid_draw(struct grid grid, struct drawBuf drawBuf);
-void window_clear_screen();
-void window_hide_cursor();
-void window_show_cursor();
-int window_buf_reset_cursor(char* buf);
-int window_buf_clear_line(char* buf);
-int window_buf_new_line(char* buf);
+void window_shutdown();
+struct window window_create();
+void window_free(struct window window);
+void window_draw(struct window window, struct grid grid);
 struct optional_char window_read_key();
-
-void grid_into_drawbuf(struct grid grid, struct drawBuf drawBuf);
-struct drawBuf drawbuf_create_from_grid(struct grid grid);

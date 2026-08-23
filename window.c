@@ -8,26 +8,12 @@
 #include "raw_mode.h"
 #include "core.h"
 
-void window_init() {
-    enable_raw_mode();
-    window_hide_cursor();
+void window_hide_cursor() {
+    write(STDOUT_FILENO, HIDE_CURSOR, 6);
 }
 
-void window_cleanup() {
-    window_show_cursor();
-    window_clear_screen();
-}
-
-int window_buf_reset_cursor(char* buf) {
-    return insert_string(buf,RESET_CURSOR);
-}
-
-int window_buf_clear_line(char* buf) {
-    return insert_string(buf,CLEAR_LINE);
-}
-
-int window_buf_new_line(char* buf) {
-    return insert_string(buf,NEW_LINE);
+void window_show_cursor() {
+    write(STDOUT_FILENO, SHOW_CURSOR, 6);
 }
 
 void window_reset_cursor() {
@@ -39,9 +25,14 @@ void window_clear_screen() {
     window_reset_cursor();
 }
 
-void clear_and_die(const char *s) {
+void window_init() {
+    enable_raw_mode();
+    window_hide_cursor();
+}
+
+void window_shutdown() {
+    window_show_cursor();
     window_clear_screen();
-    die(s);
 }
 
 struct optional_char window_read_key() {
@@ -81,24 +72,40 @@ int window_get_size(int *rows, int *cols) {
     }
 }
 
-void window_hide_cursor() {
-    write(STDOUT_FILENO, HIDE_CURSOR, 6);
-}
-
-void window_show_cursor() {
-    write(STDOUT_FILENO, SHOW_CURSOR, 6);
-}
-
 void window_buf_draw(struct drawBuf *drawBuf) {
     write(STDOUT_FILENO, drawBuf->b, drawBuf->len);
 }
 
-struct windowConfig window_init_config() {
-    struct windowConfig cfg;
-    if (window_get_size(&cfg.screenrows, &cfg.screencols) == -1) {
+struct drawBuf drawbuf_create(int rows, int cols) {
+    int len = rows*cols + rows*(strlen(CLEAR_LINE) + strlen(NEW_LINE)) + strlen(RESET_CURSOR);
+    struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .len = len};
+    return drawBuf;
+}
+
+void clear_and_die(const char *s) {
+    window_clear_screen();
+    die(s);
+}
+
+struct window window_create() {
+    struct window cfg;
+    if (window_get_size(&cfg.rows, &cfg.cols) == -1) {
         clear_and_die("window_get_size");
     }
+    cfg.drawBuf = drawbuf_create(cfg.rows,cfg.cols);
     return cfg;
+}
+
+int window_buf_reset_cursor(char* buf) {
+    return insert_string(buf,RESET_CURSOR);
+}
+
+int window_buf_clear_line(char* buf) {
+    return insert_string(buf,CLEAR_LINE);
+}
+
+int window_buf_new_line(char* buf) {
+    return insert_string(buf,NEW_LINE);
 }
 
 void grid_into_drawbuf(struct grid grid, struct drawBuf drawBuf) {
@@ -115,13 +122,11 @@ void grid_into_drawbuf(struct grid grid, struct drawBuf drawBuf) {
     }
 }
 
-struct drawBuf drawbuf_create_from_grid(struct grid grid) {
-    int len = grid.rows*grid.cols + grid.rows*(strlen(CLEAR_LINE) + strlen(NEW_LINE)) + strlen(RESET_CURSOR);
-    struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .len = len};
-    return drawBuf;
+void window_draw(struct window window, struct grid grid) {
+    grid_into_drawbuf(grid,window.drawBuf);
+    window_buf_draw(&window.drawBuf);
 }
 
-void window_grid_draw(struct grid grid, struct drawBuf drawBuf) {
-    grid_into_drawbuf(grid,drawBuf);
-    window_buf_draw(&drawBuf);
+void window_free(struct window window) {
+    drawbuf_free(&window.drawBuf);
 }
