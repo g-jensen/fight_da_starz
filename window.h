@@ -1,6 +1,6 @@
 #pragma once
 
-#include "abuf.h"
+#include "drawbuf.h"
 
 // https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html
 // https://vt100.net/docs/vt100-ug/chapter3.html#ED
@@ -25,7 +25,7 @@ struct windowConfig {
 };
 
 void window_init_config(struct windowConfig *cfg);
-void window_draw_screen(struct abuf *abuf);
+void window_draw_screen(struct drawBuf *drawBuf);
 void window_clear_screen();
 char window_read_key();
 void window_hide_cursor();

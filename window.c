@@ -65,8 +65,8 @@ void window_show_cursor() {
     write(STDOUT_FILENO, SHOW_CURSOR, 6);
 }
 
-void window_draw_screen(struct abuf *abuf) {
-    write(STDOUT_FILENO, abuf->b, abuf->len);
+void window_draw_screen(struct drawBuf *drawBuf) {
+    write(STDOUT_FILENO, drawBuf->b, drawBuf->len);
 }
 
 void window_init_config(struct windowConfig *cfg) {

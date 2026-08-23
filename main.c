@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "core.h"
-#include "abuf.h"
+#include "drawbuf.h"
 #include "raw_mode.h"
 #include "window.h"
 
@@ -49,24 +49,24 @@ int insert_string(char* buf, char* string) {
     return len;
 }
 
-void grid_into_abuf(struct grid grid, struct abuf abuf) {
+void grid_into_drawbuf(struct grid grid, struct drawBuf drawBuf) {
     int i = 0;
-    i += insert_string(abuf.b+i,RESET_CURSOR);
+    i += insert_string(drawBuf.b+i,RESET_CURSOR);
     for (int y = 0; y < grid.rows; y++) {
-        i += insert_string(abuf.b+i,CLEAR_LINE);
+        i += insert_string(drawBuf.b+i,CLEAR_LINE);
         for (int x = 0; x < grid.cols; x++) {
-            abuf.b[i++] = grid_get(grid,y,x);
+            drawBuf.b[i++] = grid_get(grid,y,x);
         }
         if (y < grid.rows - 1) {
-            i += insert_string(abuf.b+i,NEW_LINE);
+            i += insert_string(drawBuf.b+i,NEW_LINE);
         }
     }
 }
 
-struct abuf abuf_create_from_grid(struct grid grid) {
+struct drawBuf drawbuf_create_from_grid(struct grid grid) {
     int len = grid.rows*grid.cols + grid.rows*(strlen(CLEAR_LINE) + strlen(NEW_LINE)) + strlen(RESET_CURSOR);
-    struct abuf abuf = {.b = malloc(len*sizeof(char)), .len = len};
-    return abuf;
+    struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .len = len};
+    return drawBuf;
 }
 
 void process_key(struct gameState *state, struct grid grid) {
@@ -92,15 +92,15 @@ int main() {
     struct gameState state = {.counter = 1, .stop = 0};
 
     struct grid grid = grid_create(cfg.screenrows,cfg.screencols);
-    struct abuf abuf = abuf_create_from_grid(grid);
+    struct drawBuf drawBuf = drawbuf_create_from_grid(grid);
     window_hide_cursor();
     while (!state.stop) {
-        grid_into_abuf(grid,abuf);
-        window_draw_screen(&abuf);
+        grid_into_drawbuf(grid,drawBuf);
+        window_draw_screen(&drawBuf);
         process_key(&state,grid);
     }
     window_show_cursor();
-    abuf_free(&abuf);
+    drawbuf_free(&drawBuf);
     grid_free(grid);
     window_clear_screen();
 
