@@ -12,16 +12,18 @@ int main() {
     
     struct windowConfig cfg;
     window_init_config(&cfg);
-    struct grid grid = grid_create(cfg.screenrows,cfg.screencols, DEFAULT_CHAR);
-    struct drawBuf drawBuf = drawbuf_create_from_grid(grid);
     
+    struct grid grid = grid_create(cfg.screenrows,cfg.screencols, DEFAULT_CHAR);
+    
+    struct drawBuf drawBuf = drawbuf_create_from_grid(grid);
+
     struct gameState state = game_init();
     
     window_hide_cursor();
     while (!state.stop) {
         render_state_into_grid(&state,grid);
         window_grid_draw(grid,drawBuf);
-        process_key(&state);
+        process_key(&state, window_read_key());
     }
     window_show_cursor();
     drawbuf_free(&drawBuf);

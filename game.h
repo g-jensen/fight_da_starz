@@ -1,6 +1,7 @@
 #pragma once
 
 #include "point.h"
+#include "core.h"
 
 struct gameState {
     int stop;
@@ -9,5 +10,5 @@ struct gameState {
     struct point box_position;
 };
 
-void process_key(struct gameState *state);
+void process_key(struct gameState *state, struct optional_char c);
 struct gameState game_init();

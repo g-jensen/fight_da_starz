@@ -2,11 +2,10 @@
 
 #include "drawbuf.h"
 #include "grid.h"
+#include "core.h"
 
 // https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html
 // https://vt100.net/docs/vt100-ug/chapter3.html#ED
-
-#define CTRL_KEY(k) ((k) & 0x1f)
 
 #define NEW_LINE "\r\n"
 
@@ -23,11 +22,6 @@
 struct windowConfig {
     int screenrows;
     int screencols;
-};
-
-struct optional_char {
-    int some;
-    char value;
 };
 
 void window_init_config(struct windowConfig *cfg);

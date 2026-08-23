@@ -1,8 +1,6 @@
 #include "game.h"
-#include "window.h"
 
-void process_key(struct gameState *state) {
-    struct optional_char c = window_read_key();
+void process_key(struct gameState *state, struct optional_char c) {
     if (!c.some) return;
     switch (c.value) {
         case 'w':
@@ -30,6 +28,6 @@ struct gameState game_init() {
         .player_position = {.x = 0, .y = 0},
         .box_position = {.x = 0, .y = 5} 
     };
-    
+
     return state;
 }
