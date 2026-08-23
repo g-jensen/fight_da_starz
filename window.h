@@ -27,6 +27,9 @@ struct windowConfig {
 void window_init_config(struct windowConfig *cfg);
 void window_draw_screen(struct drawBuf *drawBuf);
 void window_clear_screen();
-char window_read_key();
 void window_hide_cursor();
 void window_show_cursor();
+char window_read_key();
+int window_buf_reset_cursor(char* buf);
+int window_buf_clear_line(char* buf);
+int window_buf_new_line(char* buf);

@@ -6,6 +6,18 @@
 #include "window.h"
 #include "core.h"
 
+int window_buf_reset_cursor(char* buf) {
+    return insert_string(buf,RESET_CURSOR);
+}
+
+int window_buf_clear_line(char* buf) {
+    return insert_string(buf,CLEAR_LINE);
+}
+
+int window_buf_new_line(char* buf) {
+    return insert_string(buf,NEW_LINE);
+}
+
 void window_reset_cursor() {
     write(STDOUT_FILENO, RESET_CURSOR, 3);
 }
