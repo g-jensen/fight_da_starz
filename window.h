@@ -7,6 +7,8 @@
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 
+#define NEW_LINE "\r\n"
+
 #define ESCAPE_0 '\x1b'
 #define ESCAPE_1 '['
 
@@ -23,8 +25,7 @@ struct windowConfig {
 };
 
 void window_init_config(struct windowConfig *cfg);
-void window_draw_screen(struct abuf *abuf, struct windowConfig *cfg);
-void window_clear_line(struct abuf *abuf);
+void window_draw_screen(struct abuf *abuf);
 void window_clear_screen();
 char window_read_key();
 void window_hide_cursor();
