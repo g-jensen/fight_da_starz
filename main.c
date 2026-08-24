@@ -14,11 +14,11 @@ int main() {
     struct gameState state = game_init();
     
     window_init();
+    atexit(window_shutdown);
     while (!state.stop) {
         render_state_to_window(&state,window,render_grid);
         process_key(&state, window_read_key()); // replace terminal character reading with full-scale key reading? https://github.com/kwhat/libuiohook
     }
-    window_shutdown();
 
     window_free(window);
     grid_free(render_grid);
