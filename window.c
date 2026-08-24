@@ -36,17 +36,12 @@ void window_shutdown() {
     disable_raw_mode();
 }
 
-void clear_and_die(const char *s) {
-    window_clear_screen();
-    die(s);
-}
-
 struct optional_char window_read_key() {
     int nread;
     char c;
     nread = read(STDIN_FILENO, &c, 1);
     if (nread == 0) return (struct optional_char){.some = 0};
-    if (nread == -1 && errno != EAGAIN) clear_and_die("read");
+    if (nread == -1 && errno != EAGAIN) die("read");
     return (struct optional_char){.some = 1, .value = c};
 }
 
@@ -91,7 +86,7 @@ struct drawBuf drawbuf_create(int rows, int cols) {
 struct window window_create() {
     struct window cfg;
     if (window_get_size(&cfg.rows, &cfg.cols) == -1) {
-        clear_and_die("window_get_size");
+        die("window_get_size");
     }
     cfg.drawBuf = drawbuf_create(cfg.rows,cfg.cols);
     return cfg;
