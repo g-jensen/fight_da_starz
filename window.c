@@ -78,7 +78,7 @@ void window_buf_draw(struct drawBuf *drawBuf) {
 }
 
 struct drawBuf drawbuf_create(int rows, int cols) {
-    int len = rows*cols + rows*(strlen(CLEAR_LINE) + strlen(NEW_LINE)) + strlen(RESET_CURSOR);
+    int len = rows*cols + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR);
     struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .len = len};
     return drawBuf;
 }
