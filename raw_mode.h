@@ -6,7 +6,7 @@ struct terminalContext {
     struct termios orig_termios;
 };
 
-static struct terminalContext TERM_CTX;
+extern struct terminalContext TERM_CTX;
 
 void disable_raw_mode();
 void enable_raw_mode();

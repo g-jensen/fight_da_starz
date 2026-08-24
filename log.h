@@ -1,5 +1,5 @@
 #pragma once
 
-static char* LOG_FILE = "log.txt";
+extern char* LOG_FILE;
 
 void log_info(const char *fmt, ...);

@@ -4,7 +4,7 @@
 #include "raw_mode.h"
 #include "core.h"
 
-extern struct terminalContext TERM_CTX;
+struct terminalContext TERM_CTX;
 
 void disable_raw_mode() {
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &TERM_CTX.orig_termios) == -1) {

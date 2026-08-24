@@ -5,7 +5,7 @@
 #include "log.h"
 #include "core.h"
 
-extern char* LOG_FILE;
+char* LOG_FILE = "log.txt";
 
 void log_info(const char *fmt, ...) {
     FILE* f = fopen(LOG_FILE,"a");
