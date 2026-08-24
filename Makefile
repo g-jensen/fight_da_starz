@@ -19,8 +19,10 @@ LIBS=-luiohook
 .PHONY: all
 all: $(EXEC_PATH)
 
-$(EXEC_PATH): $(LIB_PATH)/libuiohook $(OBJ) | $(DIST_PATH)
+$(EXEC_PATH): $(LIB_PATH) $(OBJ) | $(DIST_PATH)
 	$(CC) $(LIBS_PATH) -o $@ $(OBJ) $(CFLAGS) $(LIBS)
+
+$(LIB_PATH): $(LIB_PATH)/libuiohook
 
 $(LIB_PATH)/libuiohook:
 	git clone https://github.com/kwhat/libuiohook.git $@; \
