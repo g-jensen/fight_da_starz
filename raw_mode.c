@@ -16,7 +16,6 @@ void enable_raw_mode() {
     if (tcgetattr(STDIN_FILENO, &TERM_CTX.orig_termios) == -1) {
         die("tcgetattr");
     }
-    atexit(disable_raw_mode);
 
     struct termios raw = TERM_CTX.orig_termios;
     tcgetattr(STDIN_FILENO, &raw);
