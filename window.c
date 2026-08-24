@@ -27,13 +27,13 @@ void window_clear_screen() {
 
 void window_init() {
     enable_raw_mode();
-    atexit(disable_raw_mode);
     window_hide_cursor();
 }
 
 void window_shutdown() {
     window_show_cursor();
     window_clear_screen();
+    disable_raw_mode();
 }
 
 void clear_and_die(const char *s) {
