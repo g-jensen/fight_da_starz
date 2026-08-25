@@ -17,7 +17,7 @@ int main() {
     atexit(window_shutdown);
     while (!state.stop) {
         render_state_to_window(&state,window,render_grid);
-        process_key(&state, window_read_key());
+        process_key(&state, window_read_char());
     }
 
     window_free(window);

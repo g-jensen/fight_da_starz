@@ -36,7 +36,7 @@ void window_shutdown() {
     disable_raw_mode();
 }
 
-struct optional_char window_read_key() {
+struct optional_char window_read_char() {
     int nread;
     char c;
     nread = read(STDIN_FILENO, &c, 1);
