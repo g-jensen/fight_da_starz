@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "core.h"
 
@@ -15,4 +15,22 @@ int insert_string(char* buf, char* string) {
         buf[k] = string[k];
     }
     return len;
+}
+
+int read_timeout(int fd, char *buf, size_t count, struct timeval timeout) {
+    fd_set readfds;
+
+    // Clear and set the file descriptor pool
+    FD_ZERO(&readfds);
+    FD_SET(fd, &readfds);
+
+    int ret = select(fd + 1, &readfds, NULL, NULL, &timeout);
+
+    if (ret < 0) {
+        return -1;
+    } else if (ret == 0) {
+        return 0;
+    } else {
+        return read(fd, buf, count);
+    }
 }

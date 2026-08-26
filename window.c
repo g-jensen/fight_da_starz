@@ -36,10 +36,10 @@ void window_shutdown() {
     disable_raw_mode();
 }
 
-struct optional_char window_read_char() {
+struct optional_char window_read_char(struct timeval timeout) {
     int nread;
     char c;
-    nread = read(STDIN_FILENO, &c, 1);
+    nread = read_timeout(STDIN_FILENO, &c, 1, timeout);
     if (nread == 0) return (struct optional_char){.some = 0};
     if (nread == -1 && errno != EAGAIN) die("read");
     return (struct optional_char){.some = 1, .value = c};

@@ -24,7 +24,6 @@ void enable_raw_mode() {
     raw.c_cflag |= (CS8); // set character size to 8 bits per byte
     raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);  // disable echo, canonical mode, and Ctrl-V|O|C|Z
     raw.c_cc[VMIN] = 0; // set minimum characters for read()
-    raw.c_cc[VTIME] = 1; // set maximum time for read()
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
         die("tcsetattr");
     }
