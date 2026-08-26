@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+
 #include "render.h"
 
 struct grid render_grid_create(int rows, int cols) {
@@ -21,4 +24,11 @@ void render_state_into_grid(struct gameState *state, struct grid grid) {
     struct point box_rendered_position = render_position(state->box_position, player_rendered_position, state->player_position);
     place_char(box_rendered_position, grid, '9');
     place_char(player_rendered_position, grid, 'o');
+
+    struct point fps_rendered_position = {.x = 0, .y = 0};
+    char fps[16];
+    snprintf(fps,16,"FPS: %d",state->fps);
+    for (int i = 0; fps[i] != '\0'; i++) {
+        place_char(point_add(fps_rendered_position, (struct point){i,0}), grid, fps[i]);
+    }
 }

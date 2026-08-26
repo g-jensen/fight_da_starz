@@ -5,9 +5,9 @@
 
 struct gameState {
     int stop;
-    int counter;
     struct point player_position;
     struct point box_position;
+    int fps;
 };
 
 void process_key(struct gameState *state, struct optional_char c);
