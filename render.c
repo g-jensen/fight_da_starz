@@ -44,11 +44,11 @@ void render_state_into_grid(struct gameState *state, struct grid grid) {
 
     struct point center_position = {.x = grid.cols/2, .y = grid.rows/2};
     struct point player_rendered_position = center_position;
-    struct point box_rendered_position = render_position(state->box_position, center_position, state->player_position);
+    struct point box_rendered_position = render_position(state->box.position, center_position, state->player.position);
 
-    place_sprite(box_rendered_position, grid, state->box_sprite);
+    place_sprite(box_rendered_position, grid, state->box.sprite);
     place_char(box_rendered_position,grid,'x');
-    place_sprite(player_rendered_position, grid, state->player_sprite);
+    place_sprite(player_rendered_position, grid, state->player.sprite);
     place_char(player_rendered_position,grid,'x');
 
     struct point fps_rendered_position = {.x = 0, .y = 0};
