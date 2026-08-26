@@ -18,7 +18,7 @@ struct sprite sprite_create_from_file(char *filename) {
     long design_size = ftell(f) - design_start + 1;
     fseek(f, design_start+1, SEEK_SET);
     
-    char *design = calloc(sizeof(char),(design_size + 1));
+    char *design = calloc(design_size + 1,sizeof(char));
     fread(design, design_size, 1, f);
     fclose(f);
     
