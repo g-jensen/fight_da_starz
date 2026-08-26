@@ -33,8 +33,15 @@ struct gameState game_init() {
     struct gameState state = {
         .stop = 0, 
         .player_position = {.x = 0, .y = 0},
-        .box_position = {.x = 0, .y = 5} 
+        .player_sprite = sprite_create_from_file("sprites/player.txt"),
+        .box_position = {.x = 0, .y = 5},
+        .box_sprite = sprite_create_from_file("sprites/box.txt"),
     };
 
     return state;
+}
+
+void game_shutdown(struct gameState* state) {
+    sprite_free(state->player_sprite);
+    sprite_free(state->box_sprite);
 }

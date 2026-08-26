@@ -39,26 +39,16 @@ void build_fps(struct gameState *state, struct sprite fps, int maxlen) {
     snprintf(fps.design,maxlen,"FPS: %d",state->fps);
 }
 
-int has_built_sprites = 0;
-struct sprite player_sprite;
-struct sprite box_sprite;
-
 void render_state_into_grid(struct gameState *state, struct grid grid) {
     grid_fill(grid, DEFAULT_CHAR);
-
-    if(!has_built_sprites) {
-        player_sprite = sprite_create_from_file("sprites/player.txt");
-        box_sprite = sprite_create_from_file("sprites/box.txt");
-        has_built_sprites = 1;
-    }
 
     struct point center_position = {.x = grid.cols/2, .y = grid.rows/2};
     struct point player_rendered_position = center_position;
     struct point box_rendered_position = render_position(state->box_position, center_position, state->player_position);
 
-    place_sprite(box_rendered_position, grid, box_sprite);
+    place_sprite(box_rendered_position, grid, state->box_sprite);
     place_char(box_rendered_position,grid,'x');
-    place_sprite(player_rendered_position, grid, player_sprite);
+    place_sprite(player_rendered_position, grid, state->player_sprite);
     place_char(player_rendered_position,grid,'x');
 
     struct point fps_rendered_position = {.x = 0, .y = 0};
@@ -66,9 +56,4 @@ void render_state_into_grid(struct gameState *state, struct grid grid) {
     struct sprite fps  = {.design = fps_design};
     build_fps(state,fps,16);
     place_sprite(fps_rendered_position, grid, fps);
-
-    if(state->stop) {
-        sprite_free(player_sprite);
-        sprite_free(box_sprite);
-    }
 }

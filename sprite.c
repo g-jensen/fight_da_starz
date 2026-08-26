@@ -18,12 +18,12 @@ struct sprite sprite_create_from_file(char *filename) {
     long design_size = ftell(f) - design_start + 1;
     fseek(f, design_start+1, SEEK_SET);
     
-    char *sprite = malloc(sizeof(char)*(design_size + 1));
-    fread(sprite, design_size, 1, f);
+    char *design = calloc(sizeof(char),(design_size + 1));
+    fread(design, design_size, 1, f);
     fclose(f);
     
-    sprite[design_size] = '\0';
-    return (struct sprite){.design = sprite, .offset = offset};
+    design[design_size] = '\0';
+    return (struct sprite){.design = design, .offset = offset};
 }
 
 void sprite_free(struct sprite sprite) {

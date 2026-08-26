@@ -32,7 +32,7 @@ int main() {
         gettimeofday(&end_compute, NULL);
         usleep(MUS_PER_TICK - (mus(&end_compute) - mus(&start_compute)));
     }
-
+    game_shutdown(&state);
     window_free(window);
     grid_free(render_grid);
 
