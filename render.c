@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "render.h"
+#include "sprite.h"
 
 struct grid render_grid_create(int rows, int cols) {
     return grid_create(rows,cols, DEFAULT_CHAR);
@@ -34,32 +35,6 @@ struct point render_position(struct point p, struct point center_position, struc
     return point_sub(point_add(p, center_position), real_player_position);
 }
 
-struct sprite build_sprite(char *filename) {
-    FILE *f;
-    f = fopen(filename, "r");
-
-    struct point offset;
-    if (fscanf(f,"%d,%d",&offset.x,&offset.y) != 2) {
-        die("build_sprite");
-    }
-
-    long design_start = ftell(f);
-    fseek(f, 0, SEEK_END);
-    long design_size = ftell(f) - design_start + 1;
-    fseek(f, design_start+1, SEEK_SET);
-    
-    char *sprite = malloc(sizeof(char)*(design_size + 1));
-    fread(sprite, design_size, 1, f);
-    fclose(f);
-    
-    sprite[design_size] = '\0';
-    return (struct sprite){.design = sprite, .offset = offset};
-}
-
-void free_sprite(struct sprite sprite) {
-    free(sprite.design);
-}
-
 void build_fps(struct gameState *state, struct sprite fps, int maxlen) {
     snprintf(fps.design,maxlen,"FPS: %d",state->fps);
 }
@@ -72,15 +47,15 @@ void render_state_into_grid(struct gameState *state, struct grid grid) {
     grid_fill(grid, DEFAULT_CHAR);
 
     if(!has_built_sprites) {
-        player_sprite = build_sprite("sprites/player.txt");
-        box_sprite = build_sprite("sprites/box.txt");
+        player_sprite = sprite_create_from_file("sprites/player.txt");
+        box_sprite = sprite_create_from_file("sprites/box.txt");
         has_built_sprites = 1;
     }
 
     struct point center_position = {.x = grid.cols/2, .y = grid.rows/2};
     struct point player_rendered_position = center_position;
     struct point box_rendered_position = render_position(state->box_position, center_position, state->player_position);
-    
+
     place_sprite(box_rendered_position, grid, box_sprite);
     place_char(box_rendered_position,grid,'x');
     place_sprite(player_rendered_position, grid, player_sprite);
@@ -93,7 +68,7 @@ void render_state_into_grid(struct gameState *state, struct grid grid) {
     place_sprite(fps_rendered_position, grid, fps);
 
     if(state->stop) {
-        free_sprite(player_sprite);
-        free_sprite(box_sprite);
+        sprite_free(player_sprite);
+        sprite_free(box_sprite);
     }
 }
