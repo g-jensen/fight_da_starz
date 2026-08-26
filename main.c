@@ -27,8 +27,8 @@ int main() {
     atexit(window_shutdown);
     while (!state.stop) {
         gettimeofday(&start_compute, NULL);
-        render_state_to_window(&state,window,render_grid);
         process_key(&state, window_read_char(timeout));
+        render_state_to_window(&state,window,render_grid);
         gettimeofday(&end_compute, NULL);
         usleep(MUS_PER_TICK - (mus(&end_compute) - mus(&start_compute)));
     }
