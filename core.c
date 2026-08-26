@@ -34,3 +34,11 @@ int read_timeout(int fd, char *buf, size_t count, struct timeval timeout) {
         return read(fd, buf, count);
     }
 }
+
+int ceil_f(float f) {
+    return ((int)f)+1;
+}
+
+suseconds_t mus(struct timeval *time) {
+    return time->tv_sec*1000000 + time->tv_usec;
+}
