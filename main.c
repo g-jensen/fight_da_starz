@@ -15,6 +15,10 @@ void render_state_to_window(struct gameState *state, struct window window, struc
     window_draw(window,render_grid);
 }
 
+void pace_tick(struct timeval *start_compute, struct timeval *end_compute) {
+    usleep(MUS_PER_TICK - (mus(end_compute) - mus(start_compute)));
+}
+
 int main() {    
     struct window window = window_create();
     struct grid render_grid = render_grid_create(window.rows,window.cols);
@@ -30,7 +34,7 @@ int main() {
         process_key(&state, window_read_char(timeout));
         render_state_to_window(&state,window,render_grid);
         gettimeofday(&end_compute, NULL);
-        usleep(MUS_PER_TICK - (mus(&end_compute) - mus(&start_compute)));
+        pace_tick(&start_compute,&end_compute);
     }
     game_shutdown(&state);
     window_free(window);
