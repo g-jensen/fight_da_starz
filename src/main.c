@@ -1,11 +1,9 @@
-#include <sys/time.h>
-#include <unistd.h>
-
 #include "render.h"
 #include "grid.h"
 #include "window.h"
 #include "game.h"
 #include "log.h"
+#include "sys.h"
 
 #define MUS_PER_TICK MS_PER_TICK * 1000
 #define MS_PER_TICK 34 // ticks per second = 1000/MS_PER_TICK
@@ -19,17 +17,17 @@ void render_state_to_window(struct gameState *state, struct window window, struc
     window_draw(window,render_grid);
 }
 
-void pace_tick(struct timeval *start_compute, struct timeval *end_compute) {
-    usleep(MUS_PER_TICK - (mus(end_compute) - mus(start_compute)));
+void pace_tick(long start_compute, long end_compute) {
+    musleep(MUS_PER_TICK - (end_compute - start_compute));
 }
 
 int main() {    
     struct window window = window_create();
     struct grid render_grid = render_grid_create(window.rows,window.cols);
     struct gameState state = game_init();
-    struct timeval timeout = {.tv_sec = 0, .tv_usec = 5000};
+    long mus_read_timeout = 5000;
 
-    struct timeval start_compute, end_compute;
+    long start_compute, end_compute;
 
     #ifdef _DEV
     log_info("dev mode active!");
@@ -38,11 +36,11 @@ int main() {
     window_init();
     atexit(window_shutdown);
     while (!state.stop) {
-        gettimeofday(&start_compute, NULL);
-        process_key(&state, window_read_char(timeout));
+        start_compute = get_time_mus();
+        process_key(&state, window_read_char(mus_read_timeout));
         render_state_to_window(&state,window,render_grid);
-        gettimeofday(&end_compute, NULL);
-        pace_tick(&start_compute,&end_compute);
+        end_compute = get_time_mus();
+        pace_tick(start_compute,end_compute);
     }
     game_shutdown(&state);
     window_free(window);

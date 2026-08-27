@@ -1,12 +1,12 @@
 #include <errno.h>
 #include <stdio.h>
-#include <sys/ioctl.h>
 #include <unistd.h>
 #include <string.h>
 
 #include "window.h"
 #include "raw_mode.h"
 #include "core.h"
+#include "sys.h"
 
 void window_hide_cursor() {
     write(STDOUT_FILENO, HIDE_CURSOR, 6);
@@ -36,10 +36,10 @@ void window_shutdown() {
     disable_raw_mode();
 }
 
-struct optional_char window_read_char(struct timeval timeout) {
+struct optional_char window_read_char(long mus_timeout) {
     int nread;
     char c;
-    nread = read_timeout(STDIN_FILENO, &c, 1, timeout);
+    nread = read_timeout(STDIN_FILENO, &c, 1, mus_timeout);
     if (nread == 0) return (struct optional_char){.some = 0};
     if (nread == -1 && errno != EAGAIN) die("read");
     return (struct optional_char){.some = 1, .value = c};
@@ -62,15 +62,11 @@ int window_get_cursor_pos(int *rows, int *cols) {
 }
 
 int window_get_size(int *rows, int *cols) {
-    struct winsize ws;
-    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
-        if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) return -1; // set cursor position to 999,999
+    if (get_terminal_size(rows,cols) == -1 || *cols == 0) {
+        if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) return -1; // set cursor position to 999,999. And actually, I think this is broken.
         return window_get_cursor_pos(rows, cols);
-    } else {
-        *cols = ws.ws_col;
-        *rows = ws.ws_row;
-        return 0;
     }
+    return 0;
 }
 
 void window_buf_draw(struct drawBuf *drawBuf) {

@@ -30,4 +30,4 @@ void window_shutdown();
 struct window window_create();
 void window_free(struct window window);
 void window_draw(struct window window, struct grid grid);
-struct optional_char window_read_char(struct timeval timeout);
+struct optional_char window_read_char(long mus_timeout);

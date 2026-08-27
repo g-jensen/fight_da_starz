@@ -14,7 +14,12 @@ DEV_FLAGS=-D_DEV
 PROD_FLAGS=-O3
 
 HEADERS := $(wildcard $(SRC_PATH)/*.h)
-SRC := $(notdir $(wildcard $(SRC_PATH)/*.c))
+RAW_SRC := $(notdir $(wildcard $(SRC_PATH)/*.c))
+ifeq ($(OS),Windows_NT)
+    SRC = $(filter-out %_posix.c, $(RAW_SRC))
+else
+	SRC = $(filter-out %_windows.c, $(RAW_SRC))
+endif
 OBJ=$(patsubst %.c,%.o,$(SRC))
 DEV_OBJ=$(patsubst %,$(DEV_BUILD_PATH)/%,$(OBJ))
 PROD_OBJ=$(patsubst %,$(PROD_BUILD_PATH)/%,$(OBJ))

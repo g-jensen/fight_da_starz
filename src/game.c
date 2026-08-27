@@ -1,14 +1,13 @@
-#include <sys/time.h>
-
 #include "game.h"
 #include "log.h"
+#include "sys.h"
 
-struct timeval start_tick = {}, end_tick = {};
+long long start_tick = 0, end_tick = 0;
 
 void process_key(struct gameState *state, struct optional_char c) {
-    gettimeofday(&end_tick, NULL);
-    state->fps = ceil_f(1000000.0f / (mus(&end_tick) - mus(&start_tick)));
-    gettimeofday(&start_tick, NULL);
+    end_tick = get_time_mus();
+    state->fps = ceil_f(1000000.0f / (end_tick - start_tick));
+    start_tick = get_time_mus();
     if (!c.some) return;
     switch (c.value) {
         case 'w':
