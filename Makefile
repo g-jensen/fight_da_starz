@@ -10,10 +10,11 @@ PROD_EXEC=$(DIST_PATH)/prod
 
 CC=gcc
 CFLAGS=-Wall -I.
+DEV_FLAGS=-DDEV
 PROD_FLAGS=-O3
 
-HEADERS=$(shell find $(SRC_PATH) -maxdepth 1 -type f -name '*.h')
-SRC=$(shell find $(SRC_PATH) -maxdepth 1 -type f -name '*.c' -exec basename {} \;)
+HEADERS := $(wildcard $(SRC_PATH)/*.h)
+SRC := $(notdir $(wildcard $(SRC_PATH)/*.c))
 OBJ=$(patsubst %.c,%.o,$(SRC))
 DEV_OBJ=$(patsubst %,$(DEV_BUILD_PATH)/%,$(OBJ))
 PROD_OBJ=$(patsubst %,$(PROD_BUILD_PATH)/%,$(OBJ))
