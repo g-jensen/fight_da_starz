@@ -1,11 +1,11 @@
+#include <sys/time.h>
+#include <unistd.h>
+
 #include "render.h"
 #include "grid.h"
 #include "window.h"
 #include "game.h"
 #include "log.h"
-
-#include <sys/time.h>
-#include <unistd.h>
 
 #define MUS_PER_TICK MS_PER_TICK * 1000
 #define MS_PER_TICK 30
