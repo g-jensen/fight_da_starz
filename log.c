@@ -9,7 +9,6 @@ char* LOG_FILE = "log.txt";
 void log_info(const char *fmt, ...) {
     FILE* f = fopen(LOG_FILE,"a");
     if (f == NULL) {
-        fclose(f);
         die("log_info");
     } else {
         fprintf(f,"[LOG_INFO] ");
