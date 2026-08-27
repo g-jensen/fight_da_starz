@@ -8,7 +8,7 @@
 #include "log.h"
 
 #define MUS_PER_TICK MS_PER_TICK * 1000
-#define MS_PER_TICK 30
+#define MS_PER_TICK 34 // ticks per second = 1000/MS_PER_TICK
 
 void render_state_to_window(struct gameState *state, struct window window, struct grid render_grid) {
     render_state_into_grid(state,render_grid);
