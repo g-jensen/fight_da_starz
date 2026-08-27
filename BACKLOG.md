@@ -9,3 +9,5 @@
 - [ ] text boxes/speech bubbles
 - [ ] NPCs
 - [ ] cutscenes
+- [ ] ui components
+- [ ] menus (main menu, options, keybinds, etc)
