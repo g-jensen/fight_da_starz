@@ -1,5 +1,6 @@
 # Backlog
 
+- [ ] windows support
 - [ ] click support
 - [ ] colored grid support
 - [ ] collision

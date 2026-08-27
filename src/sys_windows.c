@@ -5,7 +5,7 @@
 #include <windows.h>
 
 int read_timeout(int fd, char *buf, size_t count, long mus_timeout) {
-    HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
+    HANDLE h = GetStdHandle(STD_INPUT_HANDLE); // TODO - change this to use fd
 
     DWORD timeout_ms = (DWORD)((mus_timeout + 999) / 1000);
 
