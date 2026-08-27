@@ -9,8 +9,8 @@ DEV_EXEC=$(DIST_PATH)/dev
 PROD_EXEC=$(DIST_PATH)/prod
 
 CC=gcc
-CFLAGS=-Wall -I.
-DEV_FLAGS=-DDEV
+CFLAGS=-Wall -Wextra -I.
+DEV_FLAGS=-D_DEV
 PROD_FLAGS=-O3
 
 HEADERS := $(wildcard $(SRC_PATH)/*.h)
@@ -26,7 +26,7 @@ dev: $(DEV_EXEC)
 prod: $(PROD_EXEC)
 
 $(DEV_EXEC): $(DEV_OBJ) | $(DIST_PATH)
-	$(CC) -o $@ $(DEV_OBJ) $(CFLAGS)
+	$(CC) $(DEV_FLAGS) -o $@ $(DEV_OBJ) $(CFLAGS)
 
 $(PROD_EXEC): $(PROD_OBJ) | $(DIST_PATH)
 	$(CC) $(PROD_FLAGS) -o $@ $(PROD_OBJ) $(CFLAGS)
@@ -35,7 +35,7 @@ $(DIST_PATH):
 	mkdir -p $@
 
 $(DEV_BUILD_PATH)/%.o: $(SRC_PATH)/%.c $(HEADERS) | $(DEV_BUILD_PATH)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) $(DEV_FLAGS) -c -o $@ $< $(CFLAGS)
 
 $(DEV_BUILD_PATH):
 	mkdir -p $@

@@ -10,6 +10,10 @@
 #define MUS_PER_TICK MS_PER_TICK * 1000
 #define MS_PER_TICK 34 // ticks per second = 1000/MS_PER_TICK
 
+#ifdef _DEV
+#include "log.h"
+#endif
+
 void render_state_to_window(struct gameState *state, struct window window, struct grid render_grid) {
     render_state_into_grid(state,render_grid);
     window_draw(window,render_grid);
@@ -26,6 +30,10 @@ int main() {
     struct timeval timeout = {.tv_sec = 0, .tv_usec = 5000};
 
     struct timeval start_compute, end_compute;
+
+    #ifdef _DEV
+    log_info("dev mode active!");
+    #endif
 
     window_init();
     atexit(window_shutdown);
