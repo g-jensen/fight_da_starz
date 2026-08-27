@@ -5,10 +5,22 @@
 - gcc
 - make
 
-## Build Command
+## Development Build
 
 ```bash
 make
 ```
+or
+```bash
+make dev
+```
 
-The executable will be in `dist/`.
+Run the dev build: `./dist/dev`
+
+## Production Build
+
+```bash
+make prod
+```
+
+Run the prod build: `./dist/prod`

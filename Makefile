@@ -1,38 +1,49 @@
 BUILD_PATH=build
 DIST_PATH=dist
 
-EXEC_NAME=main
-EXEC_PATH=$(DIST_PATH)/$(EXEC_NAME)
+DEV_BUILD_PATH=$(BUILD_PATH)/dev
+PROD_BUILD_PATH=$(BUILD_PATH)/prod
+
+DEV_EXEC=$(DIST_PATH)/dev
+PROD_EXEC=$(DIST_PATH)/prod
 
 CC=gcc
 CFLAGS=-Wall -I.
+PROD_FLAGS=-O3
 
 HEADERS=$(shell find . -maxdepth 1 -type f -name '*.h')
 SRC=$(shell find . -maxdepth 1 -type f -name '*.c')
-OBJ=$(patsubst %.c,$(BUILD_PATH)/%.o,$(SRC))
+OBJ=$(patsubst %.c,%.o,$(SRC))
+DEV_OBJ=$(patsubst %,$(DEV_BUILD_PATH)/%,$(OBJ))
+PROD_OBJ=$(patsubst %,$(PROD_BUILD_PATH)/%,$(OBJ))
 
-.PHONY: all
-all: $(EXEC_PATH)
+.PHONY: dev
+dev: $(DEV_EXEC)
 
-$(EXEC_PATH): $(OBJ) | $(DIST_PATH)
-	$(CC) -o $@ $(OBJ) $(CFLAGS)
+.PHONY: prod
+prod: $(PROD_EXEC)
 
-$(BUILD_PATH):
-	mkdir -p $@
+$(DEV_EXEC): $(DEV_OBJ) | $(DIST_PATH)
+	$(CC) -o $@ $(DEV_OBJ) $(CFLAGS)
 
-$(BUILD_PATH)/%.o: %.c $(HEADERS) | $(BUILD_PATH)
-	$(CC) -c -o $@ $< $(CFLAGS)
+$(PROD_EXEC): $(PROD_OBJ) | $(DIST_PATH)
+	$(CC) $(PROD_FLAGS) -o $@ $(PROD_OBJ) $(CFLAGS)
 
 $(DIST_PATH):
+	mkdir -p $@
+
+$(DEV_BUILD_PATH)/%.o: %.c $(HEADERS) | $(DEV_BUILD_PATH)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(DEV_BUILD_PATH):
+	mkdir -p $@
+
+$(PROD_BUILD_PATH)/%.o: %.c $(HEADERS) | $(PROD_BUILD_PATH)
+	$(CC) $(PROD_FLAGS) -c -o $@ $< $(CFLAGS)
+
+$(PROD_BUILD_PATH):
 	mkdir -p $@
 
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_PATH)
-
-.PHONY: clean-dist
-clean-dist:
-	rm -rf $(DIST_PATH)
-
-.PHONY: clean-all
-clean-all: clean clean-dist clean-lib
