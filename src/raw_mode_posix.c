@@ -1,23 +1,24 @@
 #include <stdlib.h>
 #include <unistd.h>
+#include <termios.h>
 
 #include "raw_mode.h"
 #include "core.h"
 
-struct terminalContext TERM_CTX;
+struct termios ORIG_TERMIOS;
 
 void disable_raw_mode() {
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &TERM_CTX.orig_termios) == -1) {
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &ORIG_TERMIOS) == -1) {
         die("tcsetattr");
     }
 }
 
 void enable_raw_mode() {
-    if (tcgetattr(STDIN_FILENO, &TERM_CTX.orig_termios) == -1) {
+    if (tcgetattr(STDIN_FILENO, &ORIG_TERMIOS) == -1) {
         die("tcgetattr");
     }
 
-    struct termios raw = TERM_CTX.orig_termios;
+    struct termios raw = ORIG_TERMIOS;
     tcgetattr(STDIN_FILENO, &raw);
     raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON); // disable BRKINT, parity checking, bit stripping, and Ctrl-M|S|Q
     raw.c_oflag &= ~(OPOST); // disable output processing (e.g. converting "\n" to "\r\n")
