@@ -14,7 +14,7 @@ void place_char(struct point p, struct grid grid, char c) {
     }
 }
 
-void place_sprite(struct point p, struct grid grid, struct sprite sprite) {
+void place_sprite(struct point rendered_position, struct grid grid, struct sprite sprite) {
     struct point position = {0,0};
 
     for(int i = 0; sprite.design[i] != '\0'; i++) {
@@ -26,7 +26,7 @@ void place_sprite(struct point p, struct grid grid, struct sprite sprite) {
             position.x++;
             continue;
         }
-        place_char(point_sub(point_add(p,position),sprite.offset), grid, sprite.design[i]);
+        place_char(point_sub(point_add(rendered_position, position), sprite.offset), grid, sprite.design[i]);
         position.x++;
     }
 }

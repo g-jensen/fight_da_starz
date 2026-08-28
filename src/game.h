@@ -5,8 +5,10 @@
 #include "sprite.h"
 
 struct gameObject {
-    struct point position;
     struct sprite sprite;
+    struct point position;
+    struct point *collision_area;
+    int collision_area_length;
 };
 
 struct gameState {
