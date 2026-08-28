@@ -74,7 +74,7 @@ void process_key(struct gameState *state, struct optional_char c) {
     state->fps = ceil_f(1000000.0f / (end_tick - start_tick));
     start_tick = get_time_mus();
     if (!c.some) return;
-    struct gameObject new_player = state->player;
+    struct gameObject new_player = state->player; // TODO - refactor this unnecessary copy.
     switch (c.value) {
         case 'w':
             new_player.position.y--;
