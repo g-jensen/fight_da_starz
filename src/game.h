@@ -3,12 +3,12 @@
 #include "point.h"
 #include "core.h"
 #include "sprite.h"
+#include "pointarray.h"
 
 struct gameObject {
     struct sprite sprite;
     struct point position;
-    struct point *collision_area;
-    int collision_area_length;
+    struct pointArray collision_area;
 };
 
 struct gameState {

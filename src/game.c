@@ -8,7 +8,7 @@ long long start_tick = 0, end_tick = 0;
 int get_collision_area_length(struct sprite sprite) {
     int j = 0;
 
-     for(int i = 0; sprite.design[i] != '\0'; i++) {
+    for(int i = 0; sprite.design[i] != '\0'; i++) {
         if(sprite.design[i] != '\n' && sprite.design[i] != ' ') {
             j++;
         }
@@ -17,10 +17,11 @@ int get_collision_area_length(struct sprite sprite) {
     return j; 
 }
 
-struct point* create_collision_area(struct sprite sprite, int collision_area_length) {
+struct pointArray create_collision_area(struct sprite sprite) {
     struct point position = {0,0};
     int j = 0;
-    struct point *collision_area = malloc(collision_area_length*sizeof(struct point));
+    int length = get_collision_area_length(sprite);
+    struct point *collision_area = malloc(length*sizeof(struct point));
 
      for(int i = 0; sprite.design[i] != '\0'; i++) {
         if(sprite.design[i] == '\n') {
@@ -35,15 +36,15 @@ struct point* create_collision_area(struct sprite sprite, int collision_area_len
         position.x++;
     }
 
-    return collision_area; 
+    return (struct pointArray){.points = collision_area, .length = length}; 
 }
 
 int is_blocked(struct gameState *state, struct point new_position) {
-    for(int i = 0; i < state->box.collision_area_length; i++) {
-        struct point current_box_point = point_add(state->box.collision_area[i], state->box.position);
+    for(int i = 0; i < state->box.collision_area.length; i++) {
+        struct point current_box_point = point_add(state->box.collision_area.points[i], state->box.position);
         
-        for(int j = 0; j < state->player.collision_area_length; j++) {
-            struct point current_player_position = point_add(state->player.collision_area[j], new_position);
+        for(int j = 0; j < state->player.collision_area.length; j++) {
+            struct point current_player_position = point_add(state->player.collision_area.points[j], new_position);
             if(current_player_position.x == current_box_point.x && current_player_position.y == current_box_point.y) 
                 return 1;
         }
@@ -91,22 +92,18 @@ void process_key(struct gameState *state, struct optional_char c) {
 struct gameState game_init() {
     struct sprite player_sprite = sprite_create_from_file("sprites/player.txt");
     struct sprite box_sprite = sprite_create_from_file("sprites/box.txt");
-    int player_collision_area_length = get_collision_area_length(player_sprite);
-    int box_collision_area_length = get_collision_area_length(box_sprite);
     
     struct gameState state = {
         .stop = 0, 
         .player = {
             .position = {.x = 0, .y = 0}, 
             .sprite = player_sprite, 
-            .collision_area_length = player_collision_area_length,
-            .collision_area = create_collision_area(player_sprite, player_collision_area_length),
+            .collision_area = create_collision_area(player_sprite),
         },
         .box = {
             .position = {.x = 0, .y = 5}, 
             .sprite = box_sprite,
-            .collision_area = create_collision_area(box_sprite, box_collision_area_length),
-            .collision_area_length = box_collision_area_length,
+            .collision_area = create_collision_area(box_sprite),
         },
     };
 
@@ -120,5 +117,5 @@ void game_shutdown(struct gameState* state) {
 
 void game_object_free(struct gameObject game_object) {
     sprite_free(game_object.sprite);
-    free(game_object.collision_area);
+    point_array_free(game_object.collision_area);
 }
