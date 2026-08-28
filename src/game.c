@@ -106,7 +106,7 @@ void process_key(struct gameState *state, struct optional_char c) {
     }
 }
 
-struct gameObjectArray create_boxes(struct gameObject game_objects[], int game_object_count) {
+struct gameObjectArray create_game_objects(struct gameObject game_objects[], int game_object_count) {
     struct gameObjectArray arr = {.game_objects = malloc(sizeof(struct gameObject)*game_object_count), .length = game_object_count};
     for (int i = 0 ; i < game_object_count; i++) {
         arr.game_objects[i] = game_objects[i];
@@ -139,7 +139,7 @@ struct gameState game_init() {
             .sprite = player_sprite, 
             .collision_area = create_collision_area(player_sprite),
         },
-        .collidables = create_boxes(collidables,COLLIDABLE_COUNT),
+        .collidables = create_game_objects(collidables,COLLIDABLE_COUNT),
     };
 
     return state;

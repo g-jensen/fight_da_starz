@@ -46,8 +46,8 @@ void render_state_into_grid(struct gameState *state, struct grid grid) {
     struct point player_rendered_position = center_position;
 
     for (int i = 0; i < state->collidables.length; i++) {
-        struct point box_rendered_position = render_position(state->collidables.game_objects[i].position, center_position, state->player.position);
-        place_sprite(box_rendered_position, grid, state->collidables.game_objects[i].sprite);
+        struct point rendered_position = render_position(state->collidables.game_objects[i].position, center_position, state->player.position);
+        place_sprite(rendered_position, grid, state->collidables.game_objects[i].sprite);
     }
 
     place_sprite(player_rendered_position, grid, state->player.sprite);
