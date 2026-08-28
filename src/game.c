@@ -151,10 +151,13 @@ void game_shutdown(struct gameState* state) {
 }
 
 void game_object_free(struct gameObject game_object) {
-    sprite_free(game_object.sprite);
+    sprite_free(game_object.sprite); // TODO fix double free
     point_array_free(game_object.collision_area);
 }
 
 void game_object_array_free(struct gameObjectArray game_object_array) {
+    for(int i = 0; i < game_object_array.length; i++) {
+        game_object_free(game_object_array.game_objects[i]);
+    }
     free(game_object_array.game_objects);
 }
