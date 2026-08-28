@@ -7,3 +7,7 @@ struct point point_add(struct point p1, struct point p2) {
 struct point point_sub(struct point p1, struct point p2) {
     return (struct point) {.x = p1.x - p2.x , .y = p1.y - p2.y};
 }
+
+int point_eq(struct point p1, struct point p2) {
+    return p1.x == p2.x && p1.y == p2.y;
+}
