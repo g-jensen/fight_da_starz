@@ -7,5 +7,11 @@ struct sprite {
     struct point offset;
 };
 
+struct sprites {
+    struct sprite *items;
+    int length;
+};
+
 struct sprite sprite_create_from_file(char *filename);
-void sprite_free(struct sprite sprite);
+void sprite_free(struct sprite *sprite);
+void sprites_free(struct sprites *sprite);

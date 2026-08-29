@@ -17,8 +17,8 @@ void render_state_to_window(struct gameState *state, struct window window, struc
     window_draw(window,render_grid);
 }
 
-void pace_tick(long start_compute, long end_compute) {
-    musleep(MUS_PER_TICK - (end_compute - start_compute));
+void pace_tick(long start_time, long end_time) {
+    musleep(MUS_PER_TICK - (end_time - start_time));
 }
 
 int main() {    
@@ -26,8 +26,7 @@ int main() {
     struct grid render_grid = render_grid_create(window.rows,window.cols);
     struct gameState state = game_init();
     long mus_read_timeout = 5000;
-
-    long start_compute, end_compute;
+    long start_time;
 
     #ifdef _DEV
     log_info("dev mode active!");
@@ -36,11 +35,10 @@ int main() {
     window_init();
     atexit(window_shutdown);
     while (!state.stop) {
-        start_compute = get_time_mus();
+        start_time = get_time_mus();
         process_key(&state, window_read_char(mus_read_timeout));
         render_state_to_window(&state,window,render_grid);
-        end_compute = get_time_mus();
-        pace_tick(start_compute,end_compute);
+        pace_tick(start_time,get_time_mus());
     }
     game_shutdown(&state);
     window_free(window);

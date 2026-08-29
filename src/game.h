@@ -5,27 +5,35 @@
 #include "sprite.h"
 #include "pointarray.h"
 
+typedef struct pointArray collisionArea;
+typedef struct pointArrays collisionAreas;
+
 struct gameObject {
-    struct sprite sprite;
+    struct sprite *sprite;
     struct point position;
-    struct pointArray collision_area;
+    collisionArea *collision_area;
 };
 
-struct gameObjectArray {
-    struct gameObject *game_objects;
+struct gameObjects {
+    struct gameObject *objects;
     int length;
+};
+
+struct gameResources {
+    struct sprites sprites;
+    collisionAreas collision_areas;
 };
 
 struct gameState {
     int stop;
+    struct gameResources resources;
     struct gameObject player;
-    struct gameObjectArray collidables;
+    struct gameObjects collidables;
     int fps;
 };
 
 void process_key(struct gameState *state, struct optional_char c);
 struct gameState game_init();
 void game_shutdown(struct gameState* state);
-void game_object_free(struct gameObject gameObject);
-
-void game_object_array_free(struct gameObjectArray game_object_array);
+void game_objects_free(struct gameObjects *game_objects);
+void game_resources_free(struct gameResources *game_resources);

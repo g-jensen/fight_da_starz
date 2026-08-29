@@ -26,6 +26,13 @@ struct sprite sprite_create_from_file(char *filename) {
     return (struct sprite){.design = design, .offset = offset};
 }
 
-void sprite_free(struct sprite sprite) {
-    free(sprite.design);
+void sprite_free(struct sprite *sprite) {
+    free(sprite->design);
+}
+
+void sprites_free(struct sprites *sprites) {
+    for(int i = 0; i < sprites->length; i++) {
+        sprite_free(&sprites->items[i]);
+    }
+    free(sprites->items);
 }

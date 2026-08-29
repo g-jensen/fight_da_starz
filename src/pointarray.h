@@ -7,4 +7,10 @@ struct pointArray {
     int length;
 };
 
-void point_array_free(struct pointArray point_array);
+struct pointArrays {
+    struct pointArray *items;
+    int length;
+};
+
+void point_array_free(struct pointArray *point_array);
+void point_arrays_free(struct pointArrays *point_array);

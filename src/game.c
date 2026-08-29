@@ -4,12 +4,11 @@
 
 long long start_tick = 0, end_tick = 0;
 
-
-int get_collision_area_length(struct sprite sprite) {
+int get_collision_area_length(struct sprite *sprite) {
     int j = 0;
 
-    for(int i = 0; sprite.design[i] != '\0'; i++) {
-        if(sprite.design[i] != '\n' && sprite.design[i] != ' ') {
+    for(int i = 0; sprite->design[i] != '\0'; i++) {
+        if(sprite->design[i] != '\n' && sprite->design[i] != ' ') {
             j++;
         }
     }
@@ -17,31 +16,31 @@ int get_collision_area_length(struct sprite sprite) {
     return j; 
 }
 
-struct pointArray create_collision_area(struct sprite sprite) {
+collisionArea create_collision_area(struct sprite *sprite) {
     struct point position = {0,0};
     int j = 0;
     int length = get_collision_area_length(sprite);
     struct point *collision_area = malloc(length*sizeof(struct point));
 
-     for(int i = 0; sprite.design[i] != '\0'; i++) {
-        if(sprite.design[i] == '\n') {
+     for(int i = 0; sprite->design[i] != '\0'; i++) {
+        if(sprite->design[i] == '\n') {
             position.y++;
             position.x = 0;
             continue;
-        } else if (sprite.design[i] == ' ') {
+        } else if (sprite->design[i] == ' ') {
             position.x++;
             continue;
         }
-        collision_area[j++] = point_sub(position, sprite.offset);
+        collision_area[j++] = point_sub(position, sprite->offset);
         position.x++;
     }
 
-    return (struct pointArray){.points = collision_area, .length = length}; 
+    return (collisionArea){.points = collision_area, .length = length}; 
 }
 
-int is_point_in_game_object(struct point point, struct gameObject game_object) {
-    for(int i = 0; i < game_object.collision_area.length; i++) {
-        struct point current_object_point = point_add(game_object.collision_area.points[i], game_object.position);
+int is_point_in_game_object(struct point point, struct gameObject *game_object) {
+    for(int i = 0; i < game_object->collision_area->length; i++) {
+        struct point current_object_point = point_add(game_object->collision_area->points[i], game_object->position);
         if (point_eq(point,current_object_point)) {
             return 1;
         }
@@ -49,9 +48,9 @@ int is_point_in_game_object(struct point point, struct gameObject game_object) {
     return 0;
 }
 
-int are_game_objects_overlapping(struct gameObject go_0, struct gameObject go_1) {
-    for(int i = 0; i < go_0.collision_area.length; i++) {
-        struct point current_player_position = point_add(go_0.collision_area.points[i], go_0.position);
+int are_game_objects_overlapping(struct gameObject *go_0, struct gameObject *go_1) {
+    for(int i = 0; i < go_0->collision_area->length; i++) {
+        struct point current_player_position = point_add(go_0->collision_area->points[i], go_0->position);
         
         if (is_point_in_game_object(current_player_position,go_1)) {
             return 1;
@@ -60,9 +59,9 @@ int are_game_objects_overlapping(struct gameObject go_0, struct gameObject go_1)
     return 0;
 }
 
-int is_object_overlapping(struct gameObject target, struct gameObjectArray objects) {
-    for (int i = 0; i < objects.length; i++) {
-        if (are_game_objects_overlapping(target,objects.game_objects[i])) {
+int is_object_overlapping(struct gameObject *target, struct gameObjects *objects) {
+    for (int i = 0; i < objects->length; i++) {
+        if (are_game_objects_overlapping(target,&objects->objects[i])) {
             return 1;
         }
     }
@@ -78,25 +77,25 @@ void process_key(struct gameState *state, struct optional_char c) {
     switch (c.value) {
         case 'w':
             new_player.position.y--;
-            if(!is_object_overlapping(new_player, state->collidables)) {
+            if(!is_object_overlapping(&new_player, &state->collidables)) {
                 state->player.position.y--;
             }
             break;
         case 'a':
             new_player.position.x--;
-            if(!is_object_overlapping(new_player, state->collidables)) {
+            if(!is_object_overlapping(&new_player, &state->collidables)) {
                 state->player.position.x--;
             }
             break;
         case 's':
             new_player.position.y++;
-            if(!is_object_overlapping(new_player, state->collidables)) {
+            if(!is_object_overlapping(&new_player, &state->collidables)) {
                 state->player.position.y++;
             }
             break;
         case 'd':
             new_player.position.x++;
-            if(!is_object_overlapping(new_player, state->collidables)) {
+            if(!is_object_overlapping(&new_player, &state->collidables)) {
                 state->player.position.x++;
             }
             break;
@@ -106,58 +105,98 @@ void process_key(struct gameState *state, struct optional_char c) {
     }
 }
 
-struct gameObjectArray create_game_objects(struct gameObject game_objects[], int game_object_count) {
-    struct gameObjectArray arr = {.game_objects = malloc(sizeof(struct gameObject)*game_object_count), .length = game_object_count};
+struct gameObjects create_game_objects(struct gameObject game_objects[], int game_object_count) {
+    struct gameObjects arr = {.objects = malloc(sizeof(struct gameObject)*game_object_count), .length = game_object_count};
     for (int i = 0 ; i < game_object_count; i++) {
-        arr.game_objects[i] = game_objects[i];
+        arr.objects[i] = game_objects[i];
     }
     return arr;
 }
 
+enum spriteIndex {
+    SPRITE_PLAYER,
+    SPRITE_BOX,
+};
+
+enum collisionAreaIndex {
+    COLLISION_AREA_PLAYER,
+    COLLISION_AREA_BOX,
+};
+
+struct sprite* sprite_get(struct gameResources *resources, enum spriteIndex sprite_index) {
+    return &resources->sprites.items[sprite_index];
+}
+
+struct sprite* sprite_load(struct gameResources *resources, enum spriteIndex sprite_index, struct sprite sprite) {
+    resources->sprites.items[sprite_index] = sprite;
+    return sprite_get(resources,sprite_index);
+}
+
+collisionArea* collision_area_get(struct gameResources *resources, enum collisionAreaIndex collision_area_index) {
+    return &resources->collision_areas.items[collision_area_index];
+}
+
+collisionArea* collision_area_load(struct gameResources *resources, enum collisionAreaIndex collision_area_index, collisionArea collision_area) {
+    resources->collision_areas.items[collision_area_index] = collision_area;
+    return collision_area_get(resources,collision_area_index);
+}
+
 #define COLLIDABLE_COUNT 2
+#define COLLISION_AREA_COUNT 2
+#define SPRITE_COUNT 2
+
+struct gameResources allocate_resources() {
+    struct gameResources resources = {
+        .sprites = {.items = malloc(sizeof(struct sprite)*SPRITE_COUNT), .length = SPRITE_COUNT},
+        .collision_areas = {.items = malloc(sizeof(collisionArea)*COLLISION_AREA_COUNT), .length = COLLISION_AREA_COUNT},
+    };
+    return resources;
+}
 
 struct gameState game_init() {
-    struct sprite player_sprite = sprite_create_from_file("sprites/player.txt");
-    struct sprite box_sprite = sprite_create_from_file("sprites/box.txt");
-    struct pointArray box_collision_area = create_collision_area(box_sprite);
+    struct gameResources resources = allocate_resources();
+
+    struct sprite *player_sprite = sprite_load(&resources, SPRITE_PLAYER, sprite_create_from_file("sprites/player.txt"));
+    struct sprite *box_sprite    = sprite_load(&resources, SPRITE_BOX,    sprite_create_from_file("sprites/box.txt")   );
+
+    collisionArea *player_collision_area = collision_area_load(&resources, COLLISION_AREA_PLAYER, create_collision_area(player_sprite));
+    collisionArea *box_collision_area    = collision_area_load(&resources, COLLISION_AREA_BOX,    create_collision_area(box_sprite)   );
+    
     struct gameObject collidables[COLLIDABLE_COUNT] = {
         {
-            .position = {.x = 0, .y = 5}, 
+            .position = {.x = 0, .y = 5},
             .sprite = box_sprite,
             .collision_area = box_collision_area,
         },
         {
-            .position = {.x = 10, .y = 5}, 
+            .position = {.x = 10, .y = 5},
             .sprite = box_sprite,
             .collision_area = box_collision_area,
         },
     };
     struct gameState state = {
-        .stop = 0, 
+        .stop = 0,
+        .resources = resources,
         .player = {
             .position = {.x = 0, .y = 0}, 
-            .sprite = player_sprite, 
-            .collision_area = create_collision_area(player_sprite),
+            .sprite = player_sprite,
+            .collision_area = player_collision_area,
         },
         .collidables = create_game_objects(collidables,COLLIDABLE_COUNT),
     };
-
     return state;
 }
 
 void game_shutdown(struct gameState* state) {
-    game_object_free(state->player);
-    game_object_array_free(state->collidables);
+    game_resources_free(&state->resources);
+    game_objects_free(&state->collidables);
 }
 
-void game_object_free(struct gameObject game_object) {
-    sprite_free(game_object.sprite); // TODO fix double free
-    point_array_free(game_object.collision_area);
+void game_objects_free(struct gameObjects *game_objects) {
+    free(game_objects->objects);
 }
 
-void game_object_array_free(struct gameObjectArray game_object_array) {
-    for(int i = 0; i < game_object_array.length; i++) {
-        game_object_free(game_object_array.game_objects[i]);
-    }
-    free(game_object_array.game_objects);
+void game_resources_free(struct gameResources *game_resources) {
+    sprites_free(&game_resources->sprites);
+    point_arrays_free(&game_resources->collision_areas);
 }
