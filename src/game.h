@@ -4,20 +4,7 @@
 #include "core.h"
 #include "sprite.h"
 #include "pointarray.h"
-
-typedef struct pointArray collisionArea;
-typedef struct pointArrays collisionAreas;
-
-struct gameObject {
-    struct sprite *sprite;
-    struct point position;
-    collisionArea *collision_area;
-};
-
-struct gameObjects {
-    struct gameObject *objects;
-    int length;
-};
+#include "gameobject.h"
 
 struct gameResources {
     struct sprites sprites;
