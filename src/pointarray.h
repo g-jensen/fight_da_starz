@@ -3,7 +3,7 @@
 #include "point.h"
 
 struct pointArray {
-    struct point *points;
+    struct ipoint *points;
     int length;
 };
 

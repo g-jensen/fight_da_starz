@@ -33,7 +33,7 @@ struct gameObjectParseResult parse_game_object_file(char *filename) {
     FILE *f;
     f = fopen(filename, "r");
 
-    struct point offset;
+    struct ipoint offset;
     int design_length;
     if (fscanf(f,"%d,%d\n%d",&offset.x,&offset.y,&design_length) != 3) {
         die("parse_game_object_file");
@@ -69,10 +69,10 @@ int get_collision_area_length(char *design) {
 }
 
 collisionArea collision_area_from_game_object_parse_result(struct gameObjectParseResult *parse_result) {
-    struct point position = {0,0};
+    struct ipoint position = {0,0};
     int j = 0;
     int length = get_collision_area_length(parse_result->collision_area_design);
-    struct point *collision_area = malloc(length*sizeof(struct point));
+    struct ipoint *collision_area = malloc(length*sizeof(struct ipoint));
 
      for(int i = 0; parse_result->collision_area_design[i] != '\0'; i++) {
         if(parse_result->collision_area_design[i] == '\n') {
@@ -83,7 +83,7 @@ collisionArea collision_area_from_game_object_parse_result(struct gameObjectPars
             position.x++;
             continue;
         }
-        collision_area[j++] = point_sub(position, parse_result->offset);
+        collision_area[j++] = ipoint_sub(position, parse_result->offset);
         position.x++;
     }
 

@@ -1,13 +1,13 @@
 #include "point.h"
 
-struct point point_add(struct point p1, struct point p2) {
-    return (struct point) {.x = p1.x + p2.x , .y = p1.y + p2.y};
+struct ipoint ipoint_add(struct ipoint p1, struct ipoint p2) {
+    return (struct ipoint) {.x = p1.x + p2.x , .y = p1.y + p2.y};
 }
 
-struct point point_sub(struct point p1, struct point p2) {
-    return (struct point) {.x = p1.x - p2.x , .y = p1.y - p2.y};
+struct ipoint ipoint_sub(struct ipoint p1, struct ipoint p2) {
+    return (struct ipoint) {.x = p1.x - p2.x , .y = p1.y - p2.y};
 }
 
-int point_eq(struct point p1, struct point p2) {
+int ipoint_eq(struct ipoint p1, struct ipoint p2) {
     return p1.x == p2.x && p1.y == p2.y;
 }

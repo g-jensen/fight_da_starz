@@ -8,7 +8,7 @@ struct sprite sprite_create_from_file(char *filename) {
     FILE *f;
     f = fopen(filename, "r");
 
-    struct point offset;
+    struct ipoint offset;
     if (fscanf(f,"%d,%d",&offset.x,&offset.y) != 2) {
         die("sprite_create_from_file");
     }

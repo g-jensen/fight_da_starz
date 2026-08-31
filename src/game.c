@@ -5,10 +5,10 @@
 #include "log.h"
 #include "sys.h"
 
-int is_point_in_game_object(struct point point, struct gameObject *game_object) {
+int is_point_in_game_object(struct ipoint ipoint, struct gameObject *game_object) {
     for(int i = 0; i < game_object->collision_area->length; i++) {
-        struct point current_object_point = point_add(game_object->collision_area->points[i], game_object->position);
-        if (point_eq(point,current_object_point)) {
+        struct ipoint current_object_point = ipoint_add(game_object->collision_area->points[i], game_object->position);
+        if (ipoint_eq(ipoint,current_object_point)) {
             return 1;
         }
     }
@@ -17,7 +17,7 @@ int is_point_in_game_object(struct point point, struct gameObject *game_object) 
 
 int are_game_objects_overlapping(struct gameObject *go_0, struct gameObject *go_1) {
     for(int i = 0; i < go_0->collision_area->length; i++) {
-        struct point current_player_position = point_add(go_0->collision_area->points[i], go_0->position);
+        struct ipoint current_player_position = ipoint_add(go_0->collision_area->points[i], go_0->position);
         
         if (is_point_in_game_object(current_player_position,go_1)) {
             return 1;
@@ -41,6 +41,9 @@ void process_key(struct gameState *state, struct optional_char c) {
     end_tick = get_time_mus();
     state->fps = ceil_f(1000000.0f / (end_tick - start_tick));
     start_tick = get_time_mus();
+
+    // state->player.position = ipoint_add(state->player.position,state->player.velocity);
+
     if (!c.some) return;
     struct gameObject new_player = state->player; // TODO - refactor this unnecessary copy.
     switch (c.value) {
@@ -160,7 +163,13 @@ struct gameState game_init() {
     struct gameState state = {
         .stop = 0,
         .resources = resources,
-        .player = { .position = {.x = 0, .y = 0}, .sprite = player_sprite, .collision_area = player_collision_area },
+        .player = { 
+            .position = {.x = 0, .y = 0}, 
+            .velocity = {.x = 0, .y = 1}, 
+            .acceleration = {.x = 0, .y = 0},
+            .sprite = player_sprite, 
+            .collision_area = player_collision_area 
+        },
         .collidables = create_game_objects(collidables,COLLIDABLE_COUNT),
     };
     return state;

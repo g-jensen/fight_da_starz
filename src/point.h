@@ -1,10 +1,10 @@
 #pragma once
 
-struct point {
+struct ipoint {
     int x;
     int y;
 };
 
-struct point point_add(struct point p1, struct point p2);
-struct point point_sub(struct point p1, struct point p2);
-int point_eq(struct point p1, struct point p2);
+struct ipoint ipoint_add(struct ipoint p1, struct ipoint p2);
+struct ipoint ipoint_sub(struct ipoint p1, struct ipoint p2);
+int ipoint_eq(struct ipoint p1, struct ipoint p2);

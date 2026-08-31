@@ -4,7 +4,7 @@
 
 struct sprite {
     char* design;
-    struct point offset;
+    struct ipoint offset;
 };
 
 struct sprites {

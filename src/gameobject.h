@@ -8,14 +8,16 @@ typedef struct pointArray collisionArea;
 typedef struct pointArrays collisionAreas;
 
 struct gameObjectParseResult {
-    struct point offset;
+    struct ipoint offset;
     char* sprite_design;
     char* collision_area_design;
 };
 
 struct gameObject {
+    struct ipoint position;
+    struct ipoint velocity;
+    struct ipoint acceleration;
     struct sprite *sprite;
-    struct point position;
     collisionArea *collision_area;
 };
 
