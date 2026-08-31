@@ -3,7 +3,7 @@
 - [ ] windows support
 - [ ] click support
 - [ ] colored grid support
-- [ ] collision
+- [x] collision
 - [ ] gravity, jumping
 - [ ] keybind system
 - [ ] maps
