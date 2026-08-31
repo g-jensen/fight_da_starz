@@ -9,7 +9,7 @@ DEV_EXEC=$(DIST_PATH)/dev
 PROD_EXEC=$(DIST_PATH)/prod
 
 CC=gcc
-CFLAGS=-Wall -Wextra -I.
+CFLAGS=-lm -Wall -Wextra -I.
 DEV_FLAGS=-D_DEV
 PROD_FLAGS=-O3
 

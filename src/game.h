@@ -19,7 +19,7 @@ struct gameState {
     int fps;
 };
 
-void process_key(struct gameState *state, struct optional_char c);
+void update_state(struct gameState *state, struct optional_char c);
 struct gameState game_init();
 void game_shutdown(struct gameState* state);
 void game_objects_free(struct gameObjects *game_objects);

@@ -36,7 +36,7 @@ int main() {
     atexit(window_shutdown);
     while (!state.stop) {
         start_time = get_time_mus();
-        process_key(&state, window_read_char(mus_read_timeout));
+        update_state(&state, window_read_char(mus_read_timeout));
         render_state_to_window(&state,window,render_grid);
         pace_tick(start_time,get_time_mus());
     }

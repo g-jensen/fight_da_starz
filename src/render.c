@@ -43,10 +43,12 @@ void render_state_into_grid(struct gameState *state, struct grid grid) {
     grid_fill(grid, DEFAULT_CHAR);
 
     struct ipoint center_position = {.x = grid.cols/2, .y = grid.rows/2};
+    struct fpoint player_position = state->player.position;
     struct ipoint player_rendered_position = center_position;
 
     for (int i = 0; i < state->collidables.length; i++) {
-        struct ipoint rendered_position = render_position(state->collidables.objects[i].position, center_position, state->player.position);
+        struct fpoint object_position = state->collidables.objects[i].position;
+        struct ipoint rendered_position = render_position(to_ipoint(object_position), center_position, to_ipoint(player_position));
         place_sprite(rendered_position, grid, *state->collidables.objects[i].sprite);
     }
 

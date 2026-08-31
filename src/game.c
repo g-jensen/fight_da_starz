@@ -7,7 +7,7 @@
 
 int is_point_in_game_object(struct ipoint ipoint, struct gameObject *game_object) {
     for(int i = 0; i < game_object->collision_area->length; i++) {
-        struct ipoint current_object_point = ipoint_add(game_object->collision_area->points[i], game_object->position);
+        struct ipoint current_object_point = ipoint_add(game_object->collision_area->points[i], to_ipoint(game_object->position));
         if (ipoint_eq(ipoint,current_object_point)) {
             return 1;
         }
@@ -17,7 +17,7 @@ int is_point_in_game_object(struct ipoint ipoint, struct gameObject *game_object
 
 int are_game_objects_overlapping(struct gameObject *go_0, struct gameObject *go_1) {
     for(int i = 0; i < go_0->collision_area->length; i++) {
-        struct ipoint current_player_position = ipoint_add(go_0->collision_area->points[i], go_0->position);
+        struct ipoint current_player_position = ipoint_add(go_0->collision_area->points[i], to_ipoint(go_0->position));
         
         if (is_point_in_game_object(current_player_position,go_1)) {
             return 1;
@@ -35,45 +35,56 @@ int is_object_overlapping(struct gameObject *target, struct gameObjects *objects
     return 0;
 }
 
+#define MAX_SPEED 5
+
 long long start_tick = 0, end_tick = 0;
 
-void process_key(struct gameState *state, struct optional_char c) {
+void update_state(struct gameState *state, struct optional_char c) {
     end_tick = get_time_mus();
     state->fps = ceil_f(1000000.0f / (end_tick - start_tick));
     start_tick = get_time_mus();
 
-    // state->player.position = ipoint_add(state->player.position,state->player.velocity);
-
-    if (!c.some) return;
     struct gameObject new_player = state->player; // TODO - refactor this unnecessary copy.
+    new_player.velocity = fpoint_add(new_player.velocity,new_player.acceleration);
+    float speed = magnitude(new_player.velocity);
+    if (speed > MAX_SPEED) {
+        new_player.velocity = (struct fpoint){.x = new_player.velocity.x * MAX_SPEED / speed, .y = new_player.velocity.y * MAX_SPEED / speed};
+    }
+    new_player.position = fpoint_add(new_player.position,new_player.velocity);
+    if (!is_object_overlapping(&new_player, &state->collidables)) {
+        state->player.velocity = new_player.velocity;
+        state->player.position = new_player.position;
+    } else {
+        state->player.acceleration = (struct fpoint){};
+        state->player.velocity = (struct fpoint){};
+    }
+
+    // if (!c.some) return;
     switch (c.value) {
         case 'w':
-            new_player.position.y--;
-            if(!is_object_overlapping(&new_player, &state->collidables)) {
-                state->player.position.y--;
-            }
+            
             break;
         case 'a':
-            new_player.position.x--;
-            if(!is_object_overlapping(&new_player, &state->collidables)) {
-                state->player.position.x--;
-            }
+            state->player.acceleration.x = -2;
             break;
         case 's':
-            new_player.position.y++;
-            if(!is_object_overlapping(&new_player, &state->collidables)) {
-                state->player.position.y++;
-            }
+            
             break;
         case 'd':
-            new_player.position.x++;
-            if(!is_object_overlapping(&new_player, &state->collidables)) {
-                state->player.position.x++;
-            }
+            state->player.acceleration.x = 2;
             break;
         case CTRL_KEY('c'):
             state->stop = 1;
             break;
+        default:
+            float sign = 0;
+            // if (state->player.velocity.x > 0) {
+            //     sign = 1;
+            // } else if (state->player.velocity.x < 0) {
+            //     sign = -1;
+            // }
+            sign = state->player.velocity.x*0.5;
+            state->player.acceleration.x = -sign;
     }
 }
 
@@ -158,15 +169,15 @@ struct gameState game_init() {
         { .position = {.x = 10,  .y = 5},  .sprite = box_sprite,   .collision_area = box_collision_area   },
         { .position = {.x = 20,  .y = 5},  .sprite = box_sprite,   .collision_area = box_collision_area   },
         { .position = {.x = -10, .y = 5},  .sprite = dot_sprite,   .collision_area = dot_collision_area   },
-        { .position = {.x = -10, .y = 10}, .sprite = floor_sprite, .collision_area = floor_collision_area },
+        { .position = {.x = -50, .y = 10}, .sprite = floor_sprite, .collision_area = floor_collision_area },
     };
     struct gameState state = {
         .stop = 0,
         .resources = resources,
         .player = { 
-            .position = {.x = 0, .y = 0}, 
-            .velocity = {.x = 0, .y = 1}, 
-            .acceleration = {.x = 0, .y = 0},
+            .position = {.x = 0, .y = -10}, 
+            .velocity = {.x = 0, .y = 0}, 
+            .acceleration = {.x = 0, .y = 0.1},
             .sprite = player_sprite, 
             .collision_area = player_collision_area 
         },

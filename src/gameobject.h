@@ -14,9 +14,9 @@ struct gameObjectParseResult {
 };
 
 struct gameObject {
-    struct ipoint position;
-    struct ipoint velocity;
-    struct ipoint acceleration;
+    struct fpoint position;
+    struct fpoint velocity;
+    struct fpoint acceleration;
     struct sprite *sprite;
     collisionArea *collision_area;
 };
