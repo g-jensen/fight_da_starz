@@ -35,14 +35,20 @@ int is_object_overlapping(struct gameObject *target, struct gameObjects *objects
     return 0;
 }
 
-#define MAX_SPEED 15
+#define MUS_PER_SEC 1000000
 
 long long start_tick = 0, end_tick = 0;
+int calculate_fps(long long *start_tick, long long *end_tick) {
+    *end_tick = get_time_mus();
+    int fps = ceil_f((float)MUS_PER_SEC / (*end_tick - *start_tick));
+    *start_tick = get_time_mus();
+    return fps;
+}
+
+#define MAX_SPEED 15
 
 void update_state(struct gameState *state, struct optional_char c) {
-    end_tick = get_time_mus();
-    state->fps = ceil_f(1000000.0f / (end_tick - start_tick));
-    start_tick = get_time_mus();
+    state->fps = calculate_fps(&start_tick, &end_tick);
 
     struct gameObject new_player = state->player; // TODO - refactor this unnecessary copy.
     new_player.velocity = fpoint_add_clamp(new_player.velocity,new_player.acceleration,MAX_SPEED);
@@ -55,7 +61,6 @@ void update_state(struct gameState *state, struct optional_char c) {
         state->player.velocity = (struct fpoint){};
     }
 
-    // if (!c.some) return;
     switch (c.value) {
         case 'w':
             
