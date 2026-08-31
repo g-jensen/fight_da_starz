@@ -16,6 +16,8 @@ struct gameState {
     struct gameResources resources;
     struct gameObject player;
     struct gameObjects collidables; // TODO - gameObjects having a collisionArea, but not all gameObjects being 'collidables' feels weird here.
+    long long tick_start_mus;
+    long long tick_end_mus;
     int fps;
 };
 

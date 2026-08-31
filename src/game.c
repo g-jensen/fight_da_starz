@@ -4,6 +4,7 @@
 #include "game.h"
 #include "log.h"
 #include "sys.h"
+#include "fps.h"
 
 int is_point_in_game_object(struct ipoint ipoint, struct gameObject *game_object) {
     for(int i = 0; i < game_object->collision_area->length; i++) {
@@ -35,20 +36,10 @@ int is_object_overlapping(struct gameObject *target, struct gameObjects *objects
     return 0;
 }
 
-#define MUS_PER_SEC 1000000
-
-long long start_tick = 0, end_tick = 0;
-int iterate_fps_counters(long long *start_tick, long long *end_tick) {
-    *end_tick = get_time_mus();
-    int fps = ceil_f((float)MUS_PER_SEC / (*end_tick - *start_tick));
-    *start_tick = get_time_mus();
-    return fps;
-}
-
 #define MAX_SPEED 15
 
 void update_state(struct gameState *state, struct optional_char c) {
-    state->fps = iterate_fps_counters(&start_tick, &end_tick);
+    state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 
     struct gameObject new_player = state->player; // TODO - refactor this unnecessary copy.
     new_player.velocity = fpoint_add_clamp(new_player.velocity,new_player.acceleration,MAX_SPEED);
@@ -174,6 +165,8 @@ struct gameState game_init() {
     };
     struct gameState state = {
         .stop = 0,
+        .tick_start_mus = 0,
+        .tick_end_mus = 0,
         .resources = resources,
         .player = { 
             .position = {.x = 0, .y = -10}, 
