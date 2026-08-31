@@ -35,7 +35,7 @@ int is_object_overlapping(struct gameObject *target, struct gameObjects *objects
     return 0;
 }
 
-#define MAX_SPEED 5
+#define MAX_SPEED 15
 
 long long start_tick = 0, end_tick = 0;
 
@@ -45,11 +45,7 @@ void update_state(struct gameState *state, struct optional_char c) {
     start_tick = get_time_mus();
 
     struct gameObject new_player = state->player; // TODO - refactor this unnecessary copy.
-    new_player.velocity = fpoint_add(new_player.velocity,new_player.acceleration);
-    float speed = magnitude(new_player.velocity);
-    if (speed > MAX_SPEED) {
-        new_player.velocity = (struct fpoint){.x = new_player.velocity.x * MAX_SPEED / speed, .y = new_player.velocity.y * MAX_SPEED / speed};
-    }
+    new_player.velocity = fpoint_add_clamp(new_player.velocity,new_player.acceleration,MAX_SPEED);
     new_player.position = fpoint_add(new_player.position,new_player.velocity);
     if (!is_object_overlapping(&new_player, &state->collidables)) {
         state->player.velocity = new_player.velocity;

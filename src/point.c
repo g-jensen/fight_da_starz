@@ -30,6 +30,18 @@ float magnitude(struct fpoint p) {
     return sqrt(p.x*p.x + p.y*p.y);
 }
 
+struct fpoint clamp(struct fpoint p, float max_magnitude) {
+    float mag = magnitude(p);
+    if (mag > max_magnitude) {
+        return (struct fpoint){.x = p.x * max_magnitude / mag, .y = p.y * max_magnitude / mag};
+    }
+    return p;
+}
+
+struct fpoint fpoint_add_clamp(struct fpoint p1, struct fpoint p2, float max_magnitude) {
+    return clamp(fpoint_add(p1,p2),max_magnitude);
+}
+
 struct ipoint to_ipoint(struct fpoint p) {
     return (struct ipoint){.x = (int)p.x, .y = (int)p.y};
 }
