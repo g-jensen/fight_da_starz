@@ -13,7 +13,7 @@ void update_state(struct gameState *state, struct optional_char c) {
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 
     struct gameObject new_player = state->player; // TODO - refactor this unnecessary copy.
-    new_player.velocity = fpoint_add_clamp(new_player.velocity,new_player.acceleration,MAX_SPEED);
+    new_player.velocity = clamp(fpoint_add(new_player.velocity,new_player.acceleration),MAX_SPEED);
     new_player.position = fpoint_add(new_player.position,new_player.velocity);
     if (!is_object_overlapping(&new_player, &state->collidables)) {
         state->player.velocity = new_player.velocity;

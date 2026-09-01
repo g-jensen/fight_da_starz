@@ -38,10 +38,6 @@ struct fpoint clamp(struct fpoint p, float max_magnitude) {
     return p;
 }
 
-struct fpoint fpoint_add_clamp(struct fpoint p1, struct fpoint p2, float max_magnitude) {
-    return clamp(fpoint_add(p1,p2),max_magnitude);
-}
-
 struct ipoint to_ipoint(struct fpoint p) {
     return (struct ipoint){.x = (int)p.x, .y = (int)p.y};
 }

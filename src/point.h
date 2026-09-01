@@ -22,6 +22,5 @@ int fpoint_eq(struct fpoint p1, struct fpoint p2);
 
 float magnitude(struct fpoint p);
 struct fpoint clamp(struct fpoint p, float max_magnitude);
-struct fpoint fpoint_add_clamp(struct fpoint p1, struct fpoint p2, float max_magnitude);
 
 struct ipoint to_ipoint(struct fpoint p);
