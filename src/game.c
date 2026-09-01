@@ -52,54 +52,10 @@ struct gameObjects create_game_objects(struct gameObject game_objects[], int gam
     return arr;
 }
 
-enum spriteIndex {
-    SPRITE_PLAYER,
-    SPRITE_BOX,
-    SPRITE_DOT,
-    SPRITE_FLOOR,
-    SPRITE_END,
-};
-
-enum collisionAreaIndex {
-    COLLISION_AREA_PLAYER,
-    COLLISION_AREA_BOX,
-    COLLISION_AREA_DOT,
-    COLLISION_AREA_FLOOR,
-    COLLISION_AREA_END,
-};
-
-struct sprite* sprite_get(struct gameResources *resources, enum spriteIndex sprite_index) {
-    return &resources->sprites.items[sprite_index];
-}
-
-struct sprite* sprite_load(struct gameResources *resources, enum spriteIndex sprite_index, struct sprite sprite) {
-    resources->sprites.items[sprite_index] = sprite;
-    return sprite_get(resources,sprite_index);
-}
-
-collisionArea* collision_area_get(struct gameResources *resources, enum collisionAreaIndex collision_area_index) {
-    return &resources->collision_areas.items[collision_area_index];
-}
-
-collisionArea* collision_area_load(struct gameResources *resources, enum collisionAreaIndex collision_area_index, collisionArea collision_area) {
-    resources->collision_areas.items[collision_area_index] = collision_area;
-    return collision_area_get(resources,collision_area_index);
-}
-
 #define COLLIDABLE_COUNT 4
-#define COLLISION_AREA_COUNT COLLISION_AREA_END
-#define SPRITE_COUNT SPRITE_END
-
-struct gameResources allocate_resources() {
-    struct gameResources resources = {
-        .sprites = {.items = malloc(sizeof(struct sprite)*SPRITE_COUNT), .length = SPRITE_COUNT},
-        .collision_areas = {.items = malloc(sizeof(collisionArea)*COLLISION_AREA_COUNT), .length = COLLISION_AREA_COUNT},
-    };
-    return resources;
-}
 
 struct gameState game_init() {
-    struct gameResources resources = allocate_resources();
+    struct resources resources = allocate_resources();
 
     struct gameObjectParseResult parsed_player = parse_game_object_file("game_objects/player.txt");
     struct gameObjectParseResult parsed_box = parse_game_object_file("game_objects/box.txt");
@@ -144,16 +100,11 @@ struct gameState game_init() {
     return state;
 }
 
-void game_shutdown(struct gameState* state) {
-    game_resources_free(&state->resources);
-    game_objects_free(&state->collidables);
-}
-
 void game_objects_free(struct gameObjects *game_objects) {
     free(game_objects->objects);
 }
 
-void game_resources_free(struct gameResources *game_resources) {
-    sprites_free(&game_resources->sprites);
-    point_arrays_free(&game_resources->collision_areas);
+void game_shutdown(struct gameState* state) {
+    game_resources_free(&state->resources);
+    game_objects_free(&state->collidables);
 }
