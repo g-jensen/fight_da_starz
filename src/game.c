@@ -9,13 +9,40 @@
 
 #define MAX_SPEED 15
 
+struct gameObjectIterState {
+    struct gameObjects *objects;
+    int idx;
+};
+
+int game_objects_is_in_range(void *_state) {
+    struct gameObjectIterState *state = (struct gameObjectIterState*)_state;
+    return state->idx < state->objects->length;
+}
+
+struct collisionBox object_collision_box(struct gameObject *object) {
+    return (struct collisionBox){.offsets = object->collision_area, .position = to_ipoint(object->position)};
+}
+
+struct collisionBox game_objects_next_collision_box(void *_state) {
+    struct gameObjectIterState *state = (struct gameObjectIterState*)_state;
+    struct gameObject object = state->objects->objects[state->idx++];
+    return object_collision_box(&object);
+}
+
+int does_object_overlap(struct gameObject *object, struct gameObjects *collidables) {
+    struct gameObjectIterState s = {.idx = 0, .objects = collidables};
+    struct collisionBoxIter iter = {.state = &s, .next = &game_objects_next_collision_box, .more = &game_objects_is_in_range};
+    struct collisionBox player_ca = object_collision_box(object);
+    return collision_check_areas(&player_ca, &iter);
+}
+
 void update_state(struct gameState *state, struct optional_char c) {
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 
     struct gameObject new_player = state->player; // TODO - refactor this unnecessary copy.
     new_player.velocity = clamp(fpoint_add(new_player.velocity,new_player.acceleration),MAX_SPEED);
     new_player.position = fpoint_add(new_player.position,new_player.velocity);
-    if (!is_object_overlapping(&new_player, &state->collidables)) {
+    if (!does_object_overlap(&new_player, &state->collidables)) {
         state->player.velocity = new_player.velocity;
         state->player.position = new_player.position;
     } else {
