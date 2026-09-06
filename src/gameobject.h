@@ -2,10 +2,7 @@
 
 #include "point.h"
 #include "sprite.h"
-#include "pointarray.h"
-
-typedef struct pointArray collisionArea;
-typedef struct pointArrays collisionAreas;
+#include "collision.h"
 
 struct gameObjectParseResult {
     struct ipoint offset;
@@ -18,7 +15,7 @@ struct gameObject {
     struct fpoint velocity;
     struct fpoint acceleration;
     struct sprite *sprite;
-    collisionArea *collision_area;
+    collisionOffset *collision_area;
 };
 
 struct gameObjects {
@@ -28,4 +25,4 @@ struct gameObjects {
 
 struct gameObjectParseResult parse_game_object_file(char *filename);
 struct sprite sprite_from_game_object_parse_result(struct gameObjectParseResult *parse_result);
-collisionArea collision_area_from_game_object_parse_result(struct gameObjectParseResult *parse_result);
+collisionOffset collision_area_from_game_object_parse_result(struct gameObjectParseResult *parse_result);

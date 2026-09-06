@@ -68,7 +68,7 @@ int get_collision_area_length(char *design) {
     return j; 
 }
 
-collisionArea collision_area_from_game_object_parse_result(struct gameObjectParseResult *parse_result) {
+collisionOffset collision_area_from_game_object_parse_result(struct gameObjectParseResult *parse_result) {
     struct ipoint position = {0,0};
     int j = 0;
     int length = get_collision_area_length(parse_result->collision_area_design);
@@ -87,5 +87,5 @@ collisionArea collision_area_from_game_object_parse_result(struct gameObjectPars
         position.x++;
     }
 
-    return (collisionArea){.points = collision_area, .length = length}; 
+    return (collisionOffset){.points = collision_area, .length = length}; 
 }

@@ -94,10 +94,10 @@ struct gameState game_init() {
     struct sprite *dot_sprite    = sprite_load(&resources, SPRITE_DOT,    sprite_from_game_object_parse_result(&parsed_dot));
     struct sprite *floor_sprite  = sprite_load(&resources, SPRITE_FLOOR,  sprite_from_game_object_parse_result(&parsed_floor));
     
-    collisionArea *player_collision_area = collision_area_load(&resources, COLLISION_AREA_PLAYER, collision_area_from_game_object_parse_result(&parsed_player));
-    collisionArea *box_collision_area    = collision_area_load(&resources, COLLISION_AREA_BOX,    collision_area_from_game_object_parse_result(&parsed_box));
-    collisionArea *dot_collision_area    = collision_area_load(&resources, COLLISION_AREA_DOT,    collision_area_from_game_object_parse_result(&parsed_dot));
-    collisionArea *floor_collision_area  = collision_area_load(&resources, COLLISION_AREA_FLOOR,  collision_area_from_game_object_parse_result(&parsed_floor));
+    collisionOffset *player_collision_area = collision_area_load(&resources, COLLISION_AREA_PLAYER, collision_area_from_game_object_parse_result(&parsed_player));
+    collisionOffset *box_collision_area    = collision_area_load(&resources, COLLISION_AREA_BOX,    collision_area_from_game_object_parse_result(&parsed_box));
+    collisionOffset *dot_collision_area    = collision_area_load(&resources, COLLISION_AREA_DOT,    collision_area_from_game_object_parse_result(&parsed_dot));
+    collisionOffset *floor_collision_area  = collision_area_load(&resources, COLLISION_AREA_FLOOR,  collision_area_from_game_object_parse_result(&parsed_floor));
     
     free(parsed_player.collision_area_design);
     free(parsed_box.collision_area_design);

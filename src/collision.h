@@ -2,12 +2,14 @@
 
 #include "iterator.h"
 #include "point.h"
-#include "gameobject.h"
 #include "pointarray.h"
+
+typedef struct pointArray collisionOffset;
+typedef struct pointArrays collisionOffsets;
 
 struct collisionBox {
     struct ipoint position;
-    struct pointArray *offsets;
+    collisionOffset *offsets;
 };
 
 iterator_define(collisionBoxIter, struct collisionBox)

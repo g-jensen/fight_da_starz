@@ -11,11 +11,11 @@ struct sprite* sprite_load(struct resources *resources, enum spriteIndex sprite_
     return sprite_get(resources,sprite_index);
 }
 
-collisionArea* collision_area_get(struct resources *resources, enum collisionAreaIndex collision_area_index) {
+collisionOffset* collision_area_get(struct resources *resources, enum collisionAreaIndex collision_area_index) {
     return &resources->collision_areas.items[collision_area_index];
 }
 
-collisionArea* collision_area_load(struct resources *resources, enum collisionAreaIndex collision_area_index, collisionArea collision_area) {
+collisionOffset* collision_area_load(struct resources *resources, enum collisionAreaIndex collision_area_index, collisionOffset collision_area) {
     resources->collision_areas.items[collision_area_index] = collision_area;
     return collision_area_get(resources,collision_area_index);
 }
@@ -24,7 +24,7 @@ collisionArea* collision_area_load(struct resources *resources, enum collisionAr
 struct resources allocate_resources() {
     struct resources resources = {
         .sprites = {.items = malloc(sizeof(struct sprite)*SPRITE_COUNT), .length = SPRITE_COUNT},
-        .collision_areas = {.items = malloc(sizeof(collisionArea)*COLLISION_AREA_COUNT), .length = COLLISION_AREA_COUNT},
+        .collision_areas = {.items = malloc(sizeof(collisionOffset)*COLLISION_AREA_COUNT), .length = COLLISION_AREA_COUNT},
     };
     return resources;
 }
