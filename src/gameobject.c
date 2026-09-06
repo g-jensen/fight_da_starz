@@ -52,6 +52,10 @@ struct gameObjectParseResult parse_game_object_file(char *filepath) {
     };
 }
 
+void game_object_parse_result_free(struct gameObjectParseResult *parse_result) {
+    free(parse_result->collision_area_design);
+}
+
 struct sprite sprite_from_parsed_game_object(struct gameObjectParseResult *parse_result) {
     return (struct sprite){.design = parse_result->sprite_design, .offset = parse_result->offset};
 }

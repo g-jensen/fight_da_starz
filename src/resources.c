@@ -28,6 +28,9 @@ collisionOffset* collision_offset_load(struct resources *resources, collisionOff
     return ptr;
 }
 
+// eventually define growing array or base the size off of number of files in game_objects/
+#define SPRITE_COUNT 8
+#define COLLISION_OFFSET_COUNT 8
 
 struct resources allocate_resources() {
     struct resources resources = {
