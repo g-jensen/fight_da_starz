@@ -19,11 +19,11 @@ int game_objects_is_in_range(void *_state) {
     return state->idx < state->objects->length;
 }
 
-struct collisionBox object_collision_box(struct gameObject *object) {
-    return (struct collisionBox){.offsets = object->collision_area, .position = to_ipoint(object->position)};
+struct collisionArea object_collision_box(struct gameObject *object) {
+    return (struct collisionArea){.offsets = object->collision_area, .position = to_ipoint(object->position)};
 }
 
-struct collisionBox game_objects_next_collision_box(void *_state) {
+struct collisionArea game_objects_next_collision_box(void *_state) {
     struct gameObjectIterState *state = (struct gameObjectIterState*)_state;
     struct gameObject object = state->objects->objects[state->idx++];
     return object_collision_box(&object);
@@ -32,7 +32,7 @@ struct collisionBox game_objects_next_collision_box(void *_state) {
 int does_object_overlap(struct gameObject *object, struct gameObjects *collidables) {
     struct gameObjectIterState s = {.idx = 0, .objects = collidables};
     struct collisionBoxIter iter = {.state = &s, .next = &game_objects_next_collision_box, .more = &game_objects_is_in_range};
-    struct collisionBox player_ca = object_collision_box(object);
+    struct collisionArea player_ca = object_collision_box(object);
     return collision_check_areas(&player_ca, &iter);
 }
 
