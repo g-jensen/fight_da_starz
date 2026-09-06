@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "game.h"
 #include "log.h"
@@ -45,9 +46,7 @@ void update_state(struct gameState *state, struct optional_char c) {
 
 struct gameObjects create_game_objects(struct gameObject game_objects[], int game_object_count) {
     struct gameObjects arr = {.objects = malloc(sizeof(struct gameObject)*game_object_count), .length = game_object_count};
-    for (int i = 0 ; i < game_object_count; i++) {
-        arr.objects[i] = game_objects[i];
-    }
+    memcpy(arr.objects,game_objects,sizeof(struct gameObject)*game_object_count);
     return arr;
 }
 
