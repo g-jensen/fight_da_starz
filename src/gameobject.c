@@ -52,7 +52,7 @@ struct gameObjectParseResult parse_game_object_file(char *filename) {
     };
 }
 
-struct sprite sprite_from_game_object_parse_result(struct gameObjectParseResult *parse_result) {
+struct sprite sprite_from_parsed_game_object(struct gameObjectParseResult *parse_result) {
     return (struct sprite){.design = parse_result->sprite_design, .offset = parse_result->offset};
 }
 
@@ -68,7 +68,7 @@ int get_collision_area_length(char *design) {
     return j; 
 }
 
-collisionOffset collision_area_from_game_object_parse_result(struct gameObjectParseResult *parse_result) {
+collisionOffset collision_offset_from_parsed_game_object(struct gameObjectParseResult *parse_result) {
     struct ipoint position = {0,0};
     int j = 0;
     int length = get_collision_area_length(parse_result->collision_area_design);

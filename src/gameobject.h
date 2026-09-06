@@ -24,5 +24,5 @@ struct gameObjects {
 };
 
 struct gameObjectParseResult parse_game_object_file(char *filename);
-struct sprite sprite_from_game_object_parse_result(struct gameObjectParseResult *parse_result);
-collisionOffset collision_area_from_game_object_parse_result(struct gameObjectParseResult *parse_result);
+struct sprite sprite_from_parsed_game_object(struct gameObjectParseResult *parse_result);
+collisionOffset collision_offset_from_parsed_game_object(struct gameObjectParseResult *parse_result);

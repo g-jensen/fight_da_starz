@@ -89,15 +89,15 @@ struct gameState game_init() {
     struct gameObjectParseResult parsed_dot = parse_game_object_file("game_objects/dot.txt");
     struct gameObjectParseResult parsed_floor = parse_game_object_file("game_objects/floor.txt");
     
-    struct sprite *player_sprite = sprite_load(&resources, SPRITE_PLAYER, sprite_from_game_object_parse_result(&parsed_player));
-    struct sprite *box_sprite    = sprite_load(&resources, SPRITE_BOX,    sprite_from_game_object_parse_result(&parsed_box));
-    struct sprite *dot_sprite    = sprite_load(&resources, SPRITE_DOT,    sprite_from_game_object_parse_result(&parsed_dot));
-    struct sprite *floor_sprite  = sprite_load(&resources, SPRITE_FLOOR,  sprite_from_game_object_parse_result(&parsed_floor));
+    struct sprite *player_sprite = sprite_load(&resources, SPRITE_PLAYER, sprite_from_parsed_game_object(&parsed_player));
+    struct sprite *box_sprite    = sprite_load(&resources, SPRITE_BOX,    sprite_from_parsed_game_object(&parsed_box));
+    struct sprite *dot_sprite    = sprite_load(&resources, SPRITE_DOT,    sprite_from_parsed_game_object(&parsed_dot));
+    struct sprite *floor_sprite  = sprite_load(&resources, SPRITE_FLOOR,  sprite_from_parsed_game_object(&parsed_floor));
     
-    collisionOffset *player_collision_area = collision_area_load(&resources, COLLISION_AREA_PLAYER, collision_area_from_game_object_parse_result(&parsed_player));
-    collisionOffset *box_collision_area    = collision_area_load(&resources, COLLISION_AREA_BOX,    collision_area_from_game_object_parse_result(&parsed_box));
-    collisionOffset *dot_collision_area    = collision_area_load(&resources, COLLISION_AREA_DOT,    collision_area_from_game_object_parse_result(&parsed_dot));
-    collisionOffset *floor_collision_area  = collision_area_load(&resources, COLLISION_AREA_FLOOR,  collision_area_from_game_object_parse_result(&parsed_floor));
+    collisionOffset *player_collision = collision_offset_load(&resources, COLLISION_OFFSET_PLAYER, collision_offset_from_parsed_game_object(&parsed_player));
+    collisionOffset *box_collision    = collision_offset_load(&resources, COLLISION_OFFSET_BOX,    collision_offset_from_parsed_game_object(&parsed_box));
+    collisionOffset *dot_collision    = collision_offset_load(&resources, COLLISION_OFFSET_DOT,    collision_offset_from_parsed_game_object(&parsed_dot));
+    collisionOffset *floor_collision  = collision_offset_load(&resources, COLLISION_OFFSET_FLOOR,  collision_offset_from_parsed_game_object(&parsed_floor));
     
     free(parsed_player.collision_area_design);
     free(parsed_box.collision_area_design);
@@ -105,10 +105,10 @@ struct gameState game_init() {
     free(parsed_floor.collision_area_design);
     
     struct gameObject collidables[COLLIDABLE_COUNT] = {
-        { .position = {.x = 10,  .y = 5},  .sprite = box_sprite,   .collision_offset = box_collision_area   },
-        { .position = {.x = 20,  .y = 5},  .sprite = box_sprite,   .collision_offset = box_collision_area   },
-        { .position = {.x = -10, .y = 5},  .sprite = dot_sprite,   .collision_offset = dot_collision_area   },
-        { .position = {.x = -50, .y = 10}, .sprite = floor_sprite, .collision_offset = floor_collision_area },
+        { .position = {.x = 10,  .y = 5},  .sprite = box_sprite,   .collision_offset = box_collision   },
+        { .position = {.x = 20,  .y = 5},  .sprite = box_sprite,   .collision_offset = box_collision   },
+        { .position = {.x = -10, .y = 5},  .sprite = dot_sprite,   .collision_offset = dot_collision   },
+        { .position = {.x = -50, .y = 10}, .sprite = floor_sprite, .collision_offset = floor_collision },
     };
     struct gameState state = {
         .stop = 0,
@@ -120,7 +120,7 @@ struct gameState game_init() {
             .velocity = {.x = 0, .y = 0}, 
             .acceleration = {.x = 0, .y = 0.1},
             .sprite = player_sprite, 
-            .collision_offset = player_collision_area 
+            .collision_offset = player_collision 
         },
         .collidables = create_game_objects(collidables,COLLIDABLE_COUNT),
     };
