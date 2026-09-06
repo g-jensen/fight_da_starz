@@ -7,6 +7,7 @@
 #include "sys.h"
 #include "fps.h"
 #include "collision.h"
+#include "gameobject_load.h"
 
 #define MAX_SPEED 15
 
@@ -51,19 +52,6 @@ struct gameObjects create_game_objects(struct gameObject game_objects[], int gam
 }
 
 #define COLLIDABLE_COUNT 4
-
-struct gameObjectResources {
-    struct sprite *sprite;
-    collisionOffset *collision_offset;
-};
-
-struct gameObjectResources load_game_object(struct resources *resources, char* filepath) {
-    struct gameObjectParseResult parsed = parse_game_object_file(filepath);
-    struct sprite *sprite = sprite_load(resources, sprite_from_parsed_game_object(&parsed));
-    collisionOffset *collision_offset = collision_offset_load(resources, collision_offset_from_parsed_game_object(&parsed));
-    game_object_parse_result_free(&parsed);
-    return (struct gameObjectResources){.sprite = sprite, .collision_offset = collision_offset};
-}
 
 struct gameState game_init() {
     struct resources resources = allocate_resources();
