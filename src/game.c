@@ -52,34 +52,32 @@ struct gameObjects create_game_objects(struct gameObject game_objects[], int gam
 
 #define COLLIDABLE_COUNT 4
 
+struct gameObjectResources {
+    struct sprite *sprite;
+    collisionOffset *collision_offset;
+};
+
+struct gameObjectResources load_game_object(struct resources *resources, char* filepath) {
+    struct gameObjectParseResult parsed = parse_game_object_file(filepath);
+    struct sprite *sprite = sprite_load(resources, sprite_from_parsed_game_object(&parsed));
+    collisionOffset *collision_offset = collision_offset_load(resources, collision_offset_from_parsed_game_object(&parsed));
+    free(parsed.collision_area_design); // should be: game_object_parse_result_free(&parsed);
+    return (struct gameObjectResources){.sprite = sprite, .collision_offset = collision_offset};
+}
+
 struct gameState game_init() {
     struct resources resources = allocate_resources();
 
-    struct gameObjectParseResult parsed_player = parse_game_object_file("game_objects/player.txt");
-    struct gameObjectParseResult parsed_box = parse_game_object_file("game_objects/box.txt");
-    struct gameObjectParseResult parsed_dot = parse_game_object_file("game_objects/dot.txt");
-    struct gameObjectParseResult parsed_floor = parse_game_object_file("game_objects/floor.txt");
-    
-    struct sprite *player_sprite = sprite_load(&resources, SPRITE_PLAYER, sprite_from_parsed_game_object(&parsed_player));
-    struct sprite *box_sprite    = sprite_load(&resources, SPRITE_BOX,    sprite_from_parsed_game_object(&parsed_box));
-    struct sprite *dot_sprite    = sprite_load(&resources, SPRITE_DOT,    sprite_from_parsed_game_object(&parsed_dot));
-    struct sprite *floor_sprite  = sprite_load(&resources, SPRITE_FLOOR,  sprite_from_parsed_game_object(&parsed_floor));
-    
-    collisionOffset *player_collision = collision_offset_load(&resources, COLLISION_OFFSET_PLAYER, collision_offset_from_parsed_game_object(&parsed_player));
-    collisionOffset *box_collision    = collision_offset_load(&resources, COLLISION_OFFSET_BOX,    collision_offset_from_parsed_game_object(&parsed_box));
-    collisionOffset *dot_collision    = collision_offset_load(&resources, COLLISION_OFFSET_DOT,    collision_offset_from_parsed_game_object(&parsed_dot));
-    collisionOffset *floor_collision  = collision_offset_load(&resources, COLLISION_OFFSET_FLOOR,  collision_offset_from_parsed_game_object(&parsed_floor));
-    
-    free(parsed_player.collision_area_design);
-    free(parsed_box.collision_area_design);
-    free(parsed_dot.collision_area_design);
-    free(parsed_floor.collision_area_design);
+    struct gameObjectResources player_resources = load_game_object(&resources,"game_objects/player.txt");
+    struct gameObjectResources box_resources = load_game_object(&resources,"game_objects/box.txt");
+    struct gameObjectResources dot_resources = load_game_object(&resources,"game_objects/dot.txt");
+    struct gameObjectResources floor_resources = load_game_object(&resources,"game_objects/floor.txt");
     
     struct gameObject collidables[COLLIDABLE_COUNT] = {
-        { .position = {.x = 10,  .y = 5},  .sprite = box_sprite,   .collision_offset = box_collision   },
-        { .position = {.x = 20,  .y = 5},  .sprite = box_sprite,   .collision_offset = box_collision   },
-        { .position = {.x = -10, .y = 5},  .sprite = dot_sprite,   .collision_offset = dot_collision   },
-        { .position = {.x = -50, .y = 10}, .sprite = floor_sprite, .collision_offset = floor_collision },
+        { .position = {.x = 10,  .y = 5},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset   },
+        { .position = {.x = 20,  .y = 5},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset   },
+        { .position = {.x = -10, .y = 5},  .sprite = dot_resources.sprite,   .collision_offset = dot_resources.collision_offset   },
+        { .position = {.x = -50, .y = 10}, .sprite = floor_resources.sprite, .collision_offset = floor_resources.collision_offset },
     };
     struct gameState state = {
         .stop = 0,
@@ -90,8 +88,8 @@ struct gameState game_init() {
             .position = {.x = 0, .y = -10}, 
             .velocity = {.x = 0, .y = 0}, 
             .acceleration = {.x = 0, .y = 0.1},
-            .sprite = player_sprite, 
-            .collision_offset = player_collision 
+            .sprite = player_resources.sprite, 
+            .collision_offset = player_resources.collision_offset 
         },
         .collidables = create_game_objects(collidables,COLLIDABLE_COUNT),
     };
