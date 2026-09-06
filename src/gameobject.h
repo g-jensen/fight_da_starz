@@ -15,7 +15,7 @@ struct gameObject {
     struct fpoint velocity;
     struct fpoint acceleration;
     struct sprite *sprite;
-    collisionOffset *collision_area;
+    collisionOffset *collision_offset;
 };
 
 struct gameObjects {

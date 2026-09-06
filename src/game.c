@@ -20,7 +20,7 @@ int game_objects_is_in_range(void *_state) {
 }
 
 struct collisionArea object_collision_box(struct gameObject *object) {
-    return (struct collisionArea){.offsets = object->collision_area, .position = to_ipoint(object->position)};
+    return (struct collisionArea){.offsets = object->collision_offset, .position = to_ipoint(object->position)};
 }
 
 struct collisionArea game_objects_next_collision_box(void *_state) {
@@ -105,10 +105,10 @@ struct gameState game_init() {
     free(parsed_floor.collision_area_design);
     
     struct gameObject collidables[COLLIDABLE_COUNT] = {
-        { .position = {.x = 10,  .y = 5},  .sprite = box_sprite,   .collision_area = box_collision_area   },
-        { .position = {.x = 20,  .y = 5},  .sprite = box_sprite,   .collision_area = box_collision_area   },
-        { .position = {.x = -10, .y = 5},  .sprite = dot_sprite,   .collision_area = dot_collision_area   },
-        { .position = {.x = -50, .y = 10}, .sprite = floor_sprite, .collision_area = floor_collision_area },
+        { .position = {.x = 10,  .y = 5},  .sprite = box_sprite,   .collision_offset = box_collision_area   },
+        { .position = {.x = 20,  .y = 5},  .sprite = box_sprite,   .collision_offset = box_collision_area   },
+        { .position = {.x = -10, .y = 5},  .sprite = dot_sprite,   .collision_offset = dot_collision_area   },
+        { .position = {.x = -50, .y = 10}, .sprite = floor_sprite, .collision_offset = floor_collision_area },
     };
     struct gameState state = {
         .stop = 0,
@@ -120,7 +120,7 @@ struct gameState game_init() {
             .velocity = {.x = 0, .y = 0}, 
             .acceleration = {.x = 0, .y = 0.1},
             .sprite = player_sprite, 
-            .collision_area = player_collision_area 
+            .collision_offset = player_collision_area 
         },
         .collidables = create_game_objects(collidables,COLLIDABLE_COUNT),
     };
