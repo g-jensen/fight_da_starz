@@ -29,9 +29,9 @@ char* parse_design(FILE *f, int length) {
     return design;
 }
 
-struct gameObjectParseResult parse_game_object_file(char *filename) {
+struct gameObjectParseResult parse_game_object_file(char *filepath) {
     FILE *f;
-    f = fopen(filename, "r");
+    f = fopen(filepath, "r");
 
     struct ipoint offset;
     int design_length;
