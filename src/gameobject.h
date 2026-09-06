@@ -10,6 +10,10 @@ struct gameObjectParseResult {
     char* collision_area_design;
 };
 
+struct gameObjectParseResult parse_game_object_file(char *filename);
+struct sprite sprite_from_parsed_game_object(struct gameObjectParseResult *parse_result);
+collisionOffset collision_offset_from_parsed_game_object(struct gameObjectParseResult *parse_result);
+
 struct gameObject {
     struct fpoint position;
     struct fpoint velocity;
@@ -23,6 +27,9 @@ struct gameObjects {
     int length;
 };
 
-struct gameObjectParseResult parse_game_object_file(char *filename);
-struct sprite sprite_from_parsed_game_object(struct gameObjectParseResult *parse_result);
-collisionOffset collision_offset_from_parsed_game_object(struct gameObjectParseResult *parse_result);
+struct gameObjectIterState {
+    struct gameObjects *objects;
+    int idx;
+};
+
+int does_object_overlap(struct gameObject *object, struct gameObjects *collidables);
