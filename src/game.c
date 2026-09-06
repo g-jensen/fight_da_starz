@@ -11,9 +11,7 @@
 
 #define MAX_SPEED 15
 
-void update_state(struct gameState *state, struct optional_char c) {
-    state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
-
+void simulate_movement(struct gameState *state) {
     struct gameObject new_player = state->player; // TODO - refactor this unnecessary copy.
     new_player.velocity = clamp(fpoint_add(new_player.velocity,new_player.acceleration),MAX_SPEED);
     new_player.position = fpoint_add(new_player.position,new_player.velocity);
@@ -23,7 +21,17 @@ void update_state(struct gameState *state, struct optional_char c) {
         state->player.acceleration = (struct fpoint){};
         state->player.velocity = (struct fpoint){};
     }
+}
 
+void set_friction(struct gameObject *game_object) {
+    game_object->acceleration.x = -game_object->velocity.x*0.5;
+}
+
+void handle_movement_keys(struct gameState *state, struct optional_char c) {
+    if (!c.some) {
+        set_friction(&state->player);
+        return;
+    }
     switch (c.value) {
         case 'w':
             
@@ -37,12 +45,25 @@ void update_state(struct gameState *state, struct optional_char c) {
         case 'd':
             state->player.acceleration.x = 2;
             break;
+        default:
+            set_friction(&state->player);
+    }
+}
+
+void handle_quit_key(struct gameState *state, struct optional_char c) {
+    if (!c.some) return;
+    switch (c.value) {
         case CTRL_KEY('c'):
             state->stop = 1;
             break;
-        default:
-            state->player.acceleration.x = -state->player.velocity.x*0.5;
     }
+}
+
+void update_state(struct gameState *state, struct optional_char c) {
+    handle_quit_key(state,c);
+    handle_movement_keys(state,c);
+    simulate_movement(state);
+    state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 }
 
 struct gameObjects create_game_objects(struct gameObject game_objects[], int game_object_count) {
