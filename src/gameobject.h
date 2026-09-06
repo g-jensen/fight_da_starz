@@ -13,7 +13,7 @@ struct gameObject {
 };
 
 struct gameObjects {
-    struct gameObject *objects;
+    struct gameObject *items;
     int length;
 };
 

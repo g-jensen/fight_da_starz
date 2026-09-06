@@ -15,7 +15,7 @@ struct collisionArea object_collision_box(struct gameObject *object) {
 
 struct collisionArea iter_next_collision_box(void *_state) {
     struct gameObjectIterState *state = (struct gameObjectIterState*)_state;
-    struct gameObject object = state->objects->objects[state->idx++];
+    struct gameObject object = state->objects->items[state->idx++];
     return object_collision_box(&object);
 }
 
