@@ -11,22 +11,19 @@
 
 #define MAX_SPEED 15
 
+void handle_object_overlap(struct gameObject *game_object, float *direction, struct fpoint offset, struct gameObjects *collidables) {
+    if (!does_object_overlap(game_object, (struct ipoint){.x=ceil_f(offset.x),.y=ceil_f(offset.y)}, collidables)) {
+        *direction = offset.y == 0 ? offset.x : offset.y;
+        game_object->position = fpoint_add(game_object->position,offset);
+    } else {
+        *direction = 0;
+    }
+}
+
 void simulate_movement(struct gameObject *game_object, struct gameObjects *collidables) {
     struct fpoint velocity = clamp(fpoint_add(game_object->velocity,game_object->acceleration),MAX_SPEED);
-    
-    if (!does_object_overlap(game_object, (struct ipoint){.x=ceil_f(velocity.x), .y=0}, collidables)) {
-        game_object->velocity.x = velocity.x;
-        game_object->position.x += velocity.x;
-    } else {
-        game_object->velocity.x = 0;
-    }
-
-    if (!does_object_overlap(game_object, (struct ipoint){.x=0, .y=ceil_f(velocity.y)}, collidables)) {
-        game_object->velocity.y = velocity.y;
-        game_object->position.y += velocity.y;
-    } else {
-        game_object->velocity.y = 0;
-    }
+    handle_object_overlap(game_object, &game_object->velocity.x,(struct fpoint){.x=velocity.x,.y=0},collidables);
+    handle_object_overlap(game_object, &game_object->velocity.y,(struct fpoint){.x=0,.y=velocity.y},collidables);
 }
 
 void add_friction(struct gameObject *game_object) {
@@ -37,7 +34,7 @@ void add_gravity(struct gameObject *game_object) {
     game_object->acceleration.y += 0.1;
 }
 
-void handle_movement_keys(struct gameObject *game_object, struct optional_char c) {
+void add_user_movement(struct gameObject *game_object, struct optional_char c) {
     if (!c.some) return;
     switch (c.value) {
         case 'w':
@@ -55,7 +52,15 @@ void handle_movement_keys(struct gameObject *game_object, struct optional_char c
     }
 }
 
-void handle_quit_key(struct gameState *state, struct optional_char c) {
+void handle_object_physics(struct gameObject *game_object, struct gameObjects *collidables, struct optional_char c) {
+    game_object->acceleration = (struct fpoint){.x=0,.y=0};
+    add_gravity(game_object);
+    add_friction(game_object);
+    add_user_movement(game_object,c);
+    simulate_movement(game_object,collidables);
+}
+
+void handle_quit(struct gameState *state, struct optional_char c) {
     if (!c.some) return;
     switch (c.value) {
         case CTRL_KEY('c'):
@@ -65,14 +70,8 @@ void handle_quit_key(struct gameState *state, struct optional_char c) {
 }
 
 void update_state(struct gameState *state, struct optional_char c) {
-    handle_quit_key(state,c);
-    
-    state->player.acceleration = (struct fpoint){.x=0,.y=0};
-    add_gravity(&state->player);
-    add_friction(&state->player);
-    handle_movement_keys(&state->player,c);
-    simulate_movement(&state->player,&state->collidables);
-    
+    handle_quit(state,c);
+    handle_object_physics(&state->player,&state->collidables,c);
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 }
 
