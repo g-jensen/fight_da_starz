@@ -22,4 +22,4 @@ struct gameObjectIterState {
     int idx;
 };
 
-int does_object_overlap(struct gameObject *object, struct gameObjects *collidables);
+int does_object_overlap(struct gameObject *object, struct ipoint object_offset, struct gameObjects *collidables);
