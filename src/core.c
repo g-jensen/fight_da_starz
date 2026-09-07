@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <math.h>
 
 #include "core.h"
 
@@ -18,5 +19,5 @@ int insert_string(char* buf, char* string) {
 }
 
 int ceil_f(float f) {
-    return ((int)f)+1;
+    return (int)ceilf(f);
 }
