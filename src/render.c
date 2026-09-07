@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "render.h"
 #include "sprite.h"
@@ -35,8 +36,12 @@ struct ipoint render_position(struct ipoint p, struct ipoint center_position, st
     return ipoint_sub(ipoint_add(p, center_position), real_player_position);
 }
 
-void build_fps(struct gameState *state, struct sprite fps, int maxlen) {
-    snprintf(fps.design,maxlen,"FPS: %d",state->fps);
+void render_format(struct grid grid, struct ipoint position, char* dest, int maxlen, char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(dest,maxlen,fmt,args);
+    va_end (args);
+    place_sprite(position, grid, (struct sprite){.design = dest});
 }
 
 void render_state_into_grid(struct gameState *state, struct grid grid) {
@@ -54,9 +59,15 @@ void render_state_into_grid(struct gameState *state, struct grid grid) {
 
     place_sprite(player_rendered_position, grid, *state->player.sprite);
 
-    struct ipoint fps_rendered_position = {.x = 0, .y = 0};
-    char fps_design[16];
-    struct sprite fps  = {.design = fps_design};
-    build_fps(state,fps,16);
-    place_sprite(fps_rendered_position, grid, fps);
+    char fps[32];
+    render_format(grid,(struct ipoint){.y=0},fps,32,"FPS: %d",state->fps);
+
+    char pos[32];
+    render_format(grid,(struct ipoint){.y=1},pos,32,"POS: (%f,%f)",state->player.position.x,state->player.position.y);
+
+    char vel[32];
+    render_format(grid,(struct ipoint){.y=2},vel,32,"VEL: (%f,%f)",state->player.velocity.x,state->player.velocity.y);
+    
+    char acc[32];
+    render_format(grid,(struct ipoint){.y=3},acc,32,"ACC: (%f,%f)",state->player.acceleration.x,state->player.acceleration.y);
 }
