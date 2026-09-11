@@ -11,19 +11,31 @@
 
 #define MAX_SPEED 15
 
-void simulate_movement_direction(struct gameObject *game_object, float *direction, struct fpoint offset, struct gameObjects *collidables) {
-    if (!does_object_overlap(game_object, (struct ipoint){.x=ceil_f(offset.x),.y=ceil_f(offset.y)}, collidables)) {
-        *direction = offset.y == 0 ? offset.x : offset.y; // feels yucky
-        game_object->position = fpoint_add(game_object->position,offset);
-    } else {
-        *direction = 0;
+enum Direction {
+    DIRECTION_X,
+    DIRECTION_Y
+};
+
+float new_velocity_component(struct gameObject *game_object, float velocity_component, enum Direction direction, struct gameObjects *collidables) {
+    struct fpoint velocity = {
+        .x = (direction == DIRECTION_X) ? velocity_component : 0,
+        .y = (direction == DIRECTION_Y) ? velocity_component : 0
+    };
+    struct ipoint offset = {.x = ceil_f(velocity.x), .y = ceil_f(velocity.y)};
+    if (!does_object_overlap(game_object, offset, collidables)) {
+        return velocity_component;
     }
+    return 0;
 }
 
 void simulate_movement(struct gameObject *game_object, struct gameObjects *collidables) {
     struct fpoint velocity = clamp(fpoint_add(game_object->velocity,game_object->acceleration),MAX_SPEED);
-    simulate_movement_direction(game_object, &game_object->velocity.x,(struct fpoint){.x=velocity.x,.y=0},collidables);
-    simulate_movement_direction(game_object, &game_object->velocity.y,(struct fpoint){.x=0,.y=velocity.y},collidables);
+    
+    game_object->velocity.x = new_velocity_component(game_object,velocity.x,DIRECTION_X,collidables);
+    game_object->position.x += game_object->velocity.x;
+    
+    game_object->velocity.y = new_velocity_component(game_object,velocity.y,DIRECTION_Y,collidables);
+    game_object->position.y += game_object->velocity.y;
 }
 
 void add_friction(struct gameObject *game_object) {
