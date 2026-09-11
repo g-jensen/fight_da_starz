@@ -46,20 +46,28 @@ void add_gravity(struct gameObject *game_object) {
     game_object->acceleration.y += 0.1;
 }
 
+void jump(struct gameObject *game_object) {
+    game_object->acceleration.y -= 1;
+}
+
+void push(struct gameObject *game_object, float force) {
+    game_object->acceleration.x += force;
+}
+
 void add_user_movement(struct gameObject *game_object, struct optional_char c) {
     if (!c.some) return;
     switch (c.value) {
         case 'w':
-            
+            jump(game_object);
+            break;
+        case ' ':
+            jump(game_object);
             break;
         case 'a':
-            game_object->acceleration.x -= 2;
-            break;
-        case 's':
-            
+            push(game_object, -2);
             break;
         case 'd':
-            game_object->acceleration.x += 2;
+            push(game_object, 2);
             break;
     }
 }
