@@ -12,8 +12,8 @@ struct collisionArea {
     collisionOffset *offsets;
 };
 
-iterator_define(collisionBoxIter, struct collisionArea)
+iterator_define(collisionAreaIter, struct collisionArea)
 
 int collision_check_point(struct ipoint p, struct collisionArea *collision_area);
 int collision_check_area(struct collisionArea *ca_0, struct collisionArea *ca_1);
-int collision_check_areas(struct collisionArea *ca_0, struct collisionBoxIter *cas);
+int collision_check_areas(struct collisionArea *ca_0, struct collisionAreaIter *cas);

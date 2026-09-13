@@ -18,7 +18,7 @@ int collision_check_area(struct collisionArea *ca_0, struct collisionArea *ca_1)
     return 0;
 }
 
-int collision_check_areas(struct collisionArea *target, struct collisionBoxIter *cas) {
+int collision_check_areas(struct collisionArea *target, struct collisionAreaIter *cas) {
     while(cas->more(cas->state)) {
         struct collisionArea ca = cas->next(cas->state);
         if (collision_check_area(target,&ca)) {

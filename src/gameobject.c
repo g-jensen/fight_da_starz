@@ -21,7 +21,7 @@ struct collisionArea iter_next_collision_box(void *_state) {
 
 int does_object_overlap(struct gameObject *object, struct ipoint object_offset, struct gameObjects *collidables) {
     struct gameObjectIterState s = {.idx = 0, .objects = collidables};
-    struct collisionBoxIter iter = {.state = &s, .next = &iter_next_collision_box, .more = &iter_is_in_range};
+    struct collisionAreaIter iter = {.state = &s, .next = &iter_next_collision_box, .more = &iter_is_in_range};
     struct collisionArea player_ca = object_collision_box(object, object_offset);
     return collision_check_areas(&player_ca, &iter);
 }
