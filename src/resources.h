@@ -5,7 +5,7 @@
 
 struct resources {
     struct sprites sprites;
-    collisionOffsets collision_areas;
+    collisionOffsets collision_offsets;
 };
 
 struct resources allocate_resources();

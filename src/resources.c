@@ -24,16 +24,16 @@ struct sprite* sprite_load(struct resources *resources, struct sprite sprite) {
 }
 
 collisionOffset* collision_offset_get(struct resources *resources, int collision_offset_index) {
-    return &resources->collision_areas.items[collision_offset_index];
+    return &resources->collision_offsets.items[collision_offset_index];
 }
 
 int collision_offset_count = 0;
 
 collisionOffset* collision_offset_load(struct resources *resources, collisionOffset collision_area) {
-    if (!(collision_offset_count < resources->collision_areas.length)) {
+    if (!(collision_offset_count < resources->collision_offsets.length)) {
         die("collision_offset_load: too many collision offsets");
     }
-    resources->collision_areas.items[collision_offset_count] = collision_area;
+    resources->collision_offsets.items[collision_offset_count] = collision_area;
     collisionOffset *ptr = collision_offset_get(resources,collision_offset_count);
     collision_offset_count++;
     return ptr;
@@ -42,12 +42,12 @@ collisionOffset* collision_offset_load(struct resources *resources, collisionOff
 struct resources allocate_resources() {
     struct resources resources = {
         .sprites = {.items = malloc(sizeof(struct sprite)*MAX_SPRITE_COUNT), .length = MAX_SPRITE_COUNT},
-        .collision_areas = {.items = malloc(sizeof(collisionOffset)*MAX_COLLISION_OFFSET_COUNT), .length = MAX_COLLISION_OFFSET_COUNT},
+        .collision_offsets = {.items = malloc(sizeof(collisionOffset)*MAX_COLLISION_OFFSET_COUNT), .length = MAX_COLLISION_OFFSET_COUNT},
     };
     return resources;
 }
 
 void game_resources_free(struct resources *game_resources) {
     sprites_free(&game_resources->sprites);
-    point_arrays_free(&game_resources->collision_areas);
+    point_arrays_free(&game_resources->collision_offsets);
 }
