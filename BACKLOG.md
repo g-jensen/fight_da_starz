@@ -4,7 +4,8 @@
 - [ ] click support
 - [ ] colored grid support
 - [x] collision
-- [ ] gravity, jumping
+- [ ] fix collision phasing bug
+- [x] gravity, jumping
 - [ ] keybind system
 - [ ] maps
 - [ ] text boxes/speech bubbles
