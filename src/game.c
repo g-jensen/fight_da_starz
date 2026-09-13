@@ -50,18 +50,27 @@ void jump(struct gameObject *game_object) {
     game_object->acceleration.y -= 1;
 }
 
+int is_grounded(struct gameObject *game_object, struct gameObjects *collidables) {
+    struct ipoint offset = {.x = 0, .y = 1};
+    return does_object_overlap(game_object, offset, collidables);
+}
+
 void push(struct gameObject *game_object, float force) {
     game_object->acceleration.x += force;
 }
 
-void add_user_movement(struct gameObject *game_object, struct optional_char c) {
+void add_user_movement(struct gameObject *game_object, struct optional_char c, int can_jump) {
     if (!c.some) return;
     switch (c.value) {
         case 'w':
-            jump(game_object);
+            if (can_jump) {
+                jump(game_object);
+            }
             break;
         case ' ':
-            jump(game_object);
+            if (can_jump) {
+                jump(game_object);
+            }
             break;
         case 'a':
             push(game_object, -2);
@@ -76,8 +85,8 @@ void handle_object_physics(struct gameObject *game_object, struct gameObjects *c
     game_object->acceleration = (struct fpoint){.x=0,.y=0};
     add_gravity(game_object);
     add_friction(game_object);
-    add_user_movement(game_object,c);
-    simulate_movement(game_object,collidables);
+    add_user_movement(game_object, c, is_grounded(game_object, collidables));
+    simulate_movement(game_object, collidables);
 }
 
 void handle_quit(struct gameState *state, struct optional_char c) {
