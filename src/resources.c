@@ -11,15 +11,13 @@ struct sprite* sprite_get(struct resources *resources, int sprite_index) {
     return &resources->sprites.items[sprite_index];
 }
 
-int sprite_count = 0;
-
 struct sprite* sprite_load(struct resources *resources, struct sprite sprite) {
-    if (!(sprite_count < resources->sprites.length)) {
+    if (!(resources->sprites.length < resources->sprites.capacity)) {
         die("sprite_load: too many sprites");
     }
-    resources->sprites.items[sprite_count] = sprite;
-    struct sprite *ptr = sprite_get(resources,sprite_count);
-    sprite_count++;
+    resources->sprites.items[resources->sprites.length] = sprite;
+    struct sprite *ptr = sprite_get(resources,resources->sprites.length);
+    resources->sprites.length++;
     return ptr;
 }
 
@@ -27,22 +25,20 @@ collisionOffset* collision_offset_get(struct resources *resources, int collision
     return &resources->collision_offsets.items[collision_offset_index];
 }
 
-int collision_offset_count = 0;
-
 collisionOffset* collision_offset_load(struct resources *resources, collisionOffset collision_area) {
-    if (!(collision_offset_count < resources->collision_offsets.length)) {
+    if (!(resources->collision_offsets.length < resources->collision_offsets.capacity)) {
         die("collision_offset_load: too many collision offsets");
     }
-    resources->collision_offsets.items[collision_offset_count] = collision_area;
-    collisionOffset *ptr = collision_offset_get(resources,collision_offset_count);
-    collision_offset_count++;
+    resources->collision_offsets.items[resources->collision_offsets.length] = collision_area;
+    collisionOffset *ptr = collision_offset_get(resources,resources->collision_offsets.length);
+    resources->collision_offsets.length++;
     return ptr;
 }
 
 struct resources allocate_resources() {
     struct resources resources = {
-        .sprites = {.items = malloc(sizeof(struct sprite)*MAX_SPRITE_COUNT), .length = MAX_SPRITE_COUNT},
-        .collision_offsets = {.items = malloc(sizeof(collisionOffset)*MAX_COLLISION_OFFSET_COUNT), .length = MAX_COLLISION_OFFSET_COUNT},
+        .sprites = {.items = malloc(sizeof(struct sprite)*MAX_SPRITE_COUNT), .length = 0, .capacity = MAX_SPRITE_COUNT},
+        .collision_offsets = {.items = malloc(sizeof(collisionOffset)*MAX_COLLISION_OFFSET_COUNT), .length = 0, .capacity = MAX_COLLISION_OFFSET_COUNT},
     };
     return resources;
 }

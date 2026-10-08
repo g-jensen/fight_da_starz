@@ -70,12 +70,12 @@ int window_get_size(int *rows, int *cols) {
 }
 
 void window_buf_draw(struct drawBuf *drawBuf) {
-    write(STDOUT_FILENO, drawBuf->b, drawBuf->len);
+    write(STDOUT_FILENO, drawBuf->b, drawBuf->length);
 }
 
 struct drawBuf drawbuf_create(int rows, int cols) {
     int len = rows*cols + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR);
-    struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .len = len};
+    struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .length = len, .capacity = len};
     return drawBuf;
 }
 

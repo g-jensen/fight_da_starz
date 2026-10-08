@@ -4,7 +4,8 @@
 
 struct drawBuf {
   char *b;
-  int len;
+  int length;
+  int capacity;
 };
 
 #define DRAWBUF_INIT {NULL, 0}

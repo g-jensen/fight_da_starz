@@ -10,6 +10,7 @@ struct sprite {
 struct sprites {
     struct sprite *items;
     int length;
+    int capacity;
 };
 
 struct sprite sprite_create_from_file(char *filename);

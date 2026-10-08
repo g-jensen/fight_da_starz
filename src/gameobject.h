@@ -15,6 +15,7 @@ struct gameObject {
 struct gameObjects {
     struct gameObject *items;
     int length;
+    int capacity;
 };
 
 struct gameObjectIterState {

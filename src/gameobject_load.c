@@ -95,7 +95,7 @@ collisionOffset collision_offset_from_parsed_game_object(struct gameObjectParseR
         position.x++;
     }
 
-    return (collisionOffset){.points = collision_area, .length = length}; 
+    return (collisionOffset){.points = collision_area, .length = length, .capacity = length}; 
 }
 
 struct gameObjectResources load_game_object(struct resources *resources, char* filepath) {
