@@ -73,8 +73,12 @@ void window_buf_draw(struct drawBuf *drawBuf) {
     write(STDOUT_FILENO, drawBuf->b, drawBuf->length);
 }
 
+int window_drawbuf_length(int rows, int cols) {
+    return rows*cols + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR);
+}
+
 struct drawBuf drawbuf_create(int rows, int cols) {
-    int len = rows*cols + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR);
+    int len = window_drawbuf_length(rows, cols); //rows*cols + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR);
     struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .length = len, .capacity = len};
     return drawBuf;
 }
@@ -100,25 +104,25 @@ int window_buf_new_line(char* buf) {
     return insert_string(buf,NEW_LINE);
 }
 
-void grid_into_drawbuf(struct grid grid, struct drawBuf drawBuf) {
+void grid_into_drawbuf(struct grid *grid, struct drawBuf *drawBuf) {
     int i = 0;
-    i += window_buf_reset_cursor(drawBuf.b+i);
-    for (int y = 0; y < grid.rows; y++) {
-        i += window_buf_clear_line(drawBuf.b+i);
-        for (int x = 0; x < grid.cols; x++) {
-            drawBuf.b[i++] = grid_get(grid,y,x);
+    i += window_buf_reset_cursor(drawBuf->b+i);
+    for (int y = 0; y < grid->rows; y++) {
+        i += window_buf_clear_line(drawBuf->b+i);
+        for (int x = 0; x < grid->cols; x++) {
+            drawBuf->b[i++] = grid_get(grid,y,x);
         }
-        if (y < grid.rows - 1) {
-            i += window_buf_new_line(drawBuf.b+i);
+        if (y < grid->rows - 1) {
+            i += window_buf_new_line(drawBuf->b+i);
         }
     }
 }
 
-void window_draw(struct window window, struct grid grid) {
-    grid_into_drawbuf(grid,window.drawBuf);
-    window_buf_draw(&window.drawBuf);
+void window_draw(struct window *window, struct grid *grid) {
+    grid_into_drawbuf(grid,&window->drawBuf);
+    window_buf_draw(&window->drawBuf);
 }
 
-void window_free(struct window window) {
-    drawbuf_free(&window.drawBuf);
+void window_free(struct window *window) {
+    drawbuf_free(&window->drawBuf);
 }
