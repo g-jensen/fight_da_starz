@@ -8,16 +8,16 @@
 #define MAX_COLLISION_OFFSET_COUNT 8
 
 struct sprite* sprite_get(struct resources *resources, int sprite_index) {
-    return &resources->sprites.items[sprite_index];
+    return &resources->sprites_buf.buffer[sprite_index];
 }
 
 struct sprite* sprite_load(struct resources *resources, struct sprite sprite) {
-    if (!(resources->sprites.length < resources->sprites.capacity)) {
-        die("sprite_load: too many sprites");
+    if (!(resources->sprites_buf.length < SPRITES_CAPACITY)) {
+        die("sprite_load: too many sprites_buf");
     }
-    resources->sprites.items[resources->sprites.length] = sprite;
-    struct sprite *ptr = sprite_get(resources,resources->sprites.length);
-    resources->sprites.length++;
+    resources->sprites_buf.buffer[resources->sprites_buf.length] = sprite;
+    struct sprite *ptr = sprite_get(resources,resources->sprites_buf.length);
+    resources->sprites_buf.length++;
     return ptr;
 }
 
@@ -35,15 +35,15 @@ collisionOffset* collision_offset_load(struct resources *resources, collisionOff
     return ptr;
 }
 
-struct resources allocate_resources() {
-    struct resources resources = {
-        .sprites = {.items = memory_map(sizeof(struct sprite)*MAX_SPRITE_COUNT), .length = 0, .capacity = MAX_SPRITE_COUNT},
+int resources_init(struct resources *resources) {
+    *resources = (struct resources){
+        .designs_buf = {},
+        .sprites_buf = {},
         .collision_offsets = {.items = memory_map(sizeof(collisionOffset)*MAX_COLLISION_OFFSET_COUNT), .length = 0, .capacity = MAX_COLLISION_OFFSET_COUNT},
     };
-    return resources;
+    return 0;
 }
 
 void game_resources_free(struct resources *game_resources) {
-    sprites_free(&game_resources->sprites);
     point_arrays_free(&game_resources->collision_offsets);
 }

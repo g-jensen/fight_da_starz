@@ -112,13 +112,11 @@ struct gameObjects create_game_objects(struct gameObject game_objects[], int gam
 
 #define COLLIDABLE_COUNT 4
 
-struct gameState game_init() {
-    struct resources resources = allocate_resources();
-
-    struct gameObjectResources player_resources = load_game_object(&resources,"game_objects/player.txt");
-    struct gameObjectResources box_resources = load_game_object(&resources,"game_objects/box.txt");
-    struct gameObjectResources dot_resources = load_game_object(&resources,"game_objects/dot.txt");
-    struct gameObjectResources floor_resources = load_game_object(&resources,"game_objects/floor.txt");
+struct gameState game_init(struct resources *resources) {
+    struct gameObjectResources player_resources = load_game_object(resources,"game_objects/player.txt");
+    struct gameObjectResources box_resources = load_game_object(resources,"game_objects/box.txt");
+    struct gameObjectResources dot_resources = load_game_object(resources,"game_objects/dot.txt");
+    struct gameObjectResources floor_resources = load_game_object(resources,"game_objects/floor.txt");
     
     struct gameObject collidables[COLLIDABLE_COUNT] = {
         { .position = {.x = 10,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset   },
@@ -147,6 +145,6 @@ void game_objects_free(struct gameObjects *game_objects) {
 }
 
 void game_shutdown(struct gameState* state) {
-    game_resources_free(&state->resources);
+    game_resources_free(state->resources);
     game_objects_free(&state->collidables);
 }

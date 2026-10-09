@@ -30,7 +30,10 @@ int main() {
     struct grid render_grid;
     grid_mmap(&render_grid, window.rows, window.cols);
 
-    struct gameState state = game_init();
+    struct resources resources;
+    resources_init(&resources);
+
+    struct gameState state = game_init(&resources);
     long mus_read_timeout = 5000;
     long start_time;
 

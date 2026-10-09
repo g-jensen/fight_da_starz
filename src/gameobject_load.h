@@ -4,14 +4,15 @@
 #include "resources.h"
 #include "sprite.h"
 #include "collision.h"
+#include "design.h"
 
 struct gameObjectParseResult {
     struct ipoint offset;
-    char* sprite_design;
-    char* collision_area_design;
+    struct design sprite_design;
+    struct design collision_area_design;
 };
 
-struct gameObjectParseResult parse_game_object_file(char *filepath);
+struct gameObjectParseResult parse_game_object_file(struct designs_buf *designs_buf, char *filepath);
 
 struct gameObjectResources {
     struct sprite *sprite;
