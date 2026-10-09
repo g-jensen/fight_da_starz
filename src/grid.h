@@ -6,7 +6,7 @@ struct grid {
     int cols;
 };
 
-struct grid grid_create(int rows, int cols, char fill_char);
+int grid_mmap(struct grid *grid, int rows, int cols);
 char grid_get(struct grid *grid, int row, int col);
 void grid_set(struct grid *grid, int row, int col, char c);
 void grid_free(struct grid *grid);

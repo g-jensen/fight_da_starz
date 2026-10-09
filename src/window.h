@@ -29,7 +29,7 @@ void window_init();
 void window_shutdown();
 int window_get_size(int *rows, int *cols);
 int window_drawbuf_length(int rows, int cols);
-struct window window_create();
+int window_mmap(struct window *window);
 void window_free(struct window *window);
 void window_draw(struct window *window, struct grid *grid);
 struct optional_char window_read_char(long mus_timeout);

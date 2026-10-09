@@ -5,8 +5,10 @@
 #include "render.h"
 #include "sprite.h"
 
-struct grid render_grid_create(int rows, int cols) {
-    return grid_create(rows,cols, DEFAULT_CHAR);
+int render_grid_create(struct grid *grid, int rows, int cols) {
+    grid_mmap(grid, rows,cols);
+    grid_fill(grid, DEFAULT_CHAR);
+    return 0;
 }
 
 void place_char(struct ipoint p, struct grid *grid, char c) {

@@ -10,5 +10,4 @@ void point_arrays_free(struct pointArrays *point_arrays) {
     for(int i = 0; i < point_arrays->length; i++) {
         point_array_free(&point_arrays->items[i]);
     }
-    free(point_arrays->items);
 }

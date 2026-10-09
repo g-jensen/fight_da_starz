@@ -2,8 +2,8 @@
 
 #include "resources.h"
 #include "core.h"
+#include "sys.h"
 
-// eventually define growing array or base the size off of number of files in game_objects/ like allocate_resources(resource_counts(path))
 #define MAX_SPRITE_COUNT 8
 #define MAX_COLLISION_OFFSET_COUNT 8
 
@@ -37,8 +37,8 @@ collisionOffset* collision_offset_load(struct resources *resources, collisionOff
 
 struct resources allocate_resources() {
     struct resources resources = {
-        .sprites = {.items = malloc(sizeof(struct sprite)*MAX_SPRITE_COUNT), .length = 0, .capacity = MAX_SPRITE_COUNT},
-        .collision_offsets = {.items = malloc(sizeof(collisionOffset)*MAX_COLLISION_OFFSET_COUNT), .length = 0, .capacity = MAX_COLLISION_OFFSET_COUNT},
+        .sprites = {.items = memory_map(sizeof(struct sprite)*MAX_SPRITE_COUNT), .length = 0, .capacity = MAX_SPRITE_COUNT},
+        .collision_offsets = {.items = memory_map(sizeof(collisionOffset)*MAX_COLLISION_OFFSET_COUNT), .length = 0, .capacity = MAX_COLLISION_OFFSET_COUNT},
     };
     return resources;
 }

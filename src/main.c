@@ -21,18 +21,15 @@ void pace_tick(long start_time, long end_time) {
     musleep(MUS_PER_TICK - (end_time - start_time));
 }
 
-#include <sys/mman.h> // breaks on windows
-
 int main() {
     struct window window;
-    if (window_get_size(&window.rows, &window.cols) == -1) {
-        die("window_get_size");
+    if (window_mmap(&window) == -1) {
+        die("window_mmap");
     }
-    int window_drawbuf_len = window_drawbuf_length(window.rows, window.cols);
-    char* window_drawbuf = mmap(NULL, window_drawbuf_len, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-    window.drawBuf = (struct drawBuf){.b = window_drawbuf, .length = window_drawbuf_len, .capacity = window_drawbuf_len};
 
-    struct grid render_grid = render_grid_create(window.rows,window.cols);
+    struct grid render_grid;
+    grid_mmap(&render_grid, window.rows, window.cols);
+
     struct gameState state = game_init();
     long mus_read_timeout = 5000;
     long start_time;
@@ -41,7 +38,7 @@ int main() {
     log_info("dev mode active!");
     #endif
 
-    window_init();
+    window_init(); // window_init() and window_shutdown() don't really have anything to do with the 'window' abstraction. Maybe rename to terminal_init() and _shutdown()
     atexit(window_shutdown);
     while (!state.stop) {
         start_time = get_time_mus();
@@ -50,7 +47,6 @@ int main() {
         pace_tick(start_time,get_time_mus());
     }
     game_shutdown(&state);
-    grid_free(&render_grid);
 
     return 0;
 }

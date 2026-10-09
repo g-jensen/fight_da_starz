@@ -1,6 +1,7 @@
 #include <sys/select.h>
 #include <sys/time.h>
 #include <sys/ioctl.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 #include "sys.h"
@@ -40,4 +41,8 @@ int get_terminal_size(int *height, int *width) {
     *height = ws.ws_row;
     *width = ws.ws_col;
     return result;
+}
+
+void* memory_map(size_t len) {
+    return mmap(NULL, len, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 }

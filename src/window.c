@@ -78,18 +78,20 @@ int window_drawbuf_length(int rows, int cols) {
 }
 
 struct drawBuf drawbuf_create(int rows, int cols) {
-    int len = window_drawbuf_length(rows, cols); //rows*cols + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR);
-    struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .length = len, .capacity = len};
+    int len = window_drawbuf_length(rows, cols);
+    struct drawBuf drawBuf = {.b = malloc(len*sizeof(char)), .length = len, .capacity = len}; // unused
     return drawBuf;
 }
 
-struct window window_create() {
-    struct window cfg;
-    if (window_get_size(&cfg.rows, &cfg.cols) == -1) {
-        die("window_get_size");
+int window_mmap(struct window *window) {
+    char *window_drawbuf;
+    if (window_get_size(&window->rows, &window->cols) == -1) {
+        return -1;
     }
-    cfg.drawBuf = drawbuf_create(cfg.rows,cfg.cols);
-    return cfg;
+    int window_drawbuf_len = window_drawbuf_length(window->rows, window->cols);
+    window_drawbuf = memory_map(window_drawbuf_len*sizeof(char));
+    window->drawBuf = (struct drawBuf){.b = window_drawbuf, .length = window_drawbuf_len, .capacity = window_drawbuf_len};
+    return 0;
 }
 
 int window_buf_reset_cursor(char* buf) {
