@@ -19,7 +19,7 @@
 #define HIDE_CURSOR "\x1b[?25l"
 #define SHOW_CURSOR "\x1b[?25h"
 
-typedef struct {
+typedef struct window {
     int rows;
     int cols;
     struct drawBuf drawBuf;

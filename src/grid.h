@@ -1,6 +1,6 @@
 #pragma once
 
-typedef struct {
+typedef struct grid {
     char* chars;
     int rows;
     int cols;
