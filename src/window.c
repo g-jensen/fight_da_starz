@@ -77,7 +77,7 @@ int window_drawbuf_length(int rows, int cols) {
     return rows*cols + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR);
 }
 
-int window_mmap(struct window *window) {
+int window_mmap(window *window) {
     char *window_drawbuf;
     if (window_get_size(&window->rows, &window->cols) == -1) {
         return -1;
@@ -114,7 +114,7 @@ void grid_into_drawbuf(struct grid *grid, struct drawBuf *drawBuf) {
     }
 }
 
-void window_draw(struct window *window, struct grid *grid) {
+void window_draw(window *window, struct grid *grid) {
     grid_into_drawbuf(grid,&window->drawBuf);
     window_buf_draw(&window->drawBuf);
 }

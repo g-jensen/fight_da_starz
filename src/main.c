@@ -12,7 +12,7 @@
 #include "log.h"
 #endif
 
-void render_state_to_window(struct gameState *state, struct window *window, struct grid *render_grid) {
+void render_state_to_window(struct gameState *state, window *window, struct grid *render_grid) {
     render_state_into_grid(state,render_grid);
     window_draw(window,render_grid);
 }
@@ -22,7 +22,7 @@ void pace_tick(long start_time, long end_time) {
 }
 
 int main() {
-    struct window window;
+    window window;
     if (window_mmap(&window) == -1) {
         die("window_mmap");
     }

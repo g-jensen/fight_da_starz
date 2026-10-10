@@ -19,16 +19,16 @@
 #define HIDE_CURSOR "\x1b[?25l"
 #define SHOW_CURSOR "\x1b[?25h"
 
-struct window {
+typedef struct {
     int rows;
     int cols;
     struct drawBuf drawBuf;
-};
+} window;
 
 void window_init();
 void window_shutdown();
 int window_get_size(int *rows, int *cols);
 int window_drawbuf_length(int rows, int cols);
-int window_mmap(struct window *window);
-void window_draw(struct window *window, struct grid *grid);
+int window_mmap(window *window);
+void window_draw(window *window, struct grid *grid);
 struct optional_char window_read_char(long mus_timeout);
