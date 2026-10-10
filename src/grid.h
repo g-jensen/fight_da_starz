@@ -1,12 +1,12 @@
 #pragma once
 
-struct grid {
+typedef struct {
     char* chars;
     int rows;
     int cols;
-};
+} grid;
 
-int grid_mmap(struct grid *grid, int rows, int cols);
-char grid_get(struct grid *grid, int row, int col);
-void grid_set(struct grid *grid, int row, int col, char c);
-void grid_fill(struct grid *grid, char c);
+int grid_mmap(grid *grid, int rows, int cols);
+char grid_get(grid *grid, int row, int col);
+void grid_set(grid *grid, int row, int col, char c);
+void grid_fill(grid *grid, char c);

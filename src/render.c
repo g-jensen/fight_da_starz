@@ -5,19 +5,19 @@
 #include "render.h"
 #include "sprite.h"
 
-int render_grid_create(struct grid *grid, int rows, int cols) {
+int render_grid_create(grid *grid, int rows, int cols) {
     grid_mmap(grid, rows,cols);
     grid_fill(grid, DEFAULT_CHAR);
     return 0;
 }
 
-void place_char(struct ipoint p, struct grid *grid, char c) {
+void place_char(struct ipoint p, grid *grid, char c) {
     if(!(p.x >= grid->cols || p.y >= grid->rows || p.x < 0 || p.y < 0)){
         grid_set(grid, p.y, p.x, c);
     }
 }
 
-void place_sprite(struct ipoint rendered_position, struct grid *grid, struct sprite *sprite) {
+void place_sprite(struct ipoint rendered_position, grid *grid, struct sprite *sprite) {
     struct ipoint position = {0,0};
 
     for(int i = 0; i < sprite->design.length; i++) {
@@ -38,7 +38,7 @@ struct ipoint render_position(struct ipoint p, struct ipoint center_position, st
     return ipoint_sub(ipoint_add(p, center_position), real_player_position);
 }
 
-void render_format(struct grid *grid, struct ipoint position, char* dest, int maxlen, char* fmt, ...) {
+void render_format(grid *grid, struct ipoint position, char* dest, int maxlen, char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
     vsnprintf(dest,maxlen,fmt,args);
@@ -50,7 +50,7 @@ void render_format(struct grid *grid, struct ipoint position, char* dest, int ma
     place_sprite(position, grid, &sprite);
 }
 
-void render_state_into_grid(struct gameState *state, struct grid *grid) {
+void render_state_into_grid(struct gameState *state, grid *grid) {
     grid_fill(grid, DEFAULT_CHAR);
 
     struct ipoint center_position = {.x = grid->cols/2, .y = grid->rows/2};

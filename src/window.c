@@ -100,7 +100,7 @@ int window_buf_new_line(char* buf) {
     return insert_string(buf,NEW_LINE);
 }
 
-void grid_into_drawbuf(struct grid *grid, struct drawBuf *drawBuf) {
+void grid_into_drawbuf(grid *grid, struct drawBuf *drawBuf) {
     int i = 0;
     i += window_buf_reset_cursor(drawBuf->b+i);
     for (int y = 0; y < grid->rows; y++) {
@@ -114,7 +114,7 @@ void grid_into_drawbuf(struct grid *grid, struct drawBuf *drawBuf) {
     }
 }
 
-void window_draw(window *window, struct grid *grid) {
+void window_draw(window *window, grid *grid) {
     grid_into_drawbuf(grid,&window->drawBuf);
     window_buf_draw(&window->drawBuf);
 }

@@ -6,5 +6,5 @@
 
 #define DEFAULT_CHAR ' '
 
-int render_grid_create(struct grid *grid, int rows, int cols);
-void render_state_into_grid(struct gameState *state, struct grid *grid); // TODO - change to render_sprites_into_grid. `render` shouldn't know about `game`. maybe include `camera` abstraction.
+int render_grid_create(grid *grid, int rows, int cols);
+void render_state_into_grid(struct gameState *state, grid *grid); // TODO - change to render_sprites_into_grid. `render` shouldn't know about `game`. maybe include `camera` abstraction.

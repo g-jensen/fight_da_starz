@@ -30,5 +30,5 @@ void window_shutdown();
 int window_get_size(int *rows, int *cols);
 int window_drawbuf_length(int rows, int cols);
 int window_mmap(window *window);
-void window_draw(window *window, struct grid *grid);
+void window_draw(window *window, grid *grid);
 struct optional_char window_read_char(long mus_timeout);

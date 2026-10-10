@@ -12,7 +12,7 @@
 #include "log.h"
 #endif
 
-void render_state_to_window(struct gameState *state, window *window, struct grid *render_grid) {
+void render_state_to_window(struct gameState *state, window *window, grid *render_grid) {
     render_state_into_grid(state,render_grid);
     window_draw(window,render_grid);
 }
@@ -27,7 +27,7 @@ int main() {
         die("window_mmap");
     }
     
-    struct grid render_grid;
+    grid render_grid;
     grid_mmap(&render_grid, window.rows, window.cols);
     
     struct resources resources;
