@@ -145,6 +145,5 @@ void game_objects_free(struct gameObjects *game_objects) {
 }
 
 void game_shutdown(struct gameState* state) {
-    game_resources_free(state->resources);
     game_objects_free(&state->collidables);
 }
