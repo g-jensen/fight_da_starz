@@ -30,7 +30,7 @@ int main() {
     grid render_grid;
     grid_mmap(&render_grid, window.rows, window.cols);
     
-    struct resources resources;
+    resources resources;
     resources_init(&resources);
 
     struct gameState state = game_init(&resources);

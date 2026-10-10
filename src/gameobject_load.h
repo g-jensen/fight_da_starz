@@ -19,4 +19,4 @@ struct gameObjectResources {
     struct collision_offset collision_offset;
 };
 
-struct gameObjectResources load_game_object(struct resources *resources, char* filepath);
+struct gameObjectResources load_game_object(resources *resources, char* filepath);

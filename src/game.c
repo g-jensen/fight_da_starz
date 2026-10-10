@@ -104,7 +104,7 @@ void update_state(struct gameState *state, struct optional_char c) {
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 }
 
-struct gameState game_init(struct resources *resources) {
+struct gameState game_init(resources *resources) {
     struct gameObjectResources player_resources = load_game_object(resources,"game_objects/player.txt");
     struct gameObjectResources box_resources = load_game_object(resources,"game_objects/box.txt");
     struct gameObjectResources dot_resources = load_game_object(resources,"game_objects/dot.txt");

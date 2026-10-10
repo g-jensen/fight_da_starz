@@ -9,7 +9,7 @@
 
 struct gameState {
     int stop;
-    struct resources *resources;
+    resources *resources;
     struct gameObject player;
     struct collidables_buf collidables; // TODO - gameObjects having a collisionArea, but not all gameObjects being 'collidables' feels weird here.
     long long tick_start_mus;
@@ -18,4 +18,4 @@ struct gameState {
 };
 
 void update_state(struct gameState *state, struct optional_char c);
-struct gameState game_init(struct resources *resources);
+struct gameState game_init(resources *resources);

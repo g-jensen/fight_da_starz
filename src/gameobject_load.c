@@ -108,7 +108,7 @@ struct sprite sprite_from_parsed_game_object(struct gameObjectParseResult *parse
     return (struct sprite){.design = parse_result->sprite_design, .offset = parse_result->offset};
 }
 
-struct gameObjectResources load_game_object(struct resources *resources, char* filepath) {
+struct gameObjectResources load_game_object(resources *resources, char* filepath) {
     struct gameObjectParseResult parsed = parse_game_object_file(&resources->designs_buf, &resources->collision_offsets_buf, filepath);
     struct sprite *sprite = sprite_load(resources, sprite_from_parsed_game_object(&parsed));
     return (struct gameObjectResources){.sprite = sprite, .collision_offset = parsed.collision_offset};
