@@ -89,7 +89,7 @@ void handle_object_physics(struct gameObject *game_object, struct collidables_bu
     simulate_movement(game_object, collidables);
 }
 
-void handle_quit(struct gameState *state, struct optional_char c) {
+void handle_quit(game_state *state, struct optional_char c) {
     if (!c.some) return;
     switch (c.value) {
         case CTRL_KEY('c'):
@@ -98,19 +98,19 @@ void handle_quit(struct gameState *state, struct optional_char c) {
     }
 }
 
-void update_state(struct gameState *state, struct optional_char c) {
+void update_state(game_state *state, struct optional_char c) {
     handle_quit(state,c);
     handle_object_physics(&state->player,&state->collidables,c);
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 }
 
-struct gameState game_init(resources *resources) {
+game_state game_init(resources *resources) {
     struct gameObjectResources player_resources = load_game_object(resources,"game_objects/player.txt");
     struct gameObjectResources box_resources = load_game_object(resources,"game_objects/box.txt");
     struct gameObjectResources dot_resources = load_game_object(resources,"game_objects/dot.txt");
     struct gameObjectResources floor_resources = load_game_object(resources,"game_objects/floor.txt");
     
-    struct gameState state = {
+    game_state state = {
         .stop = 0,
         .tick_start_mus = 0,
         .tick_end_mus = 0,

@@ -12,7 +12,7 @@
 #include "log.h"
 #endif
 
-void render_state_to_window(struct gameState *state, window *window, grid *render_grid) {
+void render_state_to_window(game_state *state, window *window, grid *render_grid) {
     render_state_into_grid(state,render_grid);
     window_draw(window,render_grid);
 }
@@ -33,7 +33,7 @@ int main() {
     resources resources;
     resources_init(&resources);
 
-    struct gameState state = game_init(&resources);
+    game_state state = game_init(&resources);
     long mus_read_timeout = 5000;
     long start_time;
     

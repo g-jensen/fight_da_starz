@@ -50,7 +50,7 @@ void render_format(grid *grid, struct ipoint position, char* dest, int maxlen, c
     place_sprite(position, grid, &sprite);
 }
 
-void render_state_into_grid(struct gameState *state, grid *grid) {
+void render_state_into_grid(game_state *state, grid *grid) {
     grid_fill(grid, DEFAULT_CHAR);
 
     struct ipoint center_position = {.x = grid->cols/2, .y = grid->rows/2};

@@ -7,7 +7,7 @@
 #include "gameobject.h"
 #include "resources.h"
 
-struct gameState {
+typedef struct game_state {
     int stop;
     resources *resources;
     struct gameObject player;
@@ -15,7 +15,7 @@ struct gameState {
     long long tick_start_mus;
     long long tick_end_mus;
     int fps;
-};
+} game_state;
 
-void update_state(struct gameState *state, struct optional_char c);
-struct gameState game_init(resources *resources);
+void update_state(game_state *state, struct optional_char c);
+game_state game_init(resources *resources);
