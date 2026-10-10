@@ -13,6 +13,3 @@ struct pointArrays {
     int length;
     int capacity;
 };
-
-void point_array_free(struct pointArray *point_array);
-void point_arrays_free(struct pointArrays *point_array);

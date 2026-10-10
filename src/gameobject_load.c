@@ -111,6 +111,5 @@ struct sprite sprite_from_parsed_game_object(struct gameObjectParseResult *parse
 struct gameObjectResources load_game_object(struct resources *resources, char* filepath) {
     struct gameObjectParseResult parsed = parse_game_object_file(&resources->designs_buf, &resources->collision_offsets_buf, filepath);
     struct sprite *sprite = sprite_load(resources, sprite_from_parsed_game_object(&parsed));
-    // struct collision_offset *collision_offset = collision_offset_load(resources, parsed.collision_offset);
     return (struct gameObjectResources){.sprite = sprite, .collision_offset = parsed.collision_offset};
 }

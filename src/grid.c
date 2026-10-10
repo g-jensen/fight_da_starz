@@ -18,10 +18,6 @@ int grid_mmap(struct grid *grid, int rows, int cols) {
     return 0;
 }
 
-void grid_free(struct grid *grid) {
-    free(grid->chars);
-};
-
 void grid_fill(struct grid *grid, char c) {
     for (int i = 0; i < (grid->rows*grid->cols); i++) {
         grid->chars[i] = c;

@@ -26,17 +26,17 @@ int main() {
     if (window_mmap(&window) == -1) {
         die("window_mmap");
     }
-
+    
     struct grid render_grid;
     grid_mmap(&render_grid, window.rows, window.cols);
-
+    
     struct resources resources;
     resources_init(&resources);
 
     struct gameState state = game_init(&resources);
     long mus_read_timeout = 5000;
     long start_time;
-
+    
     #ifdef _DEV
     log_info("dev mode active!");
     #endif
@@ -49,7 +49,6 @@ int main() {
         render_state_to_window(&state,&window,&render_grid);
         pace_tick(start_time,get_time_mus());
     }
-    game_shutdown(&state);
 
     return 0;
 }

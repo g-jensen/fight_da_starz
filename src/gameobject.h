@@ -12,15 +12,11 @@ struct gameObject {
     struct collision_offset collision_offset;
 };
 
-struct gameObjects {
-    struct gameObject *items;
+#define COLLIDABLES_CAPACITY 256
+
+struct collidables_buf {
+    struct gameObject buffer[COLLIDABLES_CAPACITY];
     int length;
-    int capacity;
 };
 
-struct gameObjectIterState {
-    struct gameObjects *objects;
-    int idx;
-};
-
-int does_object_overlap(struct gameObject *object, struct ipoint object_offset, struct gameObjects *collidables);
+int does_object_overlap(struct gameObject *object, struct ipoint object_offset, struct collidables_buf *collidables);

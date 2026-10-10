@@ -16,7 +16,7 @@ enum Direction {
     DIRECTION_Y
 };
 
-float new_velocity_component(struct gameObject *game_object, float velocity_component, enum Direction direction, struct gameObjects *collidables) {
+float new_velocity_component(struct gameObject *game_object, float velocity_component, enum Direction direction, struct collidables_buf *collidables) {
     struct fpoint velocity = {
         .x = (direction == DIRECTION_X) ? velocity_component : 0,
         .y = (direction == DIRECTION_Y) ? velocity_component : 0
@@ -28,7 +28,7 @@ float new_velocity_component(struct gameObject *game_object, float velocity_comp
     return 0;
 }
 
-void simulate_movement(struct gameObject *game_object, struct gameObjects *collidables) {
+void simulate_movement(struct gameObject *game_object, struct collidables_buf *collidables) {
     struct fpoint velocity = clamp(fpoint_add(game_object->velocity,game_object->acceleration),MAX_SPEED);
     
     game_object->velocity.x = new_velocity_component(game_object,velocity.x,DIRECTION_X,collidables);
@@ -50,7 +50,7 @@ void jump(struct gameObject *game_object) {
     game_object->acceleration.y -= 1;
 }
 
-int is_grounded(struct gameObject *game_object, struct gameObjects *collidables) {
+int is_grounded(struct gameObject *game_object, struct collidables_buf *collidables) {
     struct ipoint offset = {.x = 0, .y = 1};
     return does_object_overlap(game_object, offset, collidables);
 }
@@ -81,7 +81,7 @@ void add_user_movement(struct gameObject *game_object, struct optional_char c, i
     }
 }
 
-void handle_object_physics(struct gameObject *game_object, struct gameObjects *collidables, struct optional_char c) {
+void handle_object_physics(struct gameObject *game_object, struct collidables_buf *collidables, struct optional_char c) {
     game_object->acceleration = (struct fpoint){.x=0,.y=0};
     add_gravity(game_object);
     add_friction(game_object);
@@ -104,26 +104,12 @@ void update_state(struct gameState *state, struct optional_char c) {
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 }
 
-struct gameObjects create_game_objects(struct gameObject game_objects[], int game_object_count) {
-    struct gameObjects arr = {.items = malloc(sizeof(struct gameObject)*game_object_count), .length = game_object_count, .capacity = game_object_count};
-    memcpy(arr.items,game_objects,sizeof(struct gameObject)*game_object_count);
-    return arr;
-}
-
-#define COLLIDABLE_COUNT 4
-
 struct gameState game_init(struct resources *resources) {
     struct gameObjectResources player_resources = load_game_object(resources,"game_objects/player.txt");
     struct gameObjectResources box_resources = load_game_object(resources,"game_objects/box.txt");
     struct gameObjectResources dot_resources = load_game_object(resources,"game_objects/dot.txt");
     struct gameObjectResources floor_resources = load_game_object(resources,"game_objects/floor.txt");
     
-    struct gameObject collidables[COLLIDABLE_COUNT] = {
-        { .position = {.x = 10,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset   },
-        { .position = {.x = 20,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset   },
-        { .position = {.x = -10, .y = 6},  .sprite = dot_resources.sprite,   .collision_offset = dot_resources.collision_offset   },
-        { .position = {.x = -50, .y = 10}, .sprite = floor_resources.sprite, .collision_offset = floor_resources.collision_offset },
-    };
     struct gameState state = {
         .stop = 0,
         .tick_start_mus = 0,
@@ -135,15 +121,15 @@ struct gameState game_init(struct resources *resources) {
             .sprite = player_resources.sprite, 
             .collision_offset = player_resources.collision_offset 
         },
-        .collidables = create_game_objects(collidables,COLLIDABLE_COUNT),
+        .collidables = {
+            .buffer = {
+                { .position = {.x = 10,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset   },
+                { .position = {.x = 20,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset   },
+                { .position = {.x = -10, .y = 6},  .sprite = dot_resources.sprite,   .collision_offset = dot_resources.collision_offset   },
+                { .position = {.x = -50, .y = 10}, .sprite = floor_resources.sprite, .collision_offset = floor_resources.collision_offset },
+            },
+            .length = 4
+        },
     };
     return state;
-}
-
-void game_objects_free(struct gameObjects *game_objects) {
-    free(game_objects->items);
-}
-
-void game_shutdown(struct gameState* state) {
-    game_objects_free(&state->collidables);
 }
