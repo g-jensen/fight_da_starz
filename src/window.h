@@ -22,7 +22,7 @@
 typedef struct window {
     int rows;
     int cols;
-    struct drawBuf drawBuf;
+    draw_buf drawBuf;
 } window;
 
 void window_init();
@@ -31,4 +31,4 @@ int window_get_size(int *rows, int *cols);
 int window_drawbuf_length(int rows, int cols);
 int window_mmap(window *window);
 void window_draw(window *window, grid *grid);
-struct optional_char window_read_char(long mus_timeout);
+optional_char window_read_char(long mus_timeout);

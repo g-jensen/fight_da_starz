@@ -6,17 +6,17 @@
 #include "collision.h"
 #include "design.h"
 
-struct gameObjectParseResult {
-    struct ipoint offset;
-    struct design sprite_design;
-    struct collision_offset collision_offset;
-};
+typedef struct game_object_parse_result {
+    ipoint offset;
+    design sprite_design;
+    collision_offset collision_offset;
+} game_object_parse_result;
 
-struct gameObjectParseResult parse_game_object_file(struct designs_buf *designs_buf, struct collision_offsets_buf *collision_offsets_buf, char *filepath);
+game_object_parse_result parse_game_object_file(designs_buf *designs_buf, collision_offsets_buf *collision_offsets_buf, char *filepath);
 
-struct gameObjectResources {
-    struct sprite *sprite;
-    struct collision_offset collision_offset;
-};
+typedef struct game_object_resources {
+    sprite *sprite;
+    collision_offset collision_offset;
+} game_object_resources;
 
-struct gameObjectResources load_game_object(resources *resources, char* filepath);
+game_object_resources load_game_object(resources *resources, char* filepath);

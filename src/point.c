@@ -2,42 +2,42 @@
 
 #include "point.h"
 
-struct ipoint ipoint_add(struct ipoint p1, struct ipoint p2) {
-    return (struct ipoint) {.x = p1.x + p2.x , .y = p1.y + p2.y};
+ipoint ipoint_add(ipoint p1, ipoint p2) {
+    return (ipoint) {.x = p1.x + p2.x , .y = p1.y + p2.y};
 }
 
-struct ipoint ipoint_sub(struct ipoint p1, struct ipoint p2) {
-    return (struct ipoint) {.x = p1.x - p2.x , .y = p1.y - p2.y};
+ipoint ipoint_sub(ipoint p1, ipoint p2) {
+    return (ipoint) {.x = p1.x - p2.x , .y = p1.y - p2.y};
 }
 
-int ipoint_eq(struct ipoint p1, struct ipoint p2) {
+int ipoint_eq(ipoint p1, ipoint p2) {
     return p1.x == p2.x && p1.y == p2.y;
 }
 
-struct fpoint fpoint_add(struct fpoint p1, struct fpoint p2) {
-    return (struct fpoint) {.x = p1.x + p2.x , .y = p1.y + p2.y};
+fpoint fpoint_add(fpoint p1, fpoint p2) {
+    return (fpoint) {.x = p1.x + p2.x , .y = p1.y + p2.y};
 }
 
-struct fpoint fpoint_sub(struct fpoint p1, struct fpoint p2) {
-    return (struct fpoint) {.x = p1.x - p2.x , .y = p1.y - p2.y};
+fpoint fpoint_sub(fpoint p1, fpoint p2) {
+    return (fpoint) {.x = p1.x - p2.x , .y = p1.y - p2.y};
 }
 
-int fpoint_eq(struct fpoint p1, struct fpoint p2) {
+int fpoint_eq(fpoint p1, fpoint p2) {
     return p1.x == p2.x && p1.y == p2.y;
 }
 
-float magnitude(struct fpoint p) {
+float magnitude(fpoint p) {
     return sqrt(p.x*p.x + p.y*p.y);
 }
 
-struct fpoint clamp(struct fpoint p, float max_magnitude) {
+fpoint clamp(fpoint p, float max_magnitude) {
     float mag = magnitude(p);
     if (mag > max_magnitude) {
-        return (struct fpoint){.x = p.x * max_magnitude / mag, .y = p.y * max_magnitude / mag};
+        return (fpoint){.x = p.x * max_magnitude / mag, .y = p.y * max_magnitude / mag};
     }
     return p;
 }
 
-struct ipoint to_ipoint(struct fpoint p) {
-    return (struct ipoint){.x = (int)p.x, .y = (int)p.y};
+ipoint to_ipoint(fpoint p) {
+    return (ipoint){.x = (int)p.x, .y = (int)p.y};
 }

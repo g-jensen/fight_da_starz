@@ -2,8 +2,8 @@
 
 #include <stdlib.h>
 
-struct drawBuf {
+typedef struct draw_buf {
   char *b;
   int length;
   int capacity;
-};
+} draw_buf;

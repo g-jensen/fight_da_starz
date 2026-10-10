@@ -1,26 +1,26 @@
 #pragma once
 
-struct ipoint {
+typedef struct {
     int x;
     int y;
-};
+} ipoint;
 
 // TODO - extract this to macros
 
-struct ipoint ipoint_add(struct ipoint p1, struct ipoint p2);
-struct ipoint ipoint_sub(struct ipoint p1, struct ipoint p2);
-int ipoint_eq(struct ipoint p1, struct ipoint p2);
+ipoint ipoint_add(ipoint p1, ipoint p2);
+ipoint ipoint_sub(ipoint p1, ipoint p2);
+int ipoint_eq(ipoint p1, ipoint p2);
 
-struct fpoint {
+typedef struct {
     float x;
     float y;
-};
+} fpoint;
 
-struct fpoint fpoint_add(struct fpoint p1, struct fpoint p2);
-struct fpoint fpoint_sub(struct fpoint p1, struct fpoint p2);
-int fpoint_eq(struct fpoint p1, struct fpoint p2);
+fpoint fpoint_add(fpoint p1, fpoint p2);
+fpoint fpoint_sub(fpoint p1, fpoint p2);
+int fpoint_eq(fpoint p1, fpoint p2);
 
-float magnitude(struct fpoint p);
-struct fpoint clamp(struct fpoint p, float max_magnitude);
+float magnitude(fpoint p);
+fpoint clamp(fpoint p, float max_magnitude);
 
-struct ipoint to_ipoint(struct fpoint p);
+ipoint to_ipoint(fpoint p);

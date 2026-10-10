@@ -3,11 +3,11 @@
 #include <stdlib.h>
 
 #define iterator_define(iter_type,element_type) \
-struct iter_type { \
+typedef struct iter_type { \
     element_type (*next) (void*); \
     int (*more) (void*); \
     void* state; \
-};
+} iter_type;
 
 #define iterator_define_array(iter_type,element_type,array_type,iter_constructor_fn_name) \
 struct iter_type ## Array { \

@@ -36,13 +36,13 @@ void window_shutdown() {
     disable_raw_mode();
 }
 
-struct optional_char window_read_char(long mus_timeout) {
+optional_char window_read_char(long mus_timeout) {
     int nread;
     char c;
     nread = read_timeout(STDIN_FILENO, &c, 1, mus_timeout);
-    if (nread == 0) return (struct optional_char){.some = 0};
+    if (nread == 0) return (optional_char){.some = 0};
     if (nread == -1 && errno != EAGAIN) die("read");
-    return (struct optional_char){.some = 1, .value = c};
+    return (optional_char){.some = 1, .value = c};
 }
 
 int window_get_cursor_pos(int *rows, int *cols) {
@@ -69,7 +69,7 @@ int window_get_size(int *rows, int *cols) {
     return 0;
 }
 
-void window_buf_draw(struct drawBuf *drawBuf) {
+void window_buf_draw(draw_buf *drawBuf) {
     write(STDOUT_FILENO, drawBuf->b, drawBuf->length);
 }
 
@@ -84,7 +84,7 @@ int window_mmap(window *window) {
     }
     int window_drawbuf_len = window_drawbuf_length(window->rows, window->cols);
     window_drawbuf = memory_map(window_drawbuf_len*sizeof(char));
-    window->drawBuf = (struct drawBuf){.b = window_drawbuf, .length = window_drawbuf_len, .capacity = window_drawbuf_len};
+    window->drawBuf = (draw_buf){.b = window_drawbuf, .length = window_drawbuf_len, .capacity = window_drawbuf_len};
     return 0;
 }
 
@@ -100,7 +100,7 @@ int window_buf_new_line(char* buf) {
     return insert_string(buf,NEW_LINE);
 }
 
-void grid_into_drawbuf(grid *grid, struct drawBuf *drawBuf) {
+void grid_into_drawbuf(grid *grid, draw_buf *drawBuf) {
     int i = 0;
     i += window_buf_reset_cursor(drawBuf->b+i);
     for (int y = 0; y < grid->rows; y++) {

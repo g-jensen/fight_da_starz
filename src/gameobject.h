@@ -4,19 +4,19 @@
 #include "sprite.h"
 #include "collision.h"
 
-struct gameObject {
-    struct fpoint position;
-    struct fpoint velocity;
-    struct fpoint acceleration;
-    struct sprite *sprite;
-    struct collision_offset collision_offset;
-};
+typedef struct game_object {
+    fpoint position;
+    fpoint velocity;
+    fpoint acceleration;
+    sprite *sprite;
+    collision_offset collision_offset;
+} game_object;
 
 #define COLLIDABLES_CAPACITY 256
 
-struct collidables_buf {
-    struct gameObject buffer[COLLIDABLES_CAPACITY];
+typedef struct collidables_buf {
+    game_object buffer[COLLIDABLES_CAPACITY];
     int length;
-};
+} collidables_buf;
 
-int does_object_overlap(struct gameObject *object, struct ipoint object_offset, struct collidables_buf *collidables);
+int does_object_overlap(game_object *object, ipoint object_offset, collidables_buf *collidables);

@@ -4,10 +4,10 @@
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 
-struct optional_char {
+typedef struct optional_char {
     int some;
     char value;
-};
+} optional_char;
 
 void die(const char *s);
 int insert_string(char* buf, char* string);

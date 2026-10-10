@@ -3,14 +3,14 @@
 #include "point.h"
 #include "design.h"
 
-struct sprite {
-    struct design design;
-    struct ipoint offset;
-};
+typedef struct sprite {
+    design design;
+    ipoint offset;
+} sprite;
 
 #define SPRITES_CAPACITY 16
 
-struct sprites_buf {
-    struct sprite buffer[SPRITES_CAPACITY];
+typedef struct sprites_buf {
+    sprite buffer[SPRITES_CAPACITY];
     int length;
-};
+} sprites_buf;
