@@ -114,7 +114,6 @@ game_state game_init(resources *resources) {
         .stop = 0,
         .tick_start_mus = 0,
         .tick_end_mus = 0,
-        .resources = resources,
         .player = { 
             .position = {.x = 0, .y = -5}, 
             .velocity = {.x = 0, .y = 0}, 

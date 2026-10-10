@@ -8,7 +8,6 @@
 
 typedef struct game_state {
     int stop;
-    resources *resources;
     game_object player;
     collidables_buf collidables; // TODO - gameObjects having a collisionArea, but not all gameObjects being 'collidables' feels weird here.
     long long tick_start_mus;
