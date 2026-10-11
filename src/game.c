@@ -110,7 +110,7 @@ game_state game_init(resources *resources) {
     game_object_resources dot_resources = load_game_object(resources,"game_objects/dot.txt");
     game_object_resources floor_resources = load_game_object(resources,"game_objects/floor.txt");
     
-    game_state state = {
+    return (game_state){
         .stop = 0,
         .tick_start_mus = 0,
         .tick_end_mus = 0,
@@ -130,5 +130,4 @@ game_state game_init(resources *resources) {
             .length = 4
         },
     };
-    return state;
 }
