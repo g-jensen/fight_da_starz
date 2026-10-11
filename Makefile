@@ -10,7 +10,7 @@ PROD_EXEC=$(DIST_PATH)/prod
 
 CC=gcc
 CFLAGS=-lm -Wall -Wextra -I.
-DEV_FLAGS=-D_DEV
+DEV_FLAGS=-O0 -D_DEV -ggdb3
 PROD_FLAGS=-O3
 
 HEADERS := $(wildcard $(SRC_PATH)/*.h)
