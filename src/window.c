@@ -69,12 +69,14 @@ int window_get_size(int *rows, int *cols) {
     return 0;
 }
 
-void window_buf_draw(draw_buf *drawBuf) {
-    write(STDOUT_FILENO, drawBuf->b, drawBuf->length);
+void window_buf_draw(struct draw_buf *draw_buf) {
+    // write(STDOUT_FILENO, "\033[1;31;47m", strlen("\033[1;31;47m"));
+    write(STDOUT_FILENO, draw_buf->b, draw_buf->length);
+    // write(STDOUT_FILENO, "\033[0m", strlen("\033[0m"));
 }
 
 int window_drawbuf_length(int rows, int cols) {
-    return rows*cols + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR);
+    return rows*cols*16 + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR) + 1;
 }
 
 int window_mmap(window *window) {
@@ -106,12 +108,21 @@ void grid_into_drawbuf(grid *grid, draw_buf *drawBuf) {
     for (int y = 0; y < grid->rows; y++) {
         i += window_buf_clear_line(drawBuf->b+i);
         for (int x = 0; x < grid->cols; x++) {
-            drawBuf->b[i++] = grid_get(grid,y,x);
+            // char* color = grid_get_color(grid,y,x);
+            // strcpy(drawBuf->b+i, color);
+            // i += strlen(color);
+            
+            drawBuf->b[i++] = grid_get_char(grid,y,x);
+
+            // char* reset_color = "\033[0m";
+            // strcpy(drawBuf->b+i, reset_color);
+            // i += strlen(reset_color);
         }
         if (y < grid->rows - 1) {
             i += window_buf_new_line(drawBuf->b+i);
         }
     }
+    drawBuf->b[i] = '\0';
 }
 
 void window_draw(window *window, grid *grid) {

@@ -5,15 +5,18 @@
 #include "render.h"
 #include "sprite.h"
 
+// char DEFAULT_COLOR[16] = "\033[0m";
+char DEFAULT_COLOR[16] = "\033[0m";
+
 int render_grid_create(grid *grid, int rows, int cols) {
-    grid_mmap(grid, rows,cols);
-    grid_fill(grid, DEFAULT_CHAR);
+    grid_mmap(grid, rows, cols);
+    grid_fill(grid, DEFAULT_CHAR, DEFAULT_COLOR);
     return 0;
 }
 
-void place_char(ipoint p, grid *grid, char c) {
+void place_char(ipoint p, grid *grid, char c, char color[16]) {
     if(!(p.x >= grid->cols || p.y >= grid->rows || p.x < 0 || p.y < 0)){
-        grid_set(grid, p.y, p.x, c);
+        grid_set(grid, p.y, p.x, c, color);
     }
 }
 
@@ -29,7 +32,7 @@ void place_sprite(ipoint rendered_position, grid *grid, sprite *sprite) {
             position.x++;
             continue;
         }
-        place_char(ipoint_sub(ipoint_add(rendered_position, position), sprite->offset), grid, sprite->design.content[i]);
+        place_char(ipoint_sub(ipoint_add(rendered_position, position), sprite->offset), grid, sprite->design.content[i], sprite->color);
         position.x++;
     }
 }
@@ -51,7 +54,7 @@ void render_format(grid *grid, ipoint position, char* dest, int maxlen, char* fm
 }
 
 void render_state_into_grid(game_state *state, grid *grid) {
-    grid_fill(grid, DEFAULT_CHAR);
+    grid_fill(grid, DEFAULT_CHAR, DEFAULT_COLOR);
 
     ipoint center_position = {.x = grid->cols/2, .y = grid->rows/2};
     fpoint player_position = state->player.position;

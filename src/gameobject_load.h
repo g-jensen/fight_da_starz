@@ -10,9 +10,10 @@ typedef struct game_object_parse_result {
     ipoint offset;
     design sprite_design;
     collision_offset collision_offset;
+    char color[16];
 } game_object_parse_result;
 
-game_object_parse_result parse_game_object_file(designs_buf *designs_buf, collision_offsets_buf *collision_offsets_buf, char *filepath);
+void parse_game_object_file(game_object_parse_result *parse_result, resources *resources, char *filepath);
 
 typedef struct game_object_resources {
     sprite *sprite;

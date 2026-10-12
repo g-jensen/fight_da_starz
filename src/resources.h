@@ -11,4 +11,5 @@ typedef struct resources {
 } resources;
 
 int resources_init(resources *resources);
-sprite* sprite_load(resources *resources, sprite sprite);
+// sprite* sprite_load(resources *resources, sprite sprite);
+sprite* sprite_new(resources *resources);

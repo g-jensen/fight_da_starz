@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "gameobject_load.h"
 #include "core.h"
@@ -38,8 +39,8 @@ design parse_design(designs_buf *designs_buf, FILE *f, int design_length) {
     };
 }
 
-void parse_game_object_header(FILE *f, ipoint *offset, int *design_length) {
-    if (fscanf(f,"%d,%d\n%d",&offset->x,&offset->y,design_length) != 3) {
+void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, char* color) {
+    if (fscanf(f,"%d,%d\n%d\n%s",&offset->x,&offset->y,design_length,color) != 4) {
         die("parse_game_object_header");
     }
 }
@@ -81,35 +82,36 @@ collision_offset collision_offset_from_parsed_game_object(collision_offsets_buf 
     return (collision_offset){.points = points, .length = length}; 
 }
 
-game_object_parse_result parse_game_object_file(designs_buf *designs_buf, collision_offsets_buf *collision_offsets_buf, char *filepath) {
+void parse_game_object_file(game_object_parse_result *parsed, resources *resources, char *filepath) {
     FILE *f;
     f = fopen(filepath, "r");
 
-    ipoint offset;
     int design_length;
-    parse_game_object_header(f, &offset, &design_length);
+    parse_game_object_header(f, &parsed->offset, &design_length, parsed->color);
     fgetc(f);
 
-    design sprite_design = parse_design(designs_buf, f,design_length);
+    parsed->sprite_design = parse_design(&resources->designs_buf, f,design_length);
 
-    struct designs_buf collision_area_design_buf = {0};
+    designs_buf collision_area_design_buf = {0};
     design collision_area_design = parse_design(&collision_area_design_buf, f, design_length);
 
     fclose(f);
 
-    return (game_object_parse_result){
-        .offset = offset,
-        .sprite_design = sprite_design,
-        .collision_offset = collision_offset_from_parsed_game_object(collision_offsets_buf, &collision_area_design, offset)
-    };
+    parsed->collision_offset = collision_offset_from_parsed_game_object(&resources->collision_offsets_buf, &collision_area_design, parsed->offset);
 }
 
-sprite sprite_from_parsed_game_object(game_object_parse_result *parse_result) {
-    return (sprite){.design = parse_result->sprite_design, .offset = parse_result->offset};
+void sprite_init_from_parsed_game_object(sprite *sprite, game_object_parse_result *parse_result) {
+    sprite->design = parse_result->sprite_design;
+    sprite->offset = parse_result->offset;
+    strcpy(sprite->color, parse_result->color);
 }
 
 game_object_resources load_game_object(resources *resources, char* filepath) {
-    game_object_parse_result parsed = parse_game_object_file(&resources->designs_buf, &resources->collision_offsets_buf, filepath);
-    sprite *sprite = sprite_load(resources, sprite_from_parsed_game_object(&parsed));
+    game_object_parse_result parsed;
+    parse_game_object_file(&parsed, resources, filepath);
+
+    sprite *sprite = sprite_new(resources);
+    sprite_init_from_parsed_game_object(sprite, &parsed);
+
     return (game_object_resources){.sprite = sprite, .collision_offset = parsed.collision_offset};
 }
