@@ -5,12 +5,13 @@
 #include "sprite.h"
 #include "collision.h"
 #include "design.h"
+#include "color.h"
 
 typedef struct game_object_parse_result {
     ipoint offset;
     design sprite_design;
     collision_offset collision_offset;
-    char color[16];
+    color color;
 } game_object_parse_result;
 
 void parse_game_object_file(game_object_parse_result *parse_result, resources *resources, char *filepath);

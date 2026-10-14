@@ -6,7 +6,7 @@
 #include "sprite.h"
 
 // char DEFAULT_COLOR[16] = "\033[0m";
-char DEFAULT_COLOR[16] = "\033[0m";
+color DEFAULT_COLOR = {.foreground = 0, .background = 0};
 
 int render_grid_create(grid *grid, int rows, int cols) {
     grid_mmap(grid, rows, cols);
@@ -14,7 +14,7 @@ int render_grid_create(grid *grid, int rows, int cols) {
     return 0;
 }
 
-void place_char(ipoint p, grid *grid, char c, char color[16]) {
+void place_char(ipoint p, grid *grid, char c, color color) {
     if(!(p.x >= grid->cols || p.y >= grid->rows || p.x < 0 || p.y < 0)){
         grid_set(grid, p.y, p.x, c, color);
     }
