@@ -3,6 +3,7 @@
 #include "resources.h"
 #include "core.h"
 #include "sys.h"
+#include "gameobject_file.h"
 
 sprite* sprite_new(resources *resources) {
     if (!(resources->sprites_buf.length < SPRITES_CAPACITY)) {

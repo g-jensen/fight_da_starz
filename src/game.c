@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "game.h"
-#include "log.h"
 #include "sys.h"
 #include "fps.h"
 #include "collision.h"
