@@ -2,7 +2,8 @@
 
 - [ ] windows support
 - [ ] click support
-- [ ] colored grid support
+- [x] colored grid support
+- [ ] per-pixel color support on sprites
 - [x] collision
 - [ ] fix collision phasing bug
 - [x] gravity, jumping
