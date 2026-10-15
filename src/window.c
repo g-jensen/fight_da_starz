@@ -75,11 +75,7 @@ void window_buf_draw(struct draw_buf *draw_buf) {
 }
 
 int window_mmap(window *window, size_t window_drawbuf_capacity) {
-    char *window_drawbuf;
-    if (window_get_size(&window->rows, &window->cols) == -1) {
-        return -1;
-    }
-    window_drawbuf = memory_map(window_drawbuf_capacity);
+    char *window_drawbuf = memory_map(window_drawbuf_capacity);
     window->drawBuf = (draw_buf){.b = window_drawbuf, .length = 0, .capacity = window_drawbuf_capacity};
     return 0;
 }

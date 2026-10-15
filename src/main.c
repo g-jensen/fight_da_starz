@@ -33,8 +33,9 @@ int main() {
     #endif
 
     window window;
-    if (window_mmap(&window, 1024*sizeof(*window.drawBuf.b)) == -1) {
-        die("window_mmap");
+    window_mmap(&window, 1024*sizeof(*window.drawBuf.b));
+    if (window_get_size(&window.rows, &window.cols) == -1) {
+        die("window_get_size");
     }
     
     grid render_grid;
