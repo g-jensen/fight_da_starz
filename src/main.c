@@ -44,10 +44,10 @@ int main() {
     grid_mmap(&render_grid, window.rows, window.cols);
     
     resources resources;
-    resources_init(&resources);
+    resources_ref resources_ref = resources_load(&resources);
 
     game_state state;
-    game_init(&state, &resources);
+    game_init(&state, &resources_ref);
     long mus_read_timeout = 5000;
     long start_time;
 

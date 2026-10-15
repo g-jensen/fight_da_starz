@@ -7,7 +7,6 @@
 #include "sys.h"
 #include "fps.h"
 #include "collision.h"
-#include "gameobject_load.h"
 
 #define MAX_SPEED 15
 
@@ -104,12 +103,7 @@ void update_state(game_state *state, optional_char c) {
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 }
 
-void game_init(game_state *state, resources *resources) {
-    game_object_file_result player_resources = load_game_object_file(resources,"game_objects/player.txt");
-    game_object_file_result box_resources = load_game_object_file(resources,"game_objects/box.txt");
-    game_object_file_result dot_resources = load_game_object_file(resources,"game_objects/dot.txt");
-    game_object_file_result floor_resources = load_game_object_file(resources,"game_objects/floor.txt");
-    
+void game_init(game_state *state, resources_ref *resources_ref) {
     *state = (game_state){
         .stop = 0,
         .tick_start_mus = 0,
@@ -120,23 +114,20 @@ void game_init(game_state *state, resources *resources) {
     *state->player = (game_object){
         .position = {.x = 0, .y = -5}, 
         .velocity = {.x = 0, .y = 0}, 
-        .sprite = player_resources.sprite, 
-        .collision_offset = player_resources.collision_offset 
+        .sprite = resources_ref->player.sprite, 
+        .collision_offset = resources_ref->player.collision_offset 
     };
 
     *new_collidable(&state->collidables) = (game_object){
-        .position = {.x = 10,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset
+        .position = {.x = 10,  .y = 6},  .sprite = resources_ref->box.sprite,   .collision_offset = resources_ref->box.collision_offset
     };
-
     *new_collidable(&state->collidables) = (game_object){
-        .position = {.x = 20,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset
+        .position = {.x = 20,  .y = 6},  .sprite = resources_ref->box.sprite,   .collision_offset = resources_ref->box.collision_offset
     };
-
     *new_collidable(&state->collidables) = (game_object){
-        .position = {.x = -10, .y = 6},  .sprite = dot_resources.sprite,   .collision_offset = dot_resources.collision_offset
+        .position = {.x = -10, .y = 6},  .sprite = resources_ref->dot.sprite,   .collision_offset = resources_ref->dot.collision_offset
     };
-
     *new_collidable(&state->collidables) = (game_object){
-        .position = {.x = -50, .y = 10}, .sprite = floor_resources.sprite, .collision_offset = floor_resources.collision_offset
+        .position = {.x = -50, .y = 10}, .sprite = resources_ref->floor.sprite, .collision_offset = resources_ref->floor.collision_offset
     };
 }

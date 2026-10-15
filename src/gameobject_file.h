@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gameobject.h"
+// #include "gameobject.h"
 #include "resources.h"
 #include "sprite.h"
 #include "collision.h"
@@ -12,4 +12,4 @@ typedef struct game_object_file_result {
     collision_offset collision_offset;
 } game_object_file_result;
 
-game_object_file_result load_game_object_file(resources *resources, char* filepath);
+game_object_file_result game_object_file_load(resources *resources, char* filepath);

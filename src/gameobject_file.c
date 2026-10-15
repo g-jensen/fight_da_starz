@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "gameobject_load.h"
+#include "gameobject_file.h"
 #include "core.h"
 
 typedef struct game_object_parse_result {
@@ -113,7 +113,7 @@ void sprite_init_from_parsed_game_object(sprite *sprite, game_object_parse_resul
     sprite->color = parse_result->color;
 }
 
-game_object_file_result load_game_object_file(resources *resources, char* filepath) {
+game_object_file_result game_object_file_load(resources *resources, char* filepath) {
     game_object_parse_result parsed;
     parse_game_object_file(&parsed, resources, filepath);
 
