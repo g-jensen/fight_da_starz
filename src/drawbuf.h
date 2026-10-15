@@ -4,6 +4,6 @@
 
 typedef struct draw_buf {
   char *b;
-  int length;
-  int capacity;
+  size_t length;
+  size_t capacity;
 } draw_buf;

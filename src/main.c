@@ -33,7 +33,7 @@ int main() {
     #endif
 
     window window;
-    if (window_mmap(&window) == -1) {
+    if (window_mmap(&window, 1024*sizeof(*window.drawBuf.b)) == -1) {
         die("window_mmap");
     }
     
