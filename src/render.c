@@ -23,7 +23,7 @@ void place_char(ipoint p, grid *grid, char c, color color) {
 void place_sprite(ipoint rendered_position, grid *grid, sprite *sprite) {
     ipoint position = {0,0};
 
-    for(int i = 0; i < sprite->design.length; i++) {
+    for(size_t i = 0; i < sprite->design.length; i++) {
         if(sprite->design.content[i] == '\n') {
             position.y++;
             position.x = 0;
@@ -60,7 +60,7 @@ void render_state_into_grid(game_state *state, grid *grid) {
     fpoint player_position = state->player.position;
     ipoint player_rendered_position = center_position;
 
-    for (int i = 0; i < state->collidables.length; i++) {
+    for (size_t i = 0; i < state->collidables.length; i++) {
         fpoint object_position = state->collidables.buffer[i].position;
         ipoint rendered_position = render_position(to_ipoint(object_position), center_position, to_ipoint(player_position));
         place_sprite(rendered_position, grid, state->collidables.buffer[i].sprite);

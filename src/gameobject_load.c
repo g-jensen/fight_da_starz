@@ -48,7 +48,7 @@ void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, color
 int get_collision_area_length(design* design) {
     int j = 0;
 
-    for(int i = 0; i < design->length; i++) {
+    for(size_t i = 0; i < design->length; i++) {
         if(design->content[i] != '\n' && design->content[i] != ' ') {
             j++;
         }
@@ -65,7 +65,7 @@ collision_offset collision_offset_from_parsed_game_object(collision_offsets_buf 
         die("collision_offset_from_parsed_game_object: length > MAX_COLLISION_OFFSET_SIZE");
     }
 
-    for(int i = 0; i < design->length; i++) {
+    for(size_t i = 0; i < design->length; i++) {
         if(design->content[i] == '\n') {
             position.y++;
             position.x = 0;

@@ -14,5 +14,5 @@ typedef struct sprite {
 
 typedef struct sprites_buf {
     sprite buffer[SPRITES_CAPACITY];
-    int length;
+    size_t length;
 } sprites_buf;

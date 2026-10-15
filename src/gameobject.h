@@ -16,7 +16,7 @@ typedef struct game_object {
 
 typedef struct collidables_buf {
     game_object buffer[COLLIDABLES_CAPACITY];
-    int length;
+    size_t length;
 } collidables_buf;
 
 int does_object_overlap(game_object *object, ipoint object_offset, collidables_buf *collidables);

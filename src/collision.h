@@ -9,12 +9,12 @@
 
 typedef struct collision_offsets_buf {
     ipoint buffer[MAX_COLLISION_OFFSETS_BUFFER];
-    int length;
+    size_t length;
 } collision_offsets_buf;
 
 typedef struct collision_offset {
     ipoint *points;
-    int length;
+    size_t length;
 } collision_offset;
 
 typedef struct collision_area {

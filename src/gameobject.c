@@ -5,7 +5,7 @@
 #include "core.h"
 
 struct collidableIterState {
-    int idx;
+    size_t idx;
     collidables_buf *collidables;
 };
 

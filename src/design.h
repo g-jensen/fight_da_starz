@@ -6,10 +6,10 @@
 
 typedef struct designs_buf {
     char buffer[MAX_DESIGNS_BUFFER];
-    int length;
+    size_t length;
 } designs_buf;
 
 typedef struct design {
     char *content;
-    int length;
+    size_t length;
 } design;
