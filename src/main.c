@@ -21,8 +21,34 @@ void render_state_to_window(game_state *state, window *window, grid *render_grid
 void pace_tick(long start_time, long end_time) {
     musleep(MUS_PER_TICK - (end_time - start_time));
 }
-
+// #include <assert.h>
 int main() {
+    // draw_buf db;
+    
+    // char buf_5[5];
+    // db = (draw_buf){.b = buf_5, .length = 0, .capacity = 5};
+    // assert(!insert_string(&db, "DONT SHOW UP"));
+    // window_buf_draw(&db);
+    
+    // char buf_7[7];
+    // db = (draw_buf){.b = buf_7, .length = 0, .capacity = 7};
+    // assert(insert_string(&db, "SHOW UP"));
+    // window_buf_draw(&db);
+
+    // char buf_12[12];
+    // db = (draw_buf){.b = buf_12, .length = 0, .capacity = 12};
+    // assert(insert_string(&db, "SHOW UP"));
+    // assert(insert_string(&db, "AGAIN"));
+    // window_buf_draw(&db);
+
+    // char buf_14[14];
+    // db = (draw_buf){.b = buf_14, .length = 0, .capacity = 14};
+    // assert(insert_string(&db, "SHOW UP"));
+    // assert(!insert_string(&db, "NOT AGAIN"));
+    // window_buf_draw(&db);
+
+    // return 0;
+    
     #ifdef _DEV
     mtrace();
     atexit(muntrace);
@@ -46,12 +72,12 @@ int main() {
 
     window_init(); // window_init() and window_shutdown() don't really have anything to do with the 'window' abstraction. Maybe rename to terminal_init() and _shutdown()
     atexit(window_shutdown);
-    while (!state.stop) {
+    // while (!state.stop) {
         start_time = get_time_mus();
         update_state(&state, window_read_char(mus_read_timeout));
         render_state_to_window(&state,&window,&render_grid);
         pace_tick(start_time,get_time_mus());
-    }
+    // }
 
     return 0;
 }

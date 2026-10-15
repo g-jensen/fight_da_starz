@@ -10,5 +10,4 @@ typedef struct optional_char {
 } optional_char;
 
 void die(const char *s);
-int insert_string(char* buf, char* string);
 int ceil_f(float f);

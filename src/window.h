@@ -28,7 +28,7 @@ typedef struct window {
 void window_init();
 void window_shutdown();
 int window_get_size(int *rows, int *cols);
-int window_drawbuf_length(int rows, int cols);
+int window_drawbuf_capacity(int rows, int cols);
 int window_mmap(window *window);
 void window_draw(window *window, grid *grid);
 optional_char window_read_char(long mus_timeout);

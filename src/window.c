@@ -5,6 +5,7 @@
 
 #include "window.h"
 #include "raw_mode.h"
+#include "point.h"
 #include "core.h"
 #include "sys.h"
 
@@ -70,13 +71,12 @@ int window_get_size(int *rows, int *cols) {
 }
 
 void window_buf_draw(struct draw_buf *draw_buf) {
-    // write(STDOUT_FILENO, "\033[1;31;47m", strlen("\033[1;31;47m"));
     write(STDOUT_FILENO, draw_buf->b, draw_buf->length);
-    // write(STDOUT_FILENO, "\033[0m", strlen("\033[0m"));
 }
 
-int window_drawbuf_length(int rows, int cols) {
-    return rows*cols*16 + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR) + 1;
+int window_drawbuf_capacity(int rows, int cols) {
+    // return rows*cols + rows*strlen(CLEAR_LINE) + (rows-1)*strlen(NEW_LINE) + strlen(RESET_CURSOR) + 1;
+    return 1024;
 }
 
 int window_mmap(window *window) {
@@ -84,48 +84,91 @@ int window_mmap(window *window) {
     if (window_get_size(&window->rows, &window->cols) == -1) {
         return -1;
     }
-    int window_drawbuf_len = window_drawbuf_length(window->rows, window->cols);
-    window_drawbuf = memory_map(window_drawbuf_len*sizeof(char));
-    window->drawBuf = (draw_buf){.b = window_drawbuf, .length = window_drawbuf_len, .capacity = window_drawbuf_len};
+    int window_drawbuf_cap = window_drawbuf_capacity(window->rows, window->cols);
+    window_drawbuf = memory_map(window_drawbuf_cap*sizeof(char));
+    window->drawBuf = (draw_buf){.b = window_drawbuf, .length = 0, .capacity = window_drawbuf_cap};
     return 0;
 }
 
-int window_buf_reset_cursor(char* buf) {
-    return insert_string(buf,RESET_CURSOR);
-}
-
-int window_buf_clear_line(char* buf) {
-    return insert_string(buf,CLEAR_LINE);
-}
-
-int window_buf_new_line(char* buf) {
-    return insert_string(buf,NEW_LINE);
-}
-
-void grid_into_drawbuf(grid *grid, draw_buf *drawBuf) {
-    int i = 0;
-    i += window_buf_reset_cursor(drawBuf->b+i);
-    for (int y = 0; y < grid->rows; y++) {
-        i += window_buf_clear_line(drawBuf->b+i);
-        for (int x = 0; x < grid->cols; x++) {
-            // char* color = grid_get_color(grid,y,x);
-            // strcpy(drawBuf->b+i, color);
-            // i += strlen(color);
-            
-            drawBuf->b[i++] = grid_get_char(grid,y,x);
-
-            // char* reset_color = "\033[0m";
-            // strcpy(drawBuf->b+i, reset_color);
-            // i += strlen(reset_color);
-        }
-        if (y < grid->rows - 1) {
-            i += window_buf_new_line(drawBuf->b+i);
+int insert_string(draw_buf *draw_buf, char* string) {
+    char c;
+    int i;
+    for (i = 0; (c = string[i]) != '\0'; i++) {
+        int buf_index = draw_buf->length+i;
+        if (buf_index < draw_buf->capacity) {
+            draw_buf->b[buf_index] = c;
+        } else {
+            return -1;
         }
     }
-    drawBuf->b[i] = '\0';
+    draw_buf->length += i;
+    return 0;
+}
+
+int window_buf_reset_cursor(draw_buf *draw_buf) {
+    return insert_string(draw_buf, RESET_CURSOR);
+}
+
+int window_buf_clear_line(draw_buf *draw_buf) {
+    return insert_string(draw_buf, CLEAR_LINE);
+}
+
+int window_buf_new_line(draw_buf *draw_buf) {
+    return insert_string(draw_buf, NEW_LINE);
+}
+
+int grid_index_into_drawbuf(grid *grid, int grid_index, draw_buf *draw_buf) {
+    if (grid_index == 0) {
+        if (window_buf_reset_cursor(draw_buf) == -1) {
+            return -1;
+        }
+    }
+    int col_offset = grid_index % grid->cols;
+    if (col_offset == 0) {
+        if (window_buf_clear_line(draw_buf) == -1) {
+            return -1;
+        }
+    }
+
+    static char color_escape_code[ESCAPE_CODE_CAPACITY];
+    color_to_escape_code(color_escape_code, grid->colors[grid_index]);
+
+    if (insert_string(draw_buf, color_escape_code) == -1) {
+        return -1;
+    }
+    if (draw_buf->length < draw_buf->capacity) {
+        draw_buf->b[draw_buf->length++] = grid->chars[grid_index];
+    } else {
+        return -1;
+    }
+    if (insert_string(draw_buf, "\033[0m") == -1) {
+        return -1;
+    }
+    
+    if (col_offset == grid->cols - 1) {
+        if (window_buf_new_line(draw_buf) == -1) {
+            return -1;
+        }
+    }
+    return 0;
+}
+
+int grid_into_drawbuf(grid *grid, int *grid_index, draw_buf *draw_buf) {
+    while (*grid_index < grid->cols*grid->rows) {
+        if (grid_index_into_drawbuf(grid, *grid_index, draw_buf) == -1) {
+            return -1;
+        } else {
+            (*grid_index)++;
+        }
+    }
+    return 0;
 }
 
 void window_draw(window *window, grid *grid) {
-    grid_into_drawbuf(grid,&window->drawBuf);
-    window_buf_draw(&window->drawBuf);
+    int grid_index = 0;
+    window->drawBuf.length = 0;
+    while (grid_into_drawbuf(grid, &grid_index, &window->drawBuf) == -1) {
+        window_buf_draw(&window->drawBuf);
+        window->drawBuf.length = 0;
+    }
 }
