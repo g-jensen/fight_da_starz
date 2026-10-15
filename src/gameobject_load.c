@@ -5,6 +5,13 @@
 #include "gameobject_load.h"
 #include "core.h"
 
+typedef struct game_object_parse_result {
+    ipoint offset;
+    design sprite_design;
+    collision_offset collision_offset;
+    color color;
+} game_object_parse_result;
+
 long design_size(FILE *f, int design_newline_count) {
     long size = 0;
     long newline_count = 0;
@@ -106,12 +113,12 @@ void sprite_init_from_parsed_game_object(sprite *sprite, game_object_parse_resul
     sprite->color = parse_result->color;
 }
 
-loaded_resource load_resource(resources *resources, char* filepath) {
+game_object_file_result load_game_object_file(resources *resources, char* filepath) {
     game_object_parse_result parsed;
     parse_game_object_file(&parsed, resources, filepath);
 
     sprite *sprite = sprite_new(resources);
     sprite_init_from_parsed_game_object(sprite, &parsed);
 
-    return (loaded_resource){.sprite = sprite, .collision_offset = parsed.collision_offset};
+    return (game_object_file_result){.sprite = sprite, .collision_offset = parsed.collision_offset};
 }
