@@ -7,22 +7,6 @@
 #define MAX_SPRITE_COUNT 8
 #define MAX_COLLISION_OFFSET_COUNT 8
 
-// sprite* sprite_get(resources *resources, int sprite_index) {
-//     return &resources->sprites_buf.buffer[sprite_index];
-// }
-
-// sprite* sprite_load(resources *resources, sprite sprite) {
-//     if (!(resources->sprites_buf.length < SPRITES_CAPACITY)) {
-//         die("sprite_load: too many sprites_buf");
-//     }
-//     // struct sprite s = resources->sprites_buf.buffer[resources->sprites_buf.length];
-//     // &s.color;
-//     resources->sprites_buf.buffer[resources->sprites_buf.length] = sprite;
-//     struct sprite *ptr = sprite_get(resources,resources->sprites_buf.length);
-//     resources->sprites_buf.length++;
-//     return ptr;
-// }
-
 sprite* sprite_new(resources *resources) {
     if (!(resources->sprites_buf.length < SPRITES_CAPACITY)) {
         die("sprite_new: too many sprites");
