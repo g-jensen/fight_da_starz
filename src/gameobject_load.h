@@ -16,9 +16,9 @@ typedef struct game_object_parse_result {
 
 void parse_game_object_file(game_object_parse_result *parse_result, resources *resources, char *filepath);
 
-typedef struct game_object_resources {
+typedef struct loaded_resource {
     sprite *sprite;
     collision_offset collision_offset;
-} game_object_resources;
+} loaded_resource;
 
-game_object_resources load_game_object(resources *resources, char* filepath);
+loaded_resource load_resource(resources *resources, char* filepath);

@@ -105,10 +105,10 @@ void update_state(game_state *state, optional_char c) {
 }
 
 void game_init(game_state *state, resources *resources) {
-    game_object_resources player_resources = load_game_object(resources,"game_objects/player.txt");
-    game_object_resources box_resources = load_game_object(resources,"game_objects/box.txt");
-    game_object_resources dot_resources = load_game_object(resources,"game_objects/dot.txt");
-    game_object_resources floor_resources = load_game_object(resources,"game_objects/floor.txt");
+    loaded_resource player_resources = load_resource(resources,"game_objects/player.txt");
+    loaded_resource box_resources = load_resource(resources,"game_objects/box.txt");
+    loaded_resource dot_resources = load_resource(resources,"game_objects/dot.txt");
+    loaded_resource floor_resources = load_resource(resources,"game_objects/floor.txt");
     
     *state = (game_state){
         .stop = 0,

@@ -106,12 +106,12 @@ void sprite_init_from_parsed_game_object(sprite *sprite, game_object_parse_resul
     sprite->color = parse_result->color;
 }
 
-game_object_resources load_game_object(resources *resources, char* filepath) {
+loaded_resource load_resource(resources *resources, char* filepath) {
     game_object_parse_result parsed;
     parse_game_object_file(&parsed, resources, filepath);
 
     sprite *sprite = sprite_new(resources);
     sprite_init_from_parsed_game_object(sprite, &parsed);
 
-    return (game_object_resources){.sprite = sprite, .collision_offset = parsed.collision_offset};
+    return (loaded_resource){.sprite = sprite, .collision_offset = parsed.collision_offset};
 }
