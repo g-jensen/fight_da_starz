@@ -2,7 +2,7 @@
 
 #include <sys/types.h> // breaks on windows
 
-typedef struct color {
+typedef struct color { // TODO - I don't think order actually matters for escape codes. And there should be more than two parameters
     u_int8_t foreground;
     u_int8_t background;
 } color;
