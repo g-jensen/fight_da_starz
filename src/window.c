@@ -79,7 +79,7 @@ int window_mmap(window *window) {
     if (window_get_size(&window->rows, &window->cols) == -1) {
         return -1;
     }
-    int window_drawbuf_capacity = 512;
+    int window_drawbuf_capacity = 1024;
     window_drawbuf = memory_map(window_drawbuf_capacity*sizeof(char));
     window->drawBuf = (draw_buf){.b = window_drawbuf, .length = 0, .capacity = window_drawbuf_capacity};
     return 0;
