@@ -19,4 +19,5 @@ typedef struct collidables_buf {
     size_t length;
 } collidables_buf;
 
+game_object* new_collidable(collidables_buf *collidables);
 int does_object_overlap(game_object *object, ipoint object_offset, collidables_buf *collidables);

@@ -57,26 +57,29 @@ void render_state_into_grid(game_state *state, grid *grid) {
     grid_fill(grid, DEFAULT_CHAR, DEFAULT_COLOR);
 
     ipoint center_position = {.x = grid->cols/2, .y = grid->rows/2};
-    fpoint player_position = state->player.position;
+    fpoint player_position = state->player->position;
     ipoint player_rendered_position = center_position;
 
     for (size_t i = 0; i < state->collidables.length; i++) {
+        if (&state->collidables.buffer[i] == state->player) {
+            continue;
+        }
         fpoint object_position = state->collidables.buffer[i].position;
         ipoint rendered_position = render_position(to_ipoint(object_position), center_position, to_ipoint(player_position));
         place_sprite(rendered_position, grid, state->collidables.buffer[i].sprite);
     }
 
-    place_sprite(player_rendered_position, grid, state->player.sprite);
+    place_sprite(player_rendered_position, grid, state->player->sprite);
 
     char fps[32];
     render_format(grid,(ipoint){.y=0},fps,32,"FPS: %d",state->fps);
 
     char pos[32];
-    render_format(grid,(ipoint){.y=1},pos,32,"POS: (%f,%f)",state->player.position.x,state->player.position.y);
+    render_format(grid,(ipoint){.y=1},pos,32,"POS: (%f,%f)",state->player->position.x,state->player->position.y);
 
     char vel[32];
-    render_format(grid,(ipoint){.y=2},vel,32,"VEL: (%f,%f)",state->player.velocity.x,state->player.velocity.y);
+    render_format(grid,(ipoint){.y=2},vel,32,"VEL: (%f,%f)",state->player->velocity.x,state->player->velocity.y);
     
     char acc[32];
-    render_format(grid,(ipoint){.y=3},acc,32,"ACC: (%f,%f)",state->player.acceleration.x,state->player.acceleration.y);
+    render_format(grid,(ipoint){.y=3},acc,32,"ACC: (%f,%f)",state->player->acceleration.x,state->player->acceleration.y);
 }

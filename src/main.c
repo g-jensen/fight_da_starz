@@ -8,6 +8,8 @@
 #define MUS_PER_TICK MS_PER_TICK * 1000
 #define MS_PER_TICK 34 // ticks per second = 1000/MS_PER_TICK
 
+#define WINDOW_DRAWBUF_CAPACITY 1024
+
 #ifdef _DEV
 #include "log.h"
 #include <mcheck.h>
@@ -33,7 +35,7 @@ int main() {
     #endif
 
     window window;
-    window_mmap(&window, 1024*sizeof(*window.drawBuf.b));
+    window_mmap(&window, WINDOW_DRAWBUF_CAPACITY*sizeof(*window.drawBuf.b));
     if (window_get_size(&window.rows, &window.cols) == -1) {
         die("window_get_size");
     }
@@ -44,7 +46,8 @@ int main() {
     resources resources;
     resources_init(&resources);
 
-    game_state state = game_init(&resources);
+    game_state state;
+    game_init(&state, &resources);
     long mus_read_timeout = 5000;
     long start_time;
 

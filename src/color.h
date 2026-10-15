@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdlib.h>
+#include <sys/types.h> // breaks on windows
 
 typedef struct color {
     u_int8_t foreground;

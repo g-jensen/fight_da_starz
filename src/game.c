@@ -100,34 +100,43 @@ void handle_quit(game_state *state, optional_char c) {
 
 void update_state(game_state *state, optional_char c) {
     handle_quit(state,c);
-    handle_object_physics(&state->player,&state->collidables,c);
+    handle_object_physics(state->player,&state->collidables,c);
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 }
 
-game_state game_init(resources *resources) {
+void game_init(game_state *state, resources *resources) {
     game_object_resources player_resources = load_game_object(resources,"game_objects/player.txt");
     game_object_resources box_resources = load_game_object(resources,"game_objects/box.txt");
     game_object_resources dot_resources = load_game_object(resources,"game_objects/dot.txt");
     game_object_resources floor_resources = load_game_object(resources,"game_objects/floor.txt");
     
-    return (game_state){
+    *state = (game_state){
         .stop = 0,
         .tick_start_mus = 0,
         .tick_end_mus = 0,
-        .player = { 
-            .position = {.x = 0, .y = -5}, 
-            .velocity = {.x = 0, .y = 0}, 
-            .sprite = player_resources.sprite, 
-            .collision_offset = player_resources.collision_offset 
-        },
-        .collidables = {
-            .buffer = {
-                { .position = {.x = 10,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset   },
-                { .position = {.x = 20,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset   },
-                { .position = {.x = -10, .y = 6},  .sprite = dot_resources.sprite,   .collision_offset = dot_resources.collision_offset   },
-                { .position = {.x = -50, .y = 10}, .sprite = floor_resources.sprite, .collision_offset = floor_resources.collision_offset },
-            },
-            .length = 4
-        },
+    };
+
+    state->player = new_collidable(&state->collidables);
+    *state->player = (game_object){
+        .position = {.x = 0, .y = -5}, 
+        .velocity = {.x = 0, .y = 0}, 
+        .sprite = player_resources.sprite, 
+        .collision_offset = player_resources.collision_offset 
+    };
+
+    *new_collidable(&state->collidables) = (game_object){
+        .position = {.x = 10,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset
+    };
+
+    *new_collidable(&state->collidables) = (game_object){
+        .position = {.x = 20,  .y = 6},  .sprite = box_resources.sprite,   .collision_offset = box_resources.collision_offset
+    };
+
+    *new_collidable(&state->collidables) = (game_object){
+        .position = {.x = -10, .y = 6},  .sprite = dot_resources.sprite,   .collision_offset = dot_resources.collision_offset
+    };
+
+    *new_collidable(&state->collidables) = (game_object){
+        .position = {.x = -50, .y = 10}, .sprite = floor_resources.sprite, .collision_offset = floor_resources.collision_offset
     };
 }
