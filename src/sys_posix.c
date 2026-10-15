@@ -31,7 +31,7 @@ long long get_time_mus() {
     return time.tv_sec*1000000 + time.tv_usec;
 }
 
-void musleep(long long time) {
+void musleep(unsigned long long time) {
     usleep(time);
 }
 

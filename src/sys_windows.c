@@ -37,7 +37,7 @@ long long get_time_mus() {
     );
 }
 
-void musleep(long long time) {
+void musleep(unsigned long long time) {
     // Sleep() takes milliseconds.
     Sleep((DWORD)((time + 999) / 1000));
 }
