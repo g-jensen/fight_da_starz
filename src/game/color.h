@@ -1,7 +1,5 @@
 #pragma once
 
-#include <sys/types.h> // breaks on windows
-
 #define COLOR_PARAMS_CAPACITY 4
 #define COLOR_BUF_CAPACITY 16
 #define COLOR_PARAM_BUF_CAPACITY COLOR_PARAMS_CAPACITY*COLOR_BUF_CAPACITY
