@@ -29,16 +29,14 @@ Run the prod build: `./dist/prod`
 
 Basic debugging can be done with `gdb`.
 
-Trace memory allocations with `mtrace` or `valgrind`.
+Profile physical and virtual memory with `pmap`.
 
-mtrace:
 ```bash
-LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libc_malloc_debug.so MALLOC_TRACE=/tmp/mtrace.txt ./dist/dev
-
-mtrace ./dist/dev /tmp/mtrace.txt
+pmap -X <pid>
 ```
 
-valgrind:
+Trace memory allocations with `valgrind`.
+
 ```bash
 valgrind --tool=massif ./dist/dev
 

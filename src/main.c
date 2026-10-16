@@ -12,7 +12,6 @@
 
 #ifdef _DEV
 #include "log.h"
-#include <mcheck.h>
 #endif
 
 void render_state_to_window(game_state *state, window *window, grid *render_grid) {
@@ -29,8 +28,6 @@ void pace_tick(long start_time, long end_time) {
 
 int main() {    
     #ifdef _DEV
-    mtrace();
-    atexit(muntrace);
     log_info("dev mode active!");
     #endif
 
