@@ -68,12 +68,15 @@ int grid_index_into_drawbuf(grid *grid, size_t grid_index, draw_buf *draw_buf, s
     } else {
         return -1;
     }
-    if (insert_string(draw_buf, &draw_buf_length, "\033[0;0m") == -1) {
-        return -1;
-    }
     
     if (col_offset == grid->cols-1 && grid_index < grid_length-1) {
         if (window_buf_new_line(draw_buf, &draw_buf_length) == -1) {
+            return -1;
+        }
+    }
+    
+    if (grid_index == grid_length-1) {
+        if (insert_string(draw_buf, &draw_buf_length, "\033[0;0m") == -1) {
             return -1;
         }
     }
