@@ -9,7 +9,7 @@
 #define MUS_PER_TICK MS_PER_TICK * 1000
 #define MS_PER_TICK 34 // ticks per second = 1000/MS_PER_TICK
 
-#define WINDOW_DRAWBUF_CAPACITY 2048
+#define WINDOW_DRAWBUF_CAPACITY 256
 
 #ifdef _DEV
 #include "log.h"
