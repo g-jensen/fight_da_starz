@@ -4,6 +4,7 @@
 #include "game.h"
 #include "log.h"
 #include "sys.h"
+#include "terminal.h"
 
 #define MUS_PER_TICK MS_PER_TICK * 1000
 #define MS_PER_TICK 34 // ticks per second = 1000/MS_PER_TICK
@@ -33,8 +34,8 @@ int main() {
 
     window window;
     window_mmap(&window, WINDOW_DRAWBUF_CAPACITY*sizeof(*window.drawBuf.b));
-    if (window_get_size(&window.rows, &window.cols) == -1) {
-        die("window_get_size");
+    if (terminal_get_size(&window.rows, &window.cols) == -1) {
+        die("terminal_get_size");
     }
     
     grid render_grid;
@@ -48,11 +49,11 @@ int main() {
     long mus_read_timeout = 5000;
     long start_time;
 
-    window_init(); // window_init() and window_shutdown() don't really have anything to do with the 'window' abstraction. Maybe rename to terminal_init() and _shutdown()
-    atexit(window_shutdown);
+    terminal_init();
+    atexit(terminal_shutdown);
     while (!state.stop) {
         start_time = get_time_mus();
-        update_state(&state, window_read_char(mus_read_timeout));
+        update_state(&state, terminal_read_char(mus_read_timeout));
         render_state_to_window(&state,&window,&render_grid);
         pace_tick(start_time,get_time_mus());
     }
