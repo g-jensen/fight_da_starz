@@ -131,7 +131,7 @@ void parse_game_object_file(game_object_parse_result *parsed, resources *resourc
     }
 
     int design_length;
-    parsed->color = color_new(resources);
+    parsed->color = color_new(resources); // TODO - maybe only allocate a new color for colors that haven't already been loaded.
     parse_game_object_header(f, &parsed->offset, &design_length, parsed->color, &resources->color_resources.param_buf);
 
 
