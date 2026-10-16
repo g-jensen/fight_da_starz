@@ -15,7 +15,9 @@ or
 make dev
 ```
 
-Run the dev build: `./dist/dev`
+Run the dev build: `./dist/dev/game`
+
+Or run the object editor: `./dist/dev/object_editor`
 
 ## Production Build
 
@@ -23,7 +25,10 @@ Run the dev build: `./dist/dev`
 make prod
 ```
 
-Run the prod build: `./dist/prod`
+Run the prod build: `./dist/prod/game`
+
+Or run the object editor: `./dist/prod/object_editor`
+
 
 ## Debugging
 
