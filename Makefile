@@ -1,3 +1,5 @@
+MAKEFLAGS += -j
+
 SRC_PATH=src
 BUILD_PATH=build
 DIST_PATH=dist
