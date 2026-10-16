@@ -2,12 +2,26 @@
 
 #include <sys/types.h> // breaks on windows
 
-#define COLOR_PARAM_CAPACITY 4
+#define COLOR_PARAMS_CAPACITY 4
+#define COLOR_BUF_CAPACITY 16
+#define COLOR_PARAM_BUF_CAPACITY COLOR_PARAMS_CAPACITY*COLOR_BUF_CAPACITY
 
-typedef struct color { // TODO - Linear accumulator
-    u_int8_t params[COLOR_PARAM_CAPACITY];
+typedef int color_param;
+
+typedef struct color_param_buf {
+    color_param buffer[COLOR_PARAM_BUF_CAPACITY];
+    size_t length;
+} color_param_buf;
+
+typedef struct color {
+    color_param *params;
     size_t length;
 } color;
+
+typedef struct color_buf {
+    color buffer[COLOR_BUF_CAPACITY];
+    size_t length;
+} color_buf;
 
 #define ESCAPE_CODE_CAPACITY 32
 

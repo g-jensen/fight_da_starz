@@ -9,7 +9,7 @@ typedef struct game_object_parse_result {
     ipoint offset;
     design sprite_design;
     collision_offset collision_offset;
-    color color;
+    color *color;
 } game_object_parse_result;
 
 long design_size(FILE *f, int design_newline_count) {
@@ -46,7 +46,8 @@ design parse_design(designs_buf *designs_buf, FILE *f, int design_length) {
     };
 }
 
-void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, color* color) {
+// TODO - refactor
+void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, color* color, color_param_buf* color_param_buf) {
     if (fscanf(f, "%d,%d", &offset->x, &offset->y) != 2) {
         die("parse_game_object_header offset");
     }
@@ -59,17 +60,19 @@ void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, color
         param[param_idx] = fgetc(f);
         if (param[param_idx] == ',') {
             param[param_idx] = '\0';
-            color->params[color->length++] = atoi(param);
+            color_param_buf->buffer[color_param_buf->length+(color->length++)] = atoi(param);
             param_idx = 0;
             continue;
         }
         if (param[param_idx] == '\n') {
             param[param_idx] = '\0';
-            color->params[color->length++] = atoi(param);
+            color_param_buf->buffer[color_param_buf->length+(color->length++)] = atoi(param);
             break;
         }
         param_idx++;
     }
+    color->params = color_param_buf->buffer+color_param_buf->length;
+    color_param_buf->length += color->length;
     
     if (fscanf(f, "%d", design_length) != 1) {
         die("parse_game_object_header design_length");
@@ -117,7 +120,6 @@ collision_offset collision_offset_from_parsed_game_object(collision_offsets_buf 
     return (collision_offset){.points = points, .length = size}; 
 }
 
-// TODO - refactor
 void parse_game_object_file(game_object_parse_result *parsed, resources *resources, char *filepath) {
     FILE *f;
     f = fopen(filepath, "r");
@@ -126,7 +128,9 @@ void parse_game_object_file(game_object_parse_result *parsed, resources *resourc
     }
 
     int design_length;
-    parse_game_object_header(f, &parsed->offset, &design_length, &parsed->color);
+    parsed->color = color_new(resources);
+    parse_game_object_header(f, &parsed->offset, &design_length, parsed->color, &resources->color_resources.param_buf);
+
 
     parsed->sprite_design = parse_design(&resources->designs_buf, f,design_length);
 
@@ -141,7 +145,7 @@ void parse_game_object_file(game_object_parse_result *parsed, resources *resourc
 void sprite_init_from_parsed_game_object(sprite *sprite, game_object_parse_result *parse_result) {
     sprite->design = parse_result->sprite_design;
     sprite->offset = parse_result->offset;
-    memcpy(&sprite->color, &parse_result->color, sizeof(struct color));
+    sprite->color = parse_result->color;
 }
 
 game_object_file_resource game_object_file_load(resources *resources, char* filepath) {

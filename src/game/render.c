@@ -5,7 +5,8 @@
 #include "render.h"
 #include "sprite.h"
 
-color DEFAULT_COLOR = {.params = {0}, .length = 1};
+color_param DEFAULT_COLOR_PARAMS[1] = {0};
+color DEFAULT_COLOR = {.params = DEFAULT_COLOR_PARAMS, .length = 1};
 
 int render_grid_create(grid *grid, int rows, int cols) {
     grid_mmap(grid, rows, cols);
@@ -31,7 +32,7 @@ void place_sprite(ipoint rendered_position, grid *grid, sprite *sprite) {
             position.x++;
             continue;
         }
-        place_char(ipoint_sub(ipoint_add(rendered_position, position), sprite->offset), grid, sprite->design.content[i], &sprite->color);
+        place_char(ipoint_sub(ipoint_add(rendered_position, position), sprite->offset), grid, sprite->design.content[i], sprite->color);
         position.x++;
     }
 }
@@ -48,7 +49,7 @@ void render_format(grid *grid, ipoint position, char* dest, int maxlen, char* fm
     sprite sprite = {
         .design = {.content = dest, .length = strlen(dest)}, 
         .offset = {.x = 0, .y = 0},
-        .color = DEFAULT_COLOR
+        .color = &DEFAULT_COLOR
     };
     place_sprite(position, grid, &sprite);
 }

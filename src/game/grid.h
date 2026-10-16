@@ -4,7 +4,7 @@
 
 typedef struct grid {
     char *chars;
-    color *colors;
+    color **colors;
     int rows;
     int cols;
 } grid;

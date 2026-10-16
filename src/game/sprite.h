@@ -7,7 +7,7 @@
 typedef struct sprite {
     design design;
     ipoint offset;
-    color color;
+    color *color;
 } sprite;
 
 #define SPRITES_CAPACITY 16

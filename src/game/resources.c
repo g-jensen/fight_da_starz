@@ -12,6 +12,13 @@ sprite* sprite_new(resources *resources) {
     return &resources->sprites_buf.buffer[resources->sprites_buf.length++];
 }
 
+color* color_new(resources *resources) {
+    if (!(resources->color_resources.color_buf.length < COLOR_BUF_CAPACITY)) {
+        die("color_new: too many colors");
+    }
+    return &resources->color_resources.color_buf.buffer[resources->color_resources.color_buf.length++];
+}
+
 int resources_init(resources *resources) {
     *resources = (struct resources){0};
     return 0;
