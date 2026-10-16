@@ -46,13 +46,7 @@ design parse_design(designs_buf *designs_buf, FILE *f, int design_length) {
     };
 }
 
-// TODO - refactor
-void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, color* color, color_param_buf* color_param_buf) {
-    if (fscanf(f, "%d,%d", &offset->x, &offset->y) != 2) {
-        die("parse_game_object_header offset");
-    }
-    fgetc(f);
-
+void parse_params_into_color(FILE *f, color* color, color_param_buf* color_param_buf) {
     color->length = 0;
     char param[4] = {};
     int param_idx = 0;
@@ -73,6 +67,15 @@ void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, color
     }
     color->params = color_param_buf->buffer+color_param_buf->length;
     color_param_buf->length += color->length;
+}
+
+void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, color* color, color_param_buf* color_param_buf) {
+    if (fscanf(f, "%d,%d", &offset->x, &offset->y) != 2) {
+        die("parse_game_object_header offset");
+    }
+    fgetc(f);
+
+    parse_params_into_color(f, color, color_param_buf);
     
     if (fscanf(f, "%d", design_length) != 1) {
         die("parse_game_object_header design_length");
