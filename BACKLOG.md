@@ -1,6 +1,7 @@
 # Backlog
 
 - [ ] windows support
+- [ ] serialization
 - [ ] click support
 - [x] colored grid support
 - [ ] per-pixel color support on sprites (sprite editor)
