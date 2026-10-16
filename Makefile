@@ -5,8 +5,8 @@ DIST_PATH=dist
 DEV_BUILD_PATH=$(BUILD_PATH)/dev
 PROD_BUILD_PATH=$(BUILD_PATH)/prod
 
-DEV_EXEC=$(DIST_PATH)/dev
-PROD_EXEC=$(DIST_PATH)/prod
+DIST_DEV=$(DIST_PATH)/dev
+DIST_PROD=$(DIST_PATH)/prod
 
 CC=gcc
 CFLAGS=-lm -Wall -Wextra -I.
@@ -29,22 +29,28 @@ DEV_OBJ=$(patsubst %,$(DEV_BUILD_PATH)/%,$(OBJ))
 PROD_OBJ=$(patsubst %,$(PROD_BUILD_PATH)/%,$(OBJ))
 
 .PHONY: dev
-dev: $(DEV_EXEC)_game $(DEV_EXEC)_object_editor
+dev: $(DIST_DEV)/game $(DIST_DEV)/object_editor
 
 .PHONY: prod
-prod: $(PROD_EXEC)_game $(PROD_EXEC)_object_editor
+prod: $(DIST_PROD)/game $(DIST_PROD)/object_editor
 
-$(DEV_EXEC)_game: $(DEV_OBJ) | $(DIST_PATH)
+$(DIST_DEV)/game: $(DEV_OBJ) | $(DIST_DEV)
 	$(CC) $(DEV_FLAGS) -o $@ $(filter-out $(DEV_BUILD_PATH)/object_editor/%, $(DEV_OBJ)) $(CFLAGS)
 
-$(DEV_EXEC)_object_editor: $(DEV_OBJ) | $(DIST_PATH)
+$(DIST_DEV)/object_editor: $(DEV_OBJ) | $(DIST_DEV)
 	$(CC) $(DEV_FLAGS) -o $@ $(filter-out $(DEV_BUILD_PATH)/game/%, $(DEV_OBJ)) $(CFLAGS)
 
-$(PROD_EXEC)_game: $(PROD_OBJ) | $(DIST_PATH)
+$(DIST_DEV): | $(DIST_PATH)
+	$(call MKDIR,$@)
+
+$(DIST_PROD)/game: $(PROD_OBJ) | $(DIST_PROD)
 	$(CC) $(PROD_FLAGS) -o $@ $(filter-out $(PROD_BUILD_PATH)/object_editor/%, $(PROD_OBJ)) $(CFLAGS)
 
-$(PROD_EXEC)_object_editor: $(PROD_OBJ) | $(DIST_PATH)
+$(DIST_PROD)/object_editor: $(PROD_OBJ) | $(DIST_PROD)
 	$(CC) $(PROD_FLAGS) -o $@ $(filter-out $(PROD_BUILD_PATH)/game/%, $(PROD_OBJ)) $(CFLAGS)
+
+$(DIST_PROD): | $(DIST_PATH)
+	$(call MKDIR,$@)
 
 $(DIST_PATH):
 	$(call MKDIR,$@)
