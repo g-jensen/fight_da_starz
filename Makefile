@@ -13,8 +13,8 @@ CFLAGS=-lm -Wall -Wextra -I.
 DEV_FLAGS=-O0 -D_DEV -ggdb3
 PROD_FLAGS=-O3
 
-HEADERS := $(wildcard $(SRC_PATH)/*.h)
-RAW_SRC := $(notdir $(wildcard $(SRC_PATH)/*.c))
+HEADERS := $(wildcard $(SRC_PATH)/*/*.h)
+RAW_SRC := $(patsubst src/%, %, $(wildcard $(SRC_PATH)/*/*.c))
 
 ifeq ($(OS),Windows_NT)
     SRC = $(filter-out %_posix.c, $(RAW_SRC))
@@ -29,16 +29,22 @@ DEV_OBJ=$(patsubst %,$(DEV_BUILD_PATH)/%,$(OBJ))
 PROD_OBJ=$(patsubst %,$(PROD_BUILD_PATH)/%,$(OBJ))
 
 .PHONY: dev
-dev: $(DEV_EXEC)
+dev: $(DEV_EXEC)_game $(DEV_EXEC)_object_editor
 
 .PHONY: prod
-prod: $(PROD_EXEC)
+prod: $(PROD_EXEC)_game $(PROD_EXEC)_object_editor
 
-$(DEV_EXEC): $(DEV_OBJ) | $(DIST_PATH)
-	$(CC) $(DEV_FLAGS) -o $@ $(DEV_OBJ) $(CFLAGS)
+$(DEV_EXEC)_game: $(DEV_OBJ) | $(DIST_PATH)
+	$(CC) $(DEV_FLAGS) -o $@ $(filter-out $(DEV_BUILD_PATH)/object_editor/%, $(DEV_OBJ)) $(CFLAGS)
 
-$(PROD_EXEC): $(PROD_OBJ) | $(DIST_PATH)
-	$(CC) $(PROD_FLAGS) -o $@ $(PROD_OBJ) $(CFLAGS)
+$(DEV_EXEC)_object_editor: $(DEV_OBJ) | $(DIST_PATH)
+	$(CC) $(DEV_FLAGS) -o $@ $(filter-out $(DEV_BUILD_PATH)/game/%, $(DEV_OBJ)) $(CFLAGS)
+
+$(PROD_EXEC)_game: $(PROD_OBJ) | $(DIST_PATH)
+	$(CC) $(PROD_FLAGS) -o $@ $(filter-out $(PROD_BUILD_PATH)/object_editor/%, $(PROD_OBJ)) $(CFLAGS)
+
+$(PROD_EXEC)_object_editor: $(PROD_OBJ) | $(DIST_PATH)
+	$(CC) $(PROD_FLAGS) -o $@ $(filter-out $(PROD_BUILD_PATH)/game/%, $(PROD_OBJ)) $(CFLAGS)
 
 $(DIST_PATH):
 	$(call MKDIR,$@)
@@ -48,12 +54,18 @@ $(DEV_BUILD_PATH)/%.o: $(SRC_PATH)/%.c $(HEADERS) | $(DEV_BUILD_PATH)
 
 $(DEV_BUILD_PATH):
 	$(call MKDIR,$@)
+	$(call MKDIR,$@/game)
+	$(call MKDIR,$@/object_editor)
+	$(call MKDIR,$@/shared)
 
 $(PROD_BUILD_PATH)/%.o: $(SRC_PATH)/%.c $(HEADERS) | $(PROD_BUILD_PATH)
 	$(CC) $(PROD_FLAGS) -c -o $@ $< $(CFLAGS)
 
 $(PROD_BUILD_PATH):
 	$(call MKDIR,$@)
+	$(call MKDIR,$@/game)
+	$(call MKDIR,$@/object_editor)
+	$(call MKDIR,$@/shared)
 
 .PHONY: clean
 clean:

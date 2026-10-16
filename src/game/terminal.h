@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "../shared/core.h"
 
 // https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html
 // https://vt100.net/docs/vt100-ug/chapter3.html#ED

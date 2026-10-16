@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "gameobject.h"
-#include "core.h"
+#include "../shared/core.h"
 
 game_object* new_collidable(collidables_buf *collidables) {
     if (!(collidables->length < COLLIDABLES_CAPACITY)) {

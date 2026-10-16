@@ -2,7 +2,7 @@
 #include <stdarg.h>
 
 #include "log.h"
-#include "core.h"
+#include "../shared/core.h"
 
 char* LOG_FILE = "log.txt";
 

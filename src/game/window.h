@@ -2,7 +2,7 @@
 
 #include "drawbuf.h"
 #include "grid.h"
-#include "core.h"
+#include "../shared/core.h"
 
 typedef struct window {
     int rows;

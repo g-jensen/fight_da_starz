@@ -3,7 +3,7 @@
 #include <termios.h>
 
 #include "raw_mode.h"
-#include "core.h"
+#include "../shared/core.h"
 
 struct termios ORIG_TERMIOS;
 

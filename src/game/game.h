@@ -1,7 +1,7 @@
 #pragma once
 
 #include "point.h"
-#include "core.h"
+#include "../shared/core.h"
 #include "sprite.h"
 #include "gameobject.h"
 #include "resources.h"

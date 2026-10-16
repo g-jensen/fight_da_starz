@@ -1,6 +1,6 @@
 #include "fps.h"
 #include "sys.h"
-#include "core.h"
+#include "../shared/core.h"
 
 int fps_iterate_counters(long long *start_tick, long long *end_tick) {
     *end_tick = get_time_mus();

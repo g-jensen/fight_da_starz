@@ -1,4 +1,4 @@
-#include "core.h"
+#include "../shared/core.h"
 
 #ifdef _WIN32
 

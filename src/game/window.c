@@ -5,7 +5,7 @@
 #include "window.h"
 #include "terminal.h"
 #include "point.h"
-#include "core.h"
+#include "../shared/core.h"
 #include "sys.h"
 
 void window_buf_draw(struct draw_buf *draw_buf) {

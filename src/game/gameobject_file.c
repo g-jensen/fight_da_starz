@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "gameobject_file.h"
-#include "core.h"
+#include "../shared/core.h"
 
 typedef struct game_object_parse_result {
     ipoint offset;

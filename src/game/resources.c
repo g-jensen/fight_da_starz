@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "resources.h"
-#include "core.h"
+#include "../shared/core.h"
 #include "sys.h"
 #include "gameobject_file.h"
 
