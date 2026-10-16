@@ -58,7 +58,7 @@ int grid_index_into_drawbuf(grid *grid, size_t grid_index, draw_buf *draw_buf, s
     }
 
     static char color_escape_code[ESCAPE_CODE_CAPACITY];
-    color_to_escape_code(color_escape_code, grid->colors[grid_index]);
+    color_to_escape_code(color_escape_code, &grid->colors[grid_index]);
 
     if (insert_string(draw_buf, &draw_buf_length, color_escape_code) == -1) {
         return -1;

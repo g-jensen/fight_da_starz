@@ -47,9 +47,34 @@ design parse_design(designs_buf *designs_buf, FILE *f, int design_length) {
 }
 
 void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, color* color) {
-    if (fscanf(f,"%d,%d\n%hhd,%hhd\n%d",&offset->x,&offset->y,&color->foreground,&color->background,design_length) != 5) {
-        die("parse_game_object_header");
+    if (fscanf(f, "%d,%d", &offset->x, &offset->y) != 2) {
+        die("parse_game_object_header offset");
     }
+    fgetc(f);
+
+    color->length = 0;
+    char param[4] = {};
+    int param_idx = 0;
+    while (param_idx < 4) {
+        param[param_idx] = fgetc(f);
+        if (param[param_idx] == ',') {
+            param[param_idx] = '\0';
+            color->params[color->length++] = atoi(param);
+            param_idx = 0;
+            continue;
+        }
+        if (param[param_idx] == '\n') {
+            param[param_idx] = '\0';
+            color->params[color->length++] = atoi(param);
+            break;
+        }
+        param_idx++;
+    }
+    
+    if (fscanf(f, "%d", design_length) != 1) {
+        die("parse_game_object_header design_length");
+    }
+    fgetc(f);
 }
 
 int get_collision_offset_size(design* design) {
@@ -92,6 +117,7 @@ collision_offset collision_offset_from_parsed_game_object(collision_offsets_buf 
     return (collision_offset){.points = points, .length = size}; 
 }
 
+// TODO - refactor
 void parse_game_object_file(game_object_parse_result *parsed, resources *resources, char *filepath) {
     FILE *f;
     f = fopen(filepath, "r");
@@ -101,7 +127,6 @@ void parse_game_object_file(game_object_parse_result *parsed, resources *resourc
 
     int design_length;
     parse_game_object_header(f, &parsed->offset, &design_length, &parsed->color);
-    fgetc(f);
 
     parsed->sprite_design = parse_design(&resources->designs_buf, f,design_length);
 
@@ -116,7 +141,7 @@ void parse_game_object_file(game_object_parse_result *parsed, resources *resourc
 void sprite_init_from_parsed_game_object(sprite *sprite, game_object_parse_result *parse_result) {
     sprite->design = parse_result->sprite_design;
     sprite->offset = parse_result->offset;
-    sprite->color = parse_result->color;
+    memcpy(&sprite->color, &parse_result->color, sizeof(struct color));
 }
 
 game_object_file_resource game_object_file_load(resources *resources, char* filepath) {

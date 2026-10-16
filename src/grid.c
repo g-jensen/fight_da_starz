@@ -16,10 +16,10 @@ color* grid_get_color(grid *grid, int row, int col) {
     return &grid->colors[grid_index(grid, row, col)];
 };
 
-void grid_set(grid *grid, int row, int col, char c, color color) {
+void grid_set(grid *grid, int row, int col, char c, color *color) {
     int index = grid_index(grid, row, col);
     grid->chars[index] = c;
-    grid->colors[index] = color;
+    memcpy(&grid->colors[index], color, sizeof(struct color));
 };
 
 int grid_mmap(grid *grid, int rows, int cols) {
@@ -30,9 +30,9 @@ int grid_mmap(grid *grid, int rows, int cols) {
     return 0;
 }
 
-void grid_fill(grid *grid, char c, color color) {
+void grid_fill(grid *grid, char c, color *color) {
     for (int i = 0; i < (grid->rows*grid->cols); i++) {
         grid->chars[i] = c;
-        grid->colors[i] = color;
+        memcpy(&grid->colors[i], color, sizeof(struct color));
     }
 }
