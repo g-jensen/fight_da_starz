@@ -18,6 +18,7 @@ int resources_init(resources *resources) {
 }
 
 resources_ref resources_load(resources *resources) {
+    resources_init(resources);
     return (resources_ref){
         .player = game_object_file_load(resources,"game_objects/player.txt"),
         .box = game_object_file_load(resources,"game_objects/box.txt"),

@@ -52,7 +52,7 @@ void parse_game_object_header(FILE *f, ipoint *offset, int *design_length, color
     }
 }
 
-int get_collision_area_length(design* design) {
+int get_collision_offset_size(design* design) {
     int j = 0;
 
     for(size_t i = 0; i < design->length; i++) {
@@ -67,9 +67,9 @@ int get_collision_area_length(design* design) {
 collision_offset collision_offset_from_parsed_game_object(collision_offsets_buf *collision_offsets_buf, design *design, ipoint offset) {
     ipoint position = {0,0};
     int j = 0;
-    int length = get_collision_area_length(design);
-    if (length > MAX_COLLISION_OFFSET_SIZE) {
-        die("collision_offset_from_parsed_game_object: length > MAX_COLLISION_OFFSET_SIZE");
+    int size = get_collision_offset_size(design);
+    if (size > MAX_COLLISION_OFFSET_SIZE) {
+        die("collision_offset_from_parsed_game_object: size > MAX_COLLISION_OFFSET_SIZE");
     }
 
     for(size_t i = 0; i < design->length; i++) {
@@ -81,17 +81,23 @@ collision_offset collision_offset_from_parsed_game_object(collision_offsets_buf 
             position.x++;
             continue;
         }
+        if (!(collision_offsets_buf->length+j < MAX_COLLISION_OFFSETS_BUFFER)) {
+            die("too many collision offsets");
+        }
         collision_offsets_buf->buffer[collision_offsets_buf->length+(j++)] = ipoint_sub(position, offset);
         position.x++;
     }
     ipoint *points = collision_offsets_buf->buffer+collision_offsets_buf->length;
-    collision_offsets_buf->length += length;
-    return (collision_offset){.points = points, .length = length}; 
+    collision_offsets_buf->length += size;
+    return (collision_offset){.points = points, .length = size}; 
 }
 
 void parse_game_object_file(game_object_parse_result *parsed, resources *resources, char *filepath) {
     FILE *f;
     f = fopen(filepath, "r");
+    if (f == NULL) {
+        die("parse_game_object_file: can't open file");
+    }
 
     int design_length;
     parse_game_object_header(f, &parsed->offset, &design_length, &parsed->color);
