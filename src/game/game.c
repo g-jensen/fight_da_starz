@@ -96,7 +96,7 @@ void handle_quit(game_state *state, optional_char c) {
     }
 }
 
-void update_state(game_state *state, optional_char c) {
+void game_update(game_state *state, optional_char c) {
     handle_quit(state,c);
     handle_object_physics(state->player,&state->collidables,c);
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);

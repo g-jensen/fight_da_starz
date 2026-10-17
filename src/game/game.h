@@ -15,5 +15,5 @@ typedef struct game_state {
     int fps;
 } game_state;
 
-void update_state(game_state *state, optional_char c);
+void game_update(game_state *state, optional_char c);
 void game_init(game_state* state, resources_ref *resources_ref);

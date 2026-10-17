@@ -53,7 +53,7 @@ int main() {
     atexit(terminal_shutdown);
     while (!state.stop) {
         start_time = get_time_mus();
-        update_state(&state, terminal_read_char(mus_read_timeout));
+        game_update(&state, terminal_read_char(mus_read_timeout));
         render_state_to_window(&state,&window,&render_grid);
         pace_tick(start_time,get_time_mus());
     }
