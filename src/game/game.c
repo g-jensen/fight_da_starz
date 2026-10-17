@@ -15,15 +15,20 @@ enum Direction {
 };
 
 float new_velocity_component(game_object *game_object, float velocity_component, enum Direction direction, collidables_buf *collidables) {
-    fpoint velocity = {
-        .x = (direction == DIRECTION_X) ? velocity_component : 0,
-        .y = (direction == DIRECTION_Y) ? velocity_component : 0
-    };
-    int x_offset = (int)velocity.x + sgn_f(velocity.x);
-    int y_offset = (int)velocity.y + sgn_f(velocity.y);
-    ipoint offset = {.x = x_offset, .y = y_offset};
-    if (does_object_overlap(game_object, offset, collidables)) {
-        return 0;
+    if (velocity_component == 0) return 0;
+
+    int max_offset = (int)velocity_component + sgn_f(velocity_component);
+    ipoint offset = {.x = 0, .y = 0};
+    int sgn = sgn_f(velocity_component);
+    int *nonzero_component = (direction == DIRECTION_X) ? &offset.x : &offset.y;
+    while (sgn*(max_offset - *nonzero_component) >= 0) {
+        if (does_object_overlap(game_object, offset, collidables)) {
+            if (*nonzero_component == 0) {
+                return 0;
+            }
+            return *nonzero_component - sgn;
+        }
+        (*nonzero_component) += sgn;
     }
     return velocity_component;
 }
