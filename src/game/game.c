@@ -19,11 +19,13 @@ float new_velocity_component(game_object *game_object, float velocity_component,
         .x = (direction == DIRECTION_X) ? velocity_component : 0,
         .y = (direction == DIRECTION_Y) ? velocity_component : 0
     };
-    ipoint offset = {.x = ceil_f(velocity.x), .y = ceil_f(velocity.y)};
-    if (!does_object_overlap(game_object, offset, collidables)) {
-        return velocity_component;
+    int x_offset = (int)velocity.x + sgn_f(velocity.x);
+    int y_offset = (int)velocity.y + sgn_f(velocity.y);
+    ipoint offset = {.x = x_offset, .y = y_offset};
+    if (does_object_overlap(game_object, offset, collidables)) {
+        return 0;
     }
-    return 0;
+    return velocity_component;
 }
 
 void simulate_movement(game_object *game_object, collidables_buf *collidables) {

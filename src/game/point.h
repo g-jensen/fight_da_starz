@@ -23,4 +23,4 @@ int fpoint_eq(fpoint p1, fpoint p2);
 float magnitude(fpoint p);
 fpoint clamp(fpoint p, float max_magnitude);
 
-ipoint to_ipoint(fpoint p);
+ipoint floor_ipoint(fpoint p);

@@ -1,6 +1,7 @@
 #include <math.h>
 
 #include "point.h"
+#include "../shared/core.h"
 
 ipoint ipoint_add(ipoint p1, ipoint p2) {
     return (ipoint) {.x = p1.x + p2.x , .y = p1.y + p2.y};
@@ -38,6 +39,6 @@ fpoint clamp(fpoint p, float max_magnitude) {
     return p;
 }
 
-ipoint to_ipoint(fpoint p) {
-    return (ipoint){.x = (int)p.x, .y = (int)p.y};
+ipoint floor_ipoint(fpoint p) {
+    return (ipoint){.x = floor_f(p.x), .y = floor_f(p.y)};
 }

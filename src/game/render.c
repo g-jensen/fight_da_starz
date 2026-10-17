@@ -57,7 +57,7 @@ void render_format(grid *grid, ipoint position, char* dest, int maxlen, char* fm
 void render_state_into_grid(game_state *state, grid *grid) {
     grid_fill(grid, DEFAULT_CHAR, &DEFAULT_COLOR);
 
-    ipoint center_position = {.x = grid->cols/2, .y = grid->rows/2};
+    ipoint center_position = floor_ipoint((fpoint){.x = grid->cols/2.f, .y = grid->rows/2.f});
     fpoint player_position = state->player->position;
     ipoint player_rendered_position = center_position;
 
@@ -66,7 +66,7 @@ void render_state_into_grid(game_state *state, grid *grid) {
             continue;
         }
         fpoint object_position = state->collidables.buffer[i].position;
-        ipoint rendered_position = render_position(to_ipoint(object_position), center_position, to_ipoint(player_position));
+        ipoint rendered_position = render_position(floor_ipoint(object_position), center_position, floor_ipoint(player_position));
         place_sprite(rendered_position, grid, state->collidables.buffer[i].sprite);
     }
 

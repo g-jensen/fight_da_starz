@@ -23,7 +23,7 @@ int iter_is_in_range(void *_state) {
 }
 
 collision_area object_collision_area(game_object *object, ipoint object_offset) {
-    return (collision_area){.offsets = object->collision_offset, .position = ipoint_add(to_ipoint(object->position),object_offset)};
+    return (collision_area){.offsets = object->collision_offset, .position = ipoint_add(floor_ipoint(object->position),object_offset)};
 }
 
 collision_area iter_next_collision_area(void *_state) {

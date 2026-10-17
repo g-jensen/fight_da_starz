@@ -10,6 +10,16 @@ void die(const char *s) {
     exit(1);
 }
 
+int sgn_f(float f) {
+    if (f > 0) return 1;
+    if (f < 0) return -1;
+    return 0;
+}
+
 int ceil_f(float f) {
     return (int)ceilf(f);
+}
+
+int floor_f(float f) {
+    return (int)floor(f);
 }
