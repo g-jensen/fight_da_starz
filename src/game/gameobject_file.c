@@ -18,7 +18,7 @@ long design_size(FILE *f, int design_newline_count) {
     return size;
 }
 
-design parse_design(designs_buf *designs_buf, FILE *f, int design_length) {
+design parse_design(char *design, FILE *f, int design_length) {
     long parse_start = ftell(f);
     long size = design_size(f,design_length);
     
@@ -26,14 +26,12 @@ design parse_design(designs_buf *designs_buf, FILE *f, int design_length) {
         die("parse_design: size > MAX_DESIGN_SIZE");
     }
 
-    char* design_buf_start = designs_buf->buffer+designs_buf->length;
+    char* design_buf_start = design;
 
     fseek(f, parse_start, SEEK_SET);
     fread(design_buf_start, size, 1, f);
     
-    designs_buf->length += size;
-    
-    return (design) {
+    return (struct design) {
         .content = design_buf_start,
         .length = size
     };
@@ -116,7 +114,7 @@ collision_offset collision_offset_from_parsed_game_object(collision_offsets_buf 
     return (collision_offset){.points = points, .length = size}; 
 }
 
-void parse_game_object_file(game_object_parse_result *parsed, resources *resources, char *filepath) {
+void parse_game_object_file(game_object_parse_result *parsed, color *color, color_param_buf *param_buf, char *design, collision_offsets_buf *offsets_buf, char *filepath) {
     FILE *f;
     f = fopen(filepath, "r");
     if (f == NULL) {
@@ -124,18 +122,18 @@ void parse_game_object_file(game_object_parse_result *parsed, resources *resourc
     }
 
     int design_length;
-    parsed->color = color_new(resources); // TODO - maybe only allocate a new color for colors that haven't already been loaded.
-    parse_game_object_header(f, &parsed->offset, &design_length, parsed->color, &resources->color_resources.param_buf);
+    parsed->color = color; // TODO - maybe only allocate a new color for colors that haven't already been loaded.
+    parse_game_object_header(f, &parsed->offset, &design_length, parsed->color, param_buf);
 
-
-    parsed->sprite_design = parse_design(&resources->designs_buf, f, design_length);
+    parsed->sprite_design = parse_design(design, f, design_length);
 
     designs_buf collision_area_design_buf = {0};
-    design collision_area_design = parse_design(&collision_area_design_buf, f, design_length);
-
+    struct design collision_area_design = parse_design(collision_area_design_buf.buffer+collision_area_design_buf.length, f, design_length);
+    collision_area_design_buf.length += collision_area_design.length;
+    
     fclose(f);
 
-    parsed->collision_offset = collision_offset_from_parsed_game_object(&resources->collision_offsets_buf, &collision_area_design, parsed->offset);
+    parsed->collision_offset = collision_offset_from_parsed_game_object(offsets_buf, &collision_area_design, parsed->offset);
 }
 
 void sprite_init_from_parsed_game_object(sprite *sprite, game_object_parse_result *parse_result) {

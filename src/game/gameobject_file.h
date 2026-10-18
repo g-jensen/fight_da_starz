@@ -1,6 +1,5 @@
 #pragma once
 
-#include "resources.h"
 #include "sprite.h"
 #include "collision.h"
 #include "design.h"
@@ -13,5 +12,5 @@ typedef struct game_object_parse_result {
     color *color;
 } game_object_parse_result;
 
-void parse_game_object_file(game_object_parse_result *parsed, resources *resources, char *filepath);
+void parse_game_object_file(game_object_parse_result *parsed, color *color, color_param_buf *param_buf, char* design, collision_offsets_buf *offsets_buf, char *filepath);
 void sprite_init_from_parsed_game_object(sprite *sprite, game_object_parse_result *parse_result);
