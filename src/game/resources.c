@@ -33,3 +33,13 @@ resources_ref resources_load(resources *resources) {
         .floor = game_object_file_load(resources,"game_objects/floor.txt"),
     };
 }
+
+game_object_file_resource game_object_file_load(resources *resources, char* filepath) {
+    game_object_parse_result parsed;
+    parse_game_object_file(&parsed, resources, filepath);
+
+    sprite *sprite = sprite_new(resources);
+    sprite_init_from_parsed_game_object(sprite, &parsed);
+
+    return (game_object_file_resource){.sprite = sprite, .collision_offset = parsed.collision_offset};
+}

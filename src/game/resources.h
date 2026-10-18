@@ -32,3 +32,4 @@ typedef struct resources_ref {
 sprite* sprite_new(resources *resources);
 color* color_new(resources *resources);
 resources_ref resources_load(resources *resources);
+game_object_file_resource game_object_file_load(resources *resources, char* filepath);

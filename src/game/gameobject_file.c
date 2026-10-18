@@ -5,13 +5,6 @@
 #include "gameobject_file.h"
 #include "../shared/core.h"
 
-typedef struct game_object_parse_result {
-    ipoint offset;
-    design sprite_design;
-    collision_offset collision_offset;
-    color *color;
-} game_object_parse_result;
-
 long design_size(FILE *f, int design_newline_count) {
     long size = 0;
     long newline_count = 0;
@@ -135,7 +128,7 @@ void parse_game_object_file(game_object_parse_result *parsed, resources *resourc
     parse_game_object_header(f, &parsed->offset, &design_length, parsed->color, &resources->color_resources.param_buf);
 
 
-    parsed->sprite_design = parse_design(&resources->designs_buf, f,design_length);
+    parsed->sprite_design = parse_design(&resources->designs_buf, f, design_length);
 
     designs_buf collision_area_design_buf = {0};
     design collision_area_design = parse_design(&collision_area_design_buf, f, design_length);
@@ -149,14 +142,4 @@ void sprite_init_from_parsed_game_object(sprite *sprite, game_object_parse_resul
     sprite->design = parse_result->sprite_design;
     sprite->offset = parse_result->offset;
     sprite->color = parse_result->color;
-}
-
-game_object_file_resource game_object_file_load(resources *resources, char* filepath) {
-    game_object_parse_result parsed;
-    parse_game_object_file(&parsed, resources, filepath);
-
-    sprite *sprite = sprite_new(resources);
-    sprite_init_from_parsed_game_object(sprite, &parsed);
-
-    return (game_object_file_resource){.sprite = sprite, .collision_offset = parsed.collision_offset};
 }
