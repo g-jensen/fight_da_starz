@@ -4,9 +4,9 @@
 
 #include "window.h"
 #include "terminal.h"
-#include "point.h"
-#include "../shared/core.h"
 #include "sys.h"
+#include "../shared/point.h"
+#include "../shared/core.h"
 
 void window_buf_draw(struct draw_buf *draw_buf) {
     write(STDOUT_FILENO, draw_buf->b, draw_buf->length);

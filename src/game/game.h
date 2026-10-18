@@ -1,8 +1,8 @@
 #pragma once
 
-#include "point.h"
+#include "../shared/point.h"
 #include "../shared/core.h"
-#include "sprite.h"
+#include "../shared/sprite.h"
 #include "gameobject.h"
 #include "resources.h"
 

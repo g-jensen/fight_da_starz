@@ -1,6 +1,6 @@
 #pragma once
 
-#include "color.h"
+#include "../shared/color.h"
 
 typedef struct grid {
     char *chars;

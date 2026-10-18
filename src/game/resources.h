@@ -1,9 +1,9 @@
 #pragma once
 
-#include "sprite.h"
-#include "collision.h"
-#include "design.h"
-#include "color.h"
+#include "../shared/sprite.h"
+#include "../shared/collision.h"
+#include "../shared/design.h"
+#include "../shared/color.h"
 
 typedef struct color_resources {
     color_param_buf param_buf;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "point.h"
-#include "sprite.h"
-#include "collision.h"
+#include "../shared/point.h"
+#include "../shared/sprite.h"
+#include "../shared/collision.h"
 
 typedef struct game_object {
     fpoint position;

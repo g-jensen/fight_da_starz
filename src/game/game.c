@@ -5,7 +5,7 @@
 #include "game.h"
 #include "sys.h"
 #include "fps.h"
-#include "collision.h"
+#include "../shared/collision.h"
 
 #define MAX_SPEED 15
 

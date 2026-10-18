@@ -1,9 +1,9 @@
 #pragma once
 
-#include "point.h"
+#include "../shared/point.h"
+#include "../shared/color.h"
 #include "grid.h"
 #include "game.h"
-#include "color.h"
 
 #define DEFAULT_CHAR ' '
 extern color DEFAULT_COLOR;

@@ -1,9 +1,9 @@
 #include <stdlib.h>
 
+#include "sys.h"
 #include "resources.h"
 #include "../shared/core.h"
-#include "sys.h"
-#include "gameobject_file.h"
+#include "../shared/gameobject_file.h"
 
 sprite* sprite_new(resources *resources) {
     if (!(resources->sprites_buf.length < SPRITES_CAPACITY)) {

@@ -3,7 +3,7 @@
 #include <stdarg.h>
 
 #include "render.h"
-#include "sprite.h"
+#include "../shared/sprite.h"
 
 color_param DEFAULT_COLOR_PARAMS[1] = {0};
 color DEFAULT_COLOR = {.params = DEFAULT_COLOR_PARAMS, .length = 1};
