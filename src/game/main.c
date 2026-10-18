@@ -1,10 +1,9 @@
-#include "render.h"
-#include "grid.h"
-#include "window.h"
 #include "game.h"
-#include "log.h"
-#include "sys.h"
-#include "terminal.h"
+#include "render.h"
+#include "../shared/grid.h"
+#include "../shared/window.h"
+#include "../shared/sys.h"
+#include "../shared/terminal.h"
 
 #define MUS_PER_TICK MS_PER_TICK * 1000
 #define MS_PER_TICK 34 // ticks per second = 1000/MS_PER_TICK
@@ -12,7 +11,7 @@
 #define WINDOW_DRAWBUF_CAPACITY 256
 
 #ifdef _DEV
-#include "log.h"
+#include "../shared/log.h"
 #endif
 
 void render_state_to_window(game_state *state, window *window, grid *render_grid) {

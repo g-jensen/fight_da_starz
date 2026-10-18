@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "game.h"
-#include "sys.h"
+#include "../shared/sys.h"
 #include "fps.h"
 #include "../shared/collision.h"
 

@@ -1,5 +1,5 @@
 #include "fps.h"
-#include "sys.h"
+#include "../shared/sys.h"
 #include "../shared/core.h"
 
 int fps_iterate_counters(long long *start_tick, long long *end_tick) {
