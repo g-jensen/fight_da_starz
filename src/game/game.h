@@ -5,6 +5,7 @@
 #include "../shared/sprite.h"
 #include "gameobject.h"
 #include "resources.h"
+#include "events.h"
 
 typedef struct game_state {
     int stop;
@@ -15,5 +16,5 @@ typedef struct game_state {
     int fps;
 } game_state;
 
-void game_update(game_state *state, optional_char c);
+void game_update(game_state *state, Event event);
 void game_init(game_state* state, resources_ref *resources_ref);

@@ -1,12 +1,13 @@
 #include "game.h"
 #include "render.h"
+#include "events.h"
 #include "../shared/grid.h"
 #include "../shared/window.h"
 #include "../shared/sys.h"
 #include "../shared/terminal.h"
 
-#define MUS_PER_TICK MS_PER_TICK * 1000
 #define MS_PER_TICK 34 // ticks per second = 1000/MS_PER_TICK
+#define MUS_PER_TICK MS_PER_TICK * 1000
 
 #define WINDOW_DRAWBUF_CAPACITY 256
 
@@ -20,10 +21,22 @@ void render_state_to_window(game_state *state, window *window, grid *render_grid
 }
 
 void pace_tick(long start_time, long end_time) {
-    long duration = (end_time - start_time);
+    static long duration;
+	duration = (end_time - start_time);
     if (MUS_PER_TICK > duration) {
         musleep(MUS_PER_TICK - duration);
     }
+}
+
+Event read_event(long mus_read_timeout) {
+	static optional_char c;
+	static size_t event_index; 
+	c = terminal_read_char(mus_read_timeout);
+	event_index = KEY_NOOP;
+	if (c.some) {
+		event_index = char_to_event_index(c.value);
+	}
+	return EVENT_KEY_MAP[event_index];
 }
 
 int main() {    
@@ -52,7 +65,7 @@ int main() {
     atexit(terminal_shutdown);
     while (!state.stop) {
         start_time = get_time_mus();
-        game_update(&state, terminal_read_char(mus_read_timeout));
+        game_update(&state, read_event(mus_read_timeout));
         render_state_to_window(&state,&window,&render_grid);
         pace_tick(start_time,get_time_mus());
     }

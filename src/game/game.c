@@ -64,48 +64,45 @@ void push(game_object *game_object, float force) {
     game_object->acceleration.x += force;
 }
 
-void add_user_movement(game_object *game_object, optional_char c, int can_jump) {
-    if (!c.some) return;
-    switch (c.value) {
-        case 'w':
+void add_user_movement(game_object *game_object, Event event, int can_jump) {
+    switch (event) {
+        case EVENT_PLAYER_UP:
             if (can_jump) {
                 jump(game_object);
             }
             break;
-        case ' ':
-            if (can_jump) {
-                jump(game_object);
-            }
-            break;
-        case 'a':
+        case EVENT_PLAYER_LEFT:
             push(game_object, -2);
             break;
-        case 'd':
+        case EVENT_PLAYER_RIGHT:
             push(game_object, 2);
             break;
+		default:
+			break;
     }
 }
 
-void handle_object_physics(game_object *game_object, collidables_buf *collidables, optional_char c) {
+void handle_object_physics(game_object *game_object, collidables_buf *collidables, Event event) {
     game_object->acceleration = (fpoint){.x=0,.y=0};
     add_gravity(game_object);
     add_friction(game_object);
-    add_user_movement(game_object, c, is_grounded(game_object, collidables));
+    add_user_movement(game_object, event, is_grounded(game_object, collidables));
     simulate_movement(game_object, collidables);
 }
 
-void handle_quit(game_state *state, optional_char c) {
-    if (!c.some) return;
-    switch (c.value) {
-        case CTRL_KEY('c'):
+void handle_quit(game_state *state, Event event) {
+    switch (event) {
+        case EVENT_QUIT:
             state->stop = 1;
             break;
+		default:
+			break;
     }
 }
 
-void game_update(game_state *state, optional_char c) {
-    handle_quit(state,c);
-    handle_object_physics(state->player,&state->collidables,c);
+void game_update(game_state *state, Event event) {
+    handle_quit(state, event);
+    handle_object_physics(state->player,&state->collidables, event);
     state->fps = fps_iterate_counters(&state->tick_start_mus, &state->tick_end_mus);
 }
 
