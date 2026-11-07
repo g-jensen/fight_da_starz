@@ -1,9 +1,12 @@
 #include <stdlib.h>
 
 #include "resources.h"
-#include "../shared/sys.h"
 #include "../shared/core.h"
 #include "../shared/gameobject_file.h"
+
+#ifdef _DEV
+#include "../shared/log.h"
+#endif
 
 sprite* sprite_new(resources *resources) {
     if (!(resources->sprites_buf.length < SPRITES_CAPACITY)) {
@@ -35,6 +38,10 @@ resources_ref resources_load(resources *resources) {
 }
 
 game_object_file_resource game_object_file_load(resources *resources, char* filepath) {
+	#ifdef _DEV
+    log_info("loading %s resource file...", filepath);
+    #endif
+
     game_object_parse_result parsed;
     char *design = resources->designs_buf.buffer+resources->designs_buf.length;
     color_param_buf *param_buf = &resources->color_resources.param_buf;
@@ -46,6 +53,10 @@ game_object_file_resource game_object_file_load(resources *resources, char* file
 
     sprite *sprite = sprite_new(resources);
     sprite_init_from_parsed_game_object(sprite, &parsed);
+
+	#ifdef _DEV
+    log_raw("done\n");
+    #endif
 
     return (game_object_file_resource){.sprite = sprite, .collision_offset = parsed.collision_offset};
 }

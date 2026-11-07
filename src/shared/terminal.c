@@ -6,6 +6,10 @@
 #include "raw_mode.h"
 #include "sys.h"
 
+#ifdef _DEV
+#include "../shared/log.h"
+#endif
+
 void terminal_hide_cursor() {
     write(STDOUT_FILENO, HIDE_CURSOR, 6);
 }
@@ -24,8 +28,10 @@ void terminal_clear_screen() {
 }
 
 void terminal_init() {
+	log_info("initializing terminal...");
     enable_raw_mode();
     terminal_hide_cursor();
+	log_raw("done\n");
 }
 
 void terminal_shutdown() {

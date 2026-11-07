@@ -41,20 +41,30 @@ Event read_event(long mus_read_timeout) {
 
 int main() {    
     #ifdef _DEV
-    log_info("dev mode active!");
+    log_info("dev mode active!\n");
     #endif
 
     window window;
     window_mmap(&window, WINDOW_DRAWBUF_CAPACITY*sizeof(*window.drawBuf.b));
-    if (terminal_get_size(&window.rows, &window.cols) == -1) {
+    #ifdef _DEV
+    log_info("mapped window drawbuf with capacity: %d\n", WINDOW_DRAWBUF_CAPACITY);
+    #endif
+
+	if (terminal_get_size(&window.rows, &window.cols) == -1) {
         die("terminal_get_size");
     }
+	#ifdef _DEV
+    log_info("got terminal size: %dx%d\n", window.rows, window.cols);
+    #endif
     
     grid render_grid;
     grid_mmap(&render_grid, window.rows, window.cols);
     
     resources resources;
     resources_ref resources_ref = resources_load(&resources);
+	#ifdef _DEV
+    log_info("all resources loaded\n");
+    #endif
 
     game_state state;
     game_init(&state, &resources_ref);
