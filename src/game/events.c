@@ -11,8 +11,8 @@ Event EVENT_KEY_MAP[EVENTS_COUNT] = {
 };
 
 size_t char_to_event_index(char c) {
-    if (' ' <= c && c <= '~') {
-        return c-' ';
+    if (IS_KEY(c)) {
+        return KEY(c);
     }
 	if (c == CTRL_KEY('c')) { // can be generalized?
 		return KEY_CTRL_C;
