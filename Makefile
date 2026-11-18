@@ -27,17 +27,21 @@ else
 endif
 
 OBJ=$(patsubst %.c,%.o,$(SRC))
-DEV_OBJ=$(patsubst %,$(DEV_BUILD_PATH)/%,$(OBJ))
+ALL_DEV_OBJ=$(patsubst %,$(DEV_BUILD_PATH)/%,$(OBJ))
+DEV_OBJ=$(filter-out %specc.o %_spec.o, $(ALL_DEV_OBJ))
 PROD_OBJ=$(patsubst %,$(PROD_BUILD_PATH)/%,$(OBJ))
 
 .PHONY: dev
-dev: $(DIST_DEV)/game $(DIST_DEV)/object_editor
+dev: $(DIST_DEV)/game $(DIST_DEV)/game_specc $(DIST_DEV)/object_editor
 
 .PHONY: prod
 prod: $(DIST_PROD)/game $(DIST_PROD)/object_editor
 
 $(DIST_DEV)/game: $(DEV_OBJ) | $(DIST_DEV)
 	$(CC) $(DEV_FLAGS) -o $@ $(filter-out $(DEV_BUILD_PATH)/object_editor/%, $(DEV_OBJ)) $(CFLAGS)
+
+$(DIST_DEV)/game_specc: $(ALL_DEV_OBJ) | $(DIST_DEV)
+	$(CC) $(DEV_FLAGS) -o $@ $(filter-out $(DEV_BUILD_PATH)/game/main.o $(DEV_BUILD_PATH)/object_editor/%, $(ALL_DEV_OBJ)) $(CFLAGS)
 
 $(DIST_DEV)/object_editor: $(DEV_OBJ) | $(DIST_DEV)
 	$(CC) $(DEV_FLAGS) -o $@ $(filter-out $(DEV_BUILD_PATH)/game/%, $(DEV_OBJ)) $(CFLAGS)
@@ -65,6 +69,7 @@ $(DEV_BUILD_PATH):
 	$(call MKDIR,$@/game)
 	$(call MKDIR,$@/object_editor)
 	$(call MKDIR,$@/shared)
+	$(call MKDIR,$@/specc)
 
 $(PROD_BUILD_PATH)/%.o: $(SRC_PATH)/%.c $(HEADERS) | $(PROD_BUILD_PATH)
 	$(CC) $(PROD_FLAGS) -c -o $@ $< $(CFLAGS)
@@ -74,6 +79,7 @@ $(PROD_BUILD_PATH):
 	$(call MKDIR,$@/game)
 	$(call MKDIR,$@/object_editor)
 	$(call MKDIR,$@/shared)
+	$(call MKDIR,$@/specc)
 
 .PHONY: clean
 clean:
