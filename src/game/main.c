@@ -30,13 +30,11 @@ void pace_tick(long start_time, long end_time) {
 
 Event read_event(long mus_read_timeout) {
 	static optional_char c;
-	static size_t event_index; 
 	c = terminal_read_char(mus_read_timeout);
-	event_index = KEY_NOOP;
 	if (c.some) {
-		event_index = char_to_event_index(c.value);
+		return char_to_event(c.value);
 	}
-	return EVENT_KEY_MAP[event_index];
+	return EVENT_NOOP;
 }
 
 int main() {    

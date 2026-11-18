@@ -19,3 +19,7 @@ size_t char_to_event_index(char c) {
 	}
     return KEY_NOOP;
 }
+
+Event char_to_event(char c) {
+	return EVENT_KEY_MAP[char_to_event_index(c)];
+}

@@ -21,4 +21,4 @@ typedef enum Event  {
 
 extern Event EVENT_KEY_MAP[EVENTS_COUNT];
 
-size_t char_to_event_index(char c);
+Event char_to_event(char c);
